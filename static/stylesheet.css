@@ -1,0 +1,191 @@
+html {
+    background-color: white;
+    font-family: sans-serif;
+    margin: 0px;
+}
+
+
+/*(navigation bar start)*/
+.styled ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #d2d9dd;
+	border-bottom: solid #008348;
+}
+
+.styled li {
+    float:left;
+}
+
+.styled li a {
+    display: block;
+    color: #000000;
+	font-size:15px;
+    text-align: left;
+    padding: 10px 10px;
+    text-decoration: none;
+	background-color:#d2d9dd;
+}
+
+.styled li a:hover {
+    background-color: #FFD700;
+}
+
+.styled1 input[type=text] {
+    float: right;
+    padding: 0;
+    border: none;
+    margin-top: 8px;
+    margin-right: 16px;
+    font-size: 17px;
+}
+/*(navigation bar end)*/
+/*(drop down menu start)*/
+.dropbtn {
+    background-color: #008348;
+    color: white;
+    padding: 13px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+	position: fixed;
+	right:8px;
+	top:17px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: fixed;
+	right:8px;
+	top:17px;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 4px 5px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {background-color: #FFD700}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+/*(drop down menu end)*/
+
+.poster input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.poster input[type=submit] {
+    width: 20%%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.poster input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+.poster1 input[type=text], select {
+    width: 20%%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.poster1 input[type=submit] {
+    width: 20%%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.poster1 input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+.button input[type=submit] {
+    width: 20%%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.button input[type=submit]:hover {
+    background-color: #45a049;
+}
+.div1 {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+
+.banner{
+	width:100%;
+}
+
+.list li{
+list-style-type: none;}
+
+.positionslist {
+        width: 85%;
+        background-color: #e8eeef;
+        margin-right: auto;
+        margin-left: auto;
+        margin-bottom: 50px;
+        margin-top:10px;
+        border-radius: 10px;
+        border: solid #f4f7f8;
+}
+
+.truncate {
+  width: 95%;
+  height:138px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.head{
+font-size: large;}
+
+.txt{
+color:#008348;}

@@ -1,0 +1,14 @@
+% rebase('base.html')
+
+    % if validated:
+    <h2>insert code to update deets here</h2>
+
+
+    % else:
+        <h2>Verify password to access settings</h2>
+        <h2>{{bannerMessage}}</h2>
+        <form action="/pwordCheck" method="POST" class="poster1">
+            Password: <input type="text" name="password"><br>
+            <input type="submit" value="Verify">
+        </form>
+    % end
