@@ -1,17 +1,47 @@
 
 import sqlite3
 import hashlib
+import string
+import secrets
 import datetime
 
 
 # The database name
 DATABASE_NAME = 'comp4050.db'
 
-def password_hash(password):
+def password_hash(db, password, user):
     """Return a one-way hashed version of the password suitable for
-    storage in the database"""
+    storage in the database, checks if a user name an password is provided,
+    salts the password and returns it"""
+    if len(user) > 0 and len(password) > 6:
+        check = True
+    else:
+        check = False
+    if check:
+        salt = return_salt(db, user)
+        if salt:
+            return hashlib.sha256((password + salt).encode()).hexdigest()
+        else:
+            return False
 
-    return hashlib.sha1(password.encode()).hexdigest()
+def firstPassword_hash(password, salt):
+    """Return a one-way hashed version of the password suitable for
+    storage in the database, salts password and returns,
+    used in database table initilisation """
+
+    return hashlib.sha256((password + salt).encode()).hexdigest()
+
+def return_salt(db, user):
+    """returns a salt value for a user, could move this to users module but cbbs"""
+    cursor = db.cursor()
+
+    sql = """SELECT rand FROM users WHERE username=?"""
+    cursor.execute(sql,(user,))
+    data = cursor.fetchone()
+    if data is None:
+        return False
+    else:
+        return data[0]
 
 def create_tables(db):
     """Create and initialise the database tables. Will ovewrite
@@ -25,6 +55,7 @@ CREATE TABLE users (
     userID integer unique primary key autoincrement,
     name test,
     suburb text,
+    rand text,
     avatar text
 );
 
@@ -51,6 +82,13 @@ CREATE TABLE jobListing (
     db.commit()
 
 
+def generate_salt():
+    """returns a random 8 character value consisting of
+    upper and lower case characters  and single digits"""
+    alphabet = string.ascii_letters + string.digits
+    password = ''.join(secrets.choice(alphabet) for i in range(8))
+    return password
+
 def add_user(db, password, email, name, suburb):
     """"Adds a user to the database , ensures username is not already in use"""
     cursor = db.cursor()
@@ -60,8 +98,9 @@ def add_user(db, password, email, name, suburb):
     if data.fetchone():
         return False
     else:
-        sql = "INSERT INTO users (username, password, name, suburb) VALUES (?,?,?,?)"
-        cursor.execute(sql, [email, password_hash(password), name, suburb])
+        salt = generate_salt()
+        sql = "INSERT INTO users (username, password, name, suburb, rand) VALUES (?,?,?,?,?)"
+        cursor.execute(sql, [email, firstPassword_hash(password, salt), name, suburb, salt])
         db.commit()
         return True
 

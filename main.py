@@ -59,6 +59,7 @@ def route(db):
     suburb = request.forms.get("suburb")
 
     log = database.add_user(db, password, email, name, suburb)
+    print(log)
     if(log):#if user is valid
         users.generate_session(db, name)
         return redirect('/')
@@ -93,12 +94,10 @@ def acc(db):
 
     password = request.forms.get("password")
     usern= users.session_user(db)
-    result = users.check_password(db, usern, database.password_hash(password))
+    result = users.check_password(db, usern, database.password_hash(db,password,usern))
     if(result):
-        print('s')
         return template('account', info, authenticated=users.session_user(db), validated=True)
     else:
-        print('n')
         return template('account', info1, authenticated=users.session_user(db), validated=False)
 
 @app.post('/login')
@@ -138,7 +137,6 @@ def logout(db):
     redirect('/')
 
 if __name__ == '__main__':
-
     from bottle.ext import sqlite
     from database import DATABASE_NAME
     # install the database plugin to utilise db parameter calling
