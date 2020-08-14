@@ -16,7 +16,6 @@ def static(filename):
 
 @app.route('/')
 def index(db):
-    database.print_users(db)
     """handles routing to main page"""
 
     pageInfo = {'title': 'Comp4050'}
