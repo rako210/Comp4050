@@ -68,6 +68,14 @@ def session_user(db):
         return data[0]
     return None
 
+def return_userID(db, user):
+    """Returns the unique userID for user when provided their username"""
+    cursor = db.cursor()
+    sql = "SELECT userID FROM users WHERE username=?"
+    cursor.execute(sql,(user,))
+    data = cursor.fetchone()
+    return data[0]
+
 def check_password(db, user, password):
     """verifies password for a logged in user , I MADE THIS BY ACCIDENT BUT KEPT IT CAUSE CBSS,
      PRE MUCH THE SAME AS CHECK_LOGIN"""

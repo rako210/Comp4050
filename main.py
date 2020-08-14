@@ -1,19 +1,22 @@
 
-from bottle import Bottle, template, static_file,redirect,request, response
+from bottle import Bottle, template, static_file, redirect, request, response
 import database
 import users
 import re
+import os
 
 app = Bottle()
 
 @app.route('/static/<filename:path>')
 def static(filename):
+
     """Static file Handling method for all static files in root static"""
 
     return static_file(filename=filename, root='static')
 
 @app.route('/')
 def index(db):
+    database.print_users(db)
     """handles routing to main page"""
 
     pageInfo = {'title': 'Comp4050'}
@@ -27,6 +30,14 @@ def about(db):
     info = {'title': 'About'}
 
     return template('About', info, authenticated=users.session_user(db))
+
+@app.get('/accountSettings')
+def account_settings(db):
+    """Update account details or settings, must enter password to be able to do so"""
+
+    info = {'title': 'Account',
+            'bannerMessage': ''}
+    return template('account', info, authenticated=users.session_user(db),validated=False, invalidPword=False)
 
 @app.route('/createAccount')
 def accountPage(db):
@@ -55,17 +66,58 @@ def route(db):
         return template('createAccount', info1, authenticated=users.session_user(db))
 
     email = request.forms.get("email")
+    "SHOULD PROBS ADD JAVASCRIPT TO CHECK name and suburb ARE FILLED AND CHECK FILE TYPE OF IMAGE"
     name = request.forms.get("name")
     suburb = request.forms.get("suburb")
-
+    image = request.files.get("image")
     log = database.add_user(db, password, email, name, suburb)
-    print(log)
-    if(log):#if user is valid
+
+    if log: #if user is valid
+        if image is not None:
+            uid = users.return_userID(db, email)
+            imagePath = userImage_upload(uid, image)
+            database.update_avatar(db, uid, imagePath)
+
         users.generate_session(db, name)
         return redirect('/')
     else:
         return template('createAccount', info, authenticated=users.session_user(db))
 
+@app.post('/updateAccount')
+def account_update(db):
+    """handles account updates"""
+
+    info = {'title': 'Login Error',
+            'bannerMessage': 'Populated fields updated'
+            }
+
+    flag = False
+    uid = users.return_userID(db, users.session_user(db))
+    password = request.forms.get("pword")
+    if len(password) > 0:
+        if password_test(password):
+            newPassword = database.password_hash(db, password, uid)
+            if newPassword is not False:
+                database.update_password(db, newPassword, uid)
+            else:
+                flag = True
+        else:
+            flag = True
+
+    suburb = request.forms.get("suburb")
+    if len(suburb) > 0:
+        database.update_suburb(db, suburb, uid)
+
+    name = request.forms.get("name")
+    if len(name) > 0:
+        database.update_name(db, name, uid)
+
+    image = request.files.get("image")
+    if image is not None:
+        imagePath = userImage_upload(uid, image)
+        database.update_avatar(db, uid, imagePath)
+
+    return template('account', info, authenticated=users.session_user(db), validated=True, invalidPword=flag)
 
 
 def password_test(pWord):
@@ -76,13 +128,13 @@ def password_test(pWord):
         return True
     return False
 
-@app.get('/accountSettings')
-def account_settings(db):
-    """Update account details or settings, must enter password to be able to do so"""
+def userImage_upload(user, image):
 
-    info = {'title': 'Account',
-            'bannerMessage': ''}
-    return template('account', info, authenticated=users.session_user(db),validated=False)
+    root = os.path.abspath(os.curdir)# does this line work on all os' ?
+    path = root + "/static/userImages/" + "DP user -- " + str(user) + " -- " + image.filename
+    image.save(path, overwrite=True)
+    return path
+
 
 @app.post('/pwordCheck')
 def acc(db):
@@ -96,9 +148,11 @@ def acc(db):
     usern= users.session_user(db)
     result = users.check_password(db, usern, database.password_hash(db,password,usern))
     if(result):
-        return template('account', info, authenticated=users.session_user(db), validated=True)
+        return template('account', info, authenticated=users.session_user(db), validated=True, invalidPword=False)
     else:
-        return template('account', info1, authenticated=users.session_user(db), validated=False)
+        return template('account', info1, authenticated=users.session_user(db), validated=False, invalidPword=False)
+
+
 
 @app.post('/login')
 def route(db):
@@ -137,6 +191,7 @@ def logout(db):
     redirect('/')
 
 if __name__ == '__main__':
+
     from bottle.ext import sqlite
     from database import DATABASE_NAME
     # install the database plugin to utilise db parameter calling

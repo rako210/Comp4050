@@ -9,14 +9,24 @@ import datetime
 # The database name
 DATABASE_NAME = 'comp4050.db'
 
+"------------------------------------------------------------------------------------------------------------"
+"Password creation methods"
+
 def password_hash(db, password, user):
     """Return a one-way hashed version of the password suitable for
     storage in the database, checks if a user name an password is provided,
     salts the password and returns it"""
-    if len(user) > 0 and len(password) > 6:
+
+    if type(user) is int:
         check = True
+    elif type(user) is str:
+        if len(user) > 0 and len(password) > 6:
+            check = True
+        else:
+            check = False
     else:
         check = False
+
     if check:
         salt = return_salt(db, user)
         if salt:
@@ -31,17 +41,29 @@ def firstPassword_hash(password, salt):
 
     return hashlib.sha256((password + salt).encode()).hexdigest()
 
+def generate_salt():
+    """returns a random 8 character value consisting of
+    upper and lower case characters  and single digits"""
+    alphabet = string.ascii_letters + string.digits
+    password = ''.join(secrets.choice(alphabet) for i in range(8))
+    return password
+
 def return_salt(db, user):
     """returns a salt value for a user, could move this to users module but cbbs"""
     cursor = db.cursor()
-
-    sql = """SELECT rand FROM users WHERE username=?"""
+    if type(user) is int:
+        sql = "SELECT rand FROM users WHERE userID=?"
+    else:
+        sql = "SELECT rand FROM users WHERE username=?"
     cursor.execute(sql,(user,))
     data = cursor.fetchone()
     if data is None:
         return False
     else:
         return data[0]
+
+"------------------------------------------------------------------------------------------------------------"
+"table creation"
 
 def create_tables(db):
     """Create and initialise the database tables. Will ovewrite
@@ -81,13 +103,8 @@ CREATE TABLE jobListing (
     db.executescript(sql)
     db.commit()
 
-
-def generate_salt():
-    """returns a random 8 character value consisting of
-    upper and lower case characters  and single digits"""
-    alphabet = string.ascii_letters + string.digits
-    password = ''.join(secrets.choice(alphabet) for i in range(8))
-    return password
+"------------------------------------------------------------------------------------------------------------"
+"initial user addition"
 
 def add_user(db, password, email, name, suburb):
     """"Adds a user to the database , ensures username is not already in use"""
@@ -105,6 +122,41 @@ def add_user(db, password, email, name, suburb):
         return True
 
 
+"------------------------------------------------------------------------------------------------------------"
+"user profile update functions, could have combined these tbh"
+
+
+def update_password(db, newPassword, userID):
+    cursor = db.cursor()
+    sql = "UPDATE users SET password =? WHERE userID=?"
+    cursor.execute(sql, (newPassword, userID))
+    db.commit()
+    return True
+
+
+def update_suburb(db, newSuburb, userID):
+    cursor = db.cursor()
+    sql = "UPDATE users SET suburb =? WHERE userID=?"
+    cursor.execute(sql, (newSuburb, userID))
+    db.commit()
+    return True
+
+def update_name(db, newName, userID):
+    cursor = db.cursor()
+    sql = "UPDATE users SET name =? WHERE userID=?"
+    cursor.execute(sql, (newName, userID))
+    db.commit()
+    return True
+
+def update_avatar(db, userID, avatar):
+    """adds avatar path to db according to userID"""
+    cursor = db.cursor()
+    sql = "UPDATE users SET avatar =? WHERE userID=?"
+    cursor.execute(sql,(avatar, userID))
+    db.commit()
+    return True
+"------------------------------------------------------------------------------------------------------------"
+"table print methods"
 def print_users(db):
     """printing users table for troubleshooting"""
     cursor = db.cursor()
@@ -117,7 +169,10 @@ def print_users(db):
         print(row[3])
         print(row[4])
         print(row[5])
+        print(row[6])
 
+"------------------------------------------------------------------------------------------------------------"
+"job advert methods"
 
 def add_jobListing(db, postOwner, title, location, description):
     """CHANGE THIS LATER Add a new job post to the database.
@@ -165,7 +220,7 @@ def position_list(db, limit=10):
     data = cursor.execute(sql,(limit,))
     return list(data)
 
-
+"------------------------------------------------------------------------------------------------------------"
 if __name__=='__main__':
 
     """need to call this directly to intilise tables / clear tables"""
