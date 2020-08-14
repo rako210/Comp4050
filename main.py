@@ -43,7 +43,7 @@ def account_settings(db):
 def accountPage(db):
     """handles routing to account creation page"""
 
-    pageInfo = {'title': 'Comp4050',
+    pageInfo = {'title': 'Create Account',
                 'bannerMessage': 'Create an account'}
 
     return template('createAccount', pageInfo, authenticated=users.session_user(db))
@@ -52,11 +52,11 @@ def accountPage(db):
 def route(db):
     """handles new account creation
     """
-    info = {'title': 'Login Error',
+    info = {'title': 'Creation Error',
             'bannerMessage': 'An account under this email already exists please login or try another email'
     }
 
-    info1 = {'title': 'Login Error',
+    info1 = {'title': 'Creation Error',
             'bannerMessage': 'Password must contain at least 1 capital letter, 1 number and be atleast 7 characters long'
     }
 
@@ -87,7 +87,7 @@ def route(db):
 def account_update(db):
     """handles account updates"""
 
-    info = {'title': 'Login Error',
+    info = {'title': 'Account',
             'bannerMessage': 'Populated fields updated'
             }
 
