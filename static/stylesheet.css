@@ -1,5 +1,7 @@
 html {
     background-image: url("/static/images/Mq_backgroundcolor.JPG");
+    text-align: center;
+    color: white;
     font-family: sans-serif;
     margin: 0px;
 }
@@ -109,8 +111,18 @@ html {
     cursor: pointer;
 }
 
+.poster1{
+    width: 300px;
+    box-shadow: aquamarine;
+    background: wheat;
+    padding: 20px;
+    margin: 8% auto 0;
+    text-align: center;
+    color: black;
+}
+
 .poster input[type=submit]:hover {
-    background-color: #45a049;
+    background-color: red;
 }
 
 .poster1 input[type=text], select {
