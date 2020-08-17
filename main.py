@@ -1,13 +1,15 @@
 
-from bottle import Bottle, template, static_file,redirect,request, response
+from bottle import Bottle, template, static_file, redirect, request, response
 import database
 import users
 import re
+import os
 
 app = Bottle()
 
 @app.route('/static/<filename:path>')
 def static(filename):
+
     """Static file Handling method for all static files in root static"""
 
     return static_file(filename=filename, root='static')
@@ -28,11 +30,19 @@ def about(db):
 
     return template('About', info, authenticated=users.session_user(db))
 
+@app.get('/accountSettings')
+def account_settings(db):
+    """Update account details or settings, must enter password to be able to do so"""
+
+    info = {'title': 'Account',
+            'bannerMessage': ''}
+    return template('account', info, authenticated=users.session_user(db),validated=False, invalidPword=False)
+
 @app.route('/createAccount')
 def accountPage(db):
     """handles routing to account creation page"""
 
-    pageInfo = {'title': 'Comp4050',
+    pageInfo = {'title': 'Create Account',
                 'bannerMessage': 'Create an account'}
 
     return template('createAccount', pageInfo, authenticated=users.session_user(db))
@@ -41,11 +51,11 @@ def accountPage(db):
 def route(db):
     """handles new account creation
     """
-    info = {'title': 'Login Error',
+    info = {'title': 'Creation Error',
             'bannerMessage': 'An account under this email already exists please login or try another email'
     }
 
-    info1 = {'title': 'Login Error',
+    info1 = {'title': 'Creation Error',
             'bannerMessage': 'Password must contain at least 1 capital letter, 1 number and be atleast 7 characters long'
     }
 
@@ -55,16 +65,58 @@ def route(db):
         return template('createAccount', info1, authenticated=users.session_user(db))
 
     email = request.forms.get("email")
+    "SHOULD PROBS ADD JAVASCRIPT TO CHECK name and suburb ARE FILLED AND CHECK FILE TYPE OF IMAGE"
     name = request.forms.get("name")
     suburb = request.forms.get("suburb")
-
+    image = request.files.get("image")
     log = database.add_user(db, password, email, name, suburb)
-    if(log):#if user is valid
+
+    if log: #if user is valid
+        if image is not None:
+            uid = users.return_userID(db, email)
+            imagePath = userImage_upload(uid, image)
+            database.update_avatar(db, uid, imagePath)
+
         users.generate_session(db, name)
         return redirect('/')
     else:
         return template('createAccount', info, authenticated=users.session_user(db))
 
+@app.post('/updateAccount')
+def account_update(db):
+    """handles account updates"""
+
+    info = {'title': 'Account',
+            'bannerMessage': 'Populated fields updated'
+            }
+
+    flag = False
+    uid = users.return_userID(db, users.session_user(db))
+    password = request.forms.get("pword")
+    if len(password) > 0:
+        if password_test(password):
+            newPassword = database.password_hash(db, password, uid)
+            if newPassword is not False:
+                database.update_password(db, newPassword, uid)
+            else:
+                flag = True
+        else:
+            flag = True
+
+    suburb = request.forms.get("suburb")
+    if len(suburb) > 0:
+        database.update_suburb(db, suburb, uid)
+
+    name = request.forms.get("name")
+    if len(name) > 0:
+        database.update_name(db, name, uid)
+
+    image = request.files.get("image")
+    if image is not None:
+        imagePath = userImage_upload(uid, image)
+        database.update_avatar(db, uid, imagePath)
+
+    return template('account', info, authenticated=users.session_user(db), validated=True, invalidPword=flag)
 
 
 def password_test(pWord):
@@ -75,13 +127,13 @@ def password_test(pWord):
         return True
     return False
 
-@app.get('/accountSettings')
-def account_settings(db):
-    """Update account details or settings, must enter password to be able to do so"""
+def userImage_upload(user, image):
 
-    info = {'title': 'Account',
-            'bannerMessage': ''}
-    return template('account', info, authenticated=users.session_user(db),validated=False)
+    root = os.path.abspath(os.curdir)# does this line work on all os' ?
+    path = root + "/static/userImages/" + "DP user -- " + str(user) + " -- " + image.filename
+    image.save(path, overwrite=True)
+    return path
+
 
 @app.post('/pwordCheck')
 def acc(db):
@@ -93,13 +145,13 @@ def acc(db):
 
     password = request.forms.get("password")
     usern= users.session_user(db)
-    result = users.check_password(db, usern, database.password_hash(password))
+    result = users.check_password(db, usern, database.password_hash(db,password,usern))
     if(result):
-        print('s')
-        return template('account', info, authenticated=users.session_user(db), validated=True)
+        return template('account', info, authenticated=users.session_user(db), validated=True, invalidPword=False)
     else:
-        print('n')
-        return template('account', info1, authenticated=users.session_user(db), validated=False)
+        return template('account', info1, authenticated=users.session_user(db), validated=False, invalidPword=False)
+
+
 
 @app.post('/login')
 def route(db):

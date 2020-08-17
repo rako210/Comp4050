@@ -3,6 +3,7 @@
 from database import password_hash
 import uuid, bottle
 
+
 #import password hashing method from database
 # this variable MUST be used as the name for the cookie used by this application
 COOKIE_NAME = 'sessionid'
@@ -10,7 +11,7 @@ COOKIE_NAME = 'sessionid'
 
 def check_login(db, user, password):
     """returns True if password matches stored password for user"""
-    p = password_hash(password)#convert password to a hash in order to compare
+    p = password_hash(db, password, user)#convert password to a hash in order to compare
     cursor = db.cursor()
 
     sql = "SELECT * FROM users WHERE username=? AND password=?"
@@ -19,6 +20,7 @@ def check_login(db, user, password):
     if data.fetchone():
         return True
     return False
+
 
 
 def generate_session(db, user):
@@ -66,6 +68,14 @@ def session_user(db):
         return data[0]
     return None
 
+def return_userID(db, user):
+    """Returns the unique userID for user when provided their username"""
+    cursor = db.cursor()
+    sql = "SELECT userID FROM users WHERE username=?"
+    cursor.execute(sql,(user,))
+    data = cursor.fetchone()
+    return data[0]
+
 def check_password(db, user, password):
     """verifies password for a logged in user , I MADE THIS BY ACCIDENT BUT KEPT IT CAUSE CBSS,
      PRE MUCH THE SAME AS CHECK_LOGIN"""
@@ -76,4 +86,5 @@ def check_password(db, user, password):
     if data[0] == password:
         return True
     return False
+
 
