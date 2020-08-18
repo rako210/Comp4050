@@ -16,25 +16,36 @@
         </form>
 
     %if tasksexist:
-        <table style="width:100%">
-          <tr>
-            <th>ID</th>
-            <th>Time Created</th>
-            <th>owner</th>
-            <th>Title</th>
-            <th>Location</th>
-            <th>Description</th>
-          </tr>
-           % for t in task:
-              <tr>
-                <td>{{t.get("id")}}</td>
-                <td>{{t.get("time")}}</td>
-                <td>{{t.get("owner")}}</td>
-                <td>{{t.get("title")}}</td>
-                <td>{{t.get("location")}}</td>
-                <td>{{t.get("description")}}</td>
-              </tr>
-            %end
 
+        <table style="width:100%">
+
+            <tr>
+                <th>ID</th>
+                <th>Time Created</th>
+                <th>owner</th>
+                <th>Title</th>
+                <th>Location</th>
+                <th>Description</th>
+            </tr>
+
+            % for t in task:
+
+                <tr>
+                    <td>{{t.get("id")}}</td>
+                    <td>{{t.get("time")}}</td>
+                    <td>{{t.get("owner")}}</td>
+                    <td>{{t.get("title")}}</td>
+                    <td>{{t.get("location")}}</td>
+                    <td>{{t.get("description")}}</td>
+                    <td>
+                        <form action="/apply_for_task" method="POST" id="apply_for_task" class="button">
+                            <input type="hidden" value={{t.get("id")}} name="id">
+                            <input type="submit" value="Apply for Task">
+                        </form>
+                    </td>
+                </tr>
+
+            %end
         </table>
+
     %end
