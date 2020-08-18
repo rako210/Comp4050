@@ -26,6 +26,10 @@ Once you have successfully completed the merge, delete the old branch by:
 ```
 $ git branch -d branch_name
 ```
+Push your changes to main repository on github
+```
+$ git push
+```
 
 ## Reset your local directory
 Sometimes you will want to scrap some of the work you done or you just want to reset your workspace. You can do so by:
