@@ -1,2 +1,40 @@
 % rebase('base.html')
 
+
+<form action="/addtask" method="POST" id="addtask" class="button">
+            <input type="submit" value="addtask">
+        </form>
+
+
+<form action="/gettask" method="POST" id="gettask" class="button">
+            <input type="submit" value="gettask">
+        </form>
+
+<form action="/deletetask" method="POST" id="deletetask" class="button">
+            <input type="number" name="taskid">
+            <input type="submit" value="deletetask">
+        </form>
+
+    %if tasksexist:
+        <table style="width:100%">
+          <tr>
+            <th>ID</th>
+            <th>Time Created</th>
+            <th>owner</th>
+            <th>Title</th>
+            <th>Location</th>
+            <th>Description</th>
+          </tr>
+           % for t in task:
+              <tr>
+                <td>{{t.get("id")}}</td>
+                <td>{{t.get("time")}}</td>
+                <td>{{t.get("owner")}}</td>
+                <td>{{t.get("title")}}</td>
+                <td>{{t.get("location")}}</td>
+                <td>{{t.get("description")}}</td>
+              </tr>
+            %end
+
+        </table>
+    %end

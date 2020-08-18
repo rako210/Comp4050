@@ -179,7 +179,7 @@ def add_jobListing(db, postOwner, title, location, description):
     The date of the post will be the current time and date.
 
     Return True if the record was added, False if not."""
-    cursor = db.cursore()
+    cursor = db.cursor()
     sql = """INSERT INTO jobListing (owner, title, location, description) VALUES (?, ?, ?, ?)"""
     cursor.execute(sql, [postOwner, title, location, description])
     db.commit()
@@ -196,16 +196,17 @@ def get_listing(db, id):
     """
 
     cursor = db.cursor()
-    sql = "SELECT * FROM jobListing WHERE id=?"
+    sql = "SELECT * FROM jobListing WHERE jobID=?"
     data = cursor.execute(sql,(id,))
     return data.fetchone()#fetchone only works only once unless you make data.fetchone returns list if it exists doesnt otherwise
 
 def delete_jobListing(db, id):
     """CHANGE LATER, Delete a joblisting"""
-
+    print(id)
     cursor = db.cursor()
     sql = "DELETE FROM jobListing WHERE jobID=?"
     cursor.execute(sql,(id,))
+    db.commit()
 
 
 def position_list(db, limit=10):
@@ -217,6 +218,7 @@ def position_list(db, limit=10):
     """
     sql="SELECT * FROM jobListing ORDER BY timestamp DESC LIMIT ?"
     cursor = db.cursor()
+
     data = cursor.execute(sql,(limit,))
     return list(data)
 

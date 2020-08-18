@@ -18,9 +18,11 @@ def static(filename):
 def index(db):
     """handles routing to main page"""
 
-    pageInfo = {'title': 'Comp4050'}
+    pageInfo = {'title': 'Account'}
 
-    return template('index', pageInfo, authenticated=users.session_user(db))
+
+
+    return template('index', pageInfo, authenticated=users.session_user(db), tasksexist = False)
 
 @app.route('/about')
 def about(db):
@@ -35,7 +37,7 @@ def account_settings(db):
     """Update account details or settings, must enter password to be able to do so"""
 
     info = {'title': 'Account',
-            'bannerMessage': ''}
+            'bannerMessage': '',}
     return template('account', info, authenticated=users.session_user(db),validated=False, invalidPword=False)
 
 @app.route('/createAccount')
@@ -187,6 +189,67 @@ def logout(db):
 
     response.delete_cookie(users.COOKIE_NAME)
 
+    redirect('/')
+
+@app.post('/addtask', methods=['GET'])
+def task(db):
+    """"
+    redirects to the addtask form page
+    """
+
+    info = {'title': 'Add Task',
+            'bannerMessage': 'yeanah'}
+
+    return template('addtask',info, authenticated=users.session_user(db))
+
+@app.post('/addingtask', methods=['GET'])
+def task(db):
+    """"
+    Will take the form from addtask.html and add the respective task to the database
+    """
+
+    owner = request.forms.get("owner")
+    title = request.forms.get("title")
+    location = request.forms.get("location")
+    description = request.forms.get("descrip")
+
+    database.add_jobListing(db, owner, title, location, description)
+
+    redirect('/')
+
+@app.post('/gettask', methods=['GET'])
+def task(db):
+    """"
+    Gets the current list of tasks (top 10) and will display them in a table format.
+    """
+
+    tasklist = database.position_list(db)
+    newtrack = []
+
+    for x in tasklist:
+        dict1 = {
+                    'id': x[0],
+                    'time': x[1],
+                    'owner': x[2],
+                    'title': x[3],
+                    'location': x[4],
+                    'description': x[5]
+                }
+        newtrack.append(dict1)
+    info = {'title': 'Account',
+            'bannerMessage': '',
+            'task' : newtrack}
+
+    return template('index',info, authenticated=users.session_user(db), tasksexist = True)
+
+@app.post('/deletetask', methods=['GET'])
+def task(db):
+    """"
+    Deletes respective ID'd task
+    """
+    taskid = request.forms.get("taskid")
+    print(taskid)
+    database.delete_jobListing(db, taskid)
     redirect('/')
 
 if __name__ == '__main__':
