@@ -9,7 +9,7 @@ $ git clone https://github.com/rako210/Comp4050.git
 1. Right-click `main.py` and select `Run 'main'`.
 1. Navigate to http://127.0.0.1:8010/
 
-## Commiting Updates
+## Implementing Features
 
 If you want to implement something new please create a new branch along with the name of the feature you want to implement:
 ```
@@ -26,10 +26,31 @@ Once you have successfully completed the merge, delete the old branch by:
 ```
 $ git branch -d branch_name
 ```
-Push your changes to main repository on github
+
+## Committing Updates
+
+First check if your branch is up to date by typing:
+```
+$ git fetch --dry-run // Show what would be done, without making any changes.
+```
+
+If there is no response, that means that you are up to date with main repository so you can just push your changes using:
 ```
 $ git push
 ```
+
+If there is a response, that means that someone has updated the main repository since your last pull/fetch. You will have
+to run some extra commands listed below:
+
+```
+$ git stash // Stash your local changes
+$ git pull // Update your branch to the latest code
+$ git stash apply // Merge your local changes into the latest code
+```
+
+Then simply `add` `commit` and `push` your desired changes.
+
+*Note: You could also simply just run `git pull` however it is easier using this method.* 
 
 ## Reset your local directory
 Sometimes you will want to scrap some of the work you done or you just want to reset your workspace. You can do so by:
