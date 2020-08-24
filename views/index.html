@@ -1,19 +1,23 @@
 % rebase('base.html')
 
 
-<form action="/addtask" method="POST" id="addtask" class="button">
+
+    %if loginIsTrue:
+
+    <form action="/addtask" method="POST" id="addtask" class="button">
             <input type="submit" value="addtask">
         </form>
 
 
-<form action="/gettask" method="POST" id="gettask" class="button">
+    <form action="/gettask" method="POST" id="gettask" class="button">
             <input type="submit" value="gettask">
         </form>
 
-<form action="/deletetask" method="POST" id="deletetask" class="button">
+    <form action="/deletetask" method="POST" id="deletetask" class="button">
             <input type="number" name="taskid">
             <input type="submit" value="deletetask">
         </form>
+    %end
 
     %if tasksexist:
         <table style="width:100%">

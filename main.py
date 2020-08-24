@@ -17,12 +17,14 @@ def static(filename):
 @app.route('/')
 def index(db):
     """handles routing to main page"""
-
     pageInfo = {'title': 'Account'}
+    loginisTrue = False
+    tasksexist = False
 
+    if users.session_user(db):
+        loginisTrue = True
 
-
-    return template('index', pageInfo, authenticated=users.session_user(db), tasksexist = False)
+    return template('index', pageInfo, authenticated=users.session_user(db), tasksexist=tasksexist, loginIsTrue=loginisTrue)
 
 @app.route('/about')
 def about(db):
@@ -226,6 +228,11 @@ def task(db):
     tasklist = database.position_list(db)
     newtrack = []
 
+    loginisTrue = False
+
+    if users.session_user(db):
+        loginisTrue = True
+
     for x in tasklist:
         dict1 = {
                     'id': x[0],
@@ -240,7 +247,7 @@ def task(db):
             'bannerMessage': '',
             'task' : newtrack}
 
-    return template('index',info, authenticated=users.session_user(db), tasksexist = True)
+    return template('index',info, authenticated=users.session_user(db), tasksexist = True, loginIsTrue=loginisTrue )
 
 @app.post('/deletetask', methods=['GET'])
 def task(db):
