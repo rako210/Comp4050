@@ -209,32 +209,61 @@ def task(db):
     """"
     Will take the form from addtask.html and add the respective task to the database
     """
-
+    userID = users.session_user(db)
     owner = request.forms.get("owner")
     title = request.forms.get("title")
     location = request.forms.get("location")
     description = request.forms.get("descrip")
 
-    database.add_jobListing(db, owner, title, location, description)
+    database.add_jobListing(db,userID, owner, title, location, description)
 
     redirect('/')
 
 @app.post('/gettask', methods=['GET'])
 def task(db):
     """"
-    Gets the current list of tasks (top 10) and will display them in a table format.
+    Will return based on the button pressed. It will then return the relative tasks in a top 10 format
     """
 
-    tasklist = database.position_list(db)
-    newtrack = []
+    tasktype = request.forms.get("tasktype")
 
-    loginisTrue = False
+    if tasktype == "1":
+        usrid = users.session_user(db)
+        tasklist = database.position_list(db,usrid)
+        newtrack = []
 
-    if users.session_user(db):
-        loginisTrue = True
+        loginisTrue = False
 
-    for x in tasklist:
-        dict1 = {
+        if users.session_user(db):
+            loginisTrue = True
+
+        for x in tasklist:
+            dict1 = {
+                        'id': x[0],
+                        'time': x[1],
+                        'owner': x[2],
+                        'title': x[3],
+                        'location': x[4],
+                        'description': x[5]
+                    }
+            newtrack.append(dict1)
+        info = {'title': 'Account',
+                'bannerMessage': '',
+                'task' : newtrack}
+
+        return template('index',info, authenticated=users.session_user(db), tasksexist = True, loginIsTrue=loginisTrue )
+
+    if tasktype == "0":
+            tasklist = database.position_list(db,None)
+            newtrack = []
+
+            loginisTrue = False
+
+            if users.session_user(db):
+                loginisTrue = True
+
+            for x in tasklist:
+                dict1 = {
                     'id': x[0],
                     'time': x[1],
                     'owner': x[2],
@@ -242,12 +271,14 @@ def task(db):
                     'location': x[4],
                     'description': x[5]
                 }
-        newtrack.append(dict1)
-    info = {'title': 'Account',
-            'bannerMessage': '',
-            'task' : newtrack}
+                newtrack.append(dict1)
+            info = {'title': 'Account',
+                    'bannerMessage': '',
+                    'task': newtrack}
 
-    return template('index',info, authenticated=users.session_user(db), tasksexist = True, loginIsTrue=loginisTrue )
+            return template('index', info, authenticated=users.session_user(db), tasksexist=True,
+                            loginIsTrue=loginisTrue)
+
 
 @app.post('/deletetask', methods=['GET'])
 def task(db):

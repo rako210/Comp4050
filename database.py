@@ -92,6 +92,7 @@ DROP TABLE IF EXISTS jobListing;
 CREATE TABLE jobListing (
     jobID integer unique primary key autoincrement,
     timestamp text default CURRENT_TIMESTAMP,
+    userID text,
     owner text,
     title text,
     location text, 
@@ -174,14 +175,14 @@ def print_users(db):
 "------------------------------------------------------------------------------------------------------------"
 "job advert methods"
 
-def add_jobListing(db, postOwner, title, location, description):
+def add_jobListing(db,userID,postOwner, title, location, description):
     """CHANGE THIS LATER Add a new job post to the database.
     The date of the post will be the current time and date.
 
     Return True if the record was added, False if not."""
     cursor = db.cursor()
-    sql = """INSERT INTO jobListing (owner, title, location, description) VALUES (?, ?, ?, ?)"""
-    cursor.execute(sql, [postOwner, title, location, description])
+    sql = """INSERT INTO jobListing (userID ,owner, title, location, description) VALUES (?,?, ?, ?, ?)"""
+    cursor.execute(sql, [userID, postOwner, title, location, description])
     db.commit()
 
     return True
@@ -194,10 +195,9 @@ def get_listing(db, id):
     Returns a tuple (id, timestamp, owner, title, location, company, description)
 
     """
-
     cursor = db.cursor()
-    sql = "SELECT * FROM jobListing WHERE jobID=?"
-    data = cursor.execute(sql,(id,))
+    sql = "SELECT * FROM jobListing WHERE jobID=? AND userID =?"
+    data = cursor.execute(sql,(id,userID))
     return data.fetchone()#fetchone only works only once unless you make data.fetchone returns list if it exists doesnt otherwise
 
 def delete_jobListing(db, id):
@@ -209,17 +209,23 @@ def delete_jobListing(db, id):
     db.commit()
 
 
-def position_list(db, limit=10):
+def position_list(db,userID, limit=10):
     """Return a list of jobs ordered by date
     db is a database connection
     return at most limit positions (default 10)
 
     Returns a list of tuples  (id, timestamp, owner, title, location, company, description)
     """
-    sql="SELECT * FROM jobListing ORDER BY timestamp DESC LIMIT ?"
+    if userID != None:
+        sql="SELECT * FROM jobListing WHERE userID =? ORDER BY timestamp DESC LIMIT ? "
+        cursor = db.cursor()
+
+        data = cursor.execute(sql,(userID,limit))
+        return list(data)
+    sql = "SELECT * FROM jobListing ORDER BY timestamp DESC LIMIT ? "
     cursor = db.cursor()
 
-    data = cursor.execute(sql,(limit,))
+    data = cursor.execute(sql, (limit,))
     return list(data)
 
 "------------------------------------------------------------------------------------------------------------"

@@ -5,17 +5,23 @@
     %if loginIsTrue:
 
     <form action="/addtask" method="POST" id="addtask" class="button">
-            <input type="submit" value="addtask">
+            <input type="submit" value="Add A New Task">
         </form>
 
 
     <form action="/gettask" method="POST" id="gettask" class="button">
-            <input type="submit" value="gettask">
+        <input type="hidden" name="tasktype" value="0">
+            <input type="submit" value="Get All Available Tasks">
+        </form>
+
+    <form action="/gettask" method="POST" id="getmyTask" class="button">
+            <input type="hidden" name="tasktype" value="1">
+            <input type="submit" value="Get My Tasks">
         </form>
 
     <form action="/deletetask" method="POST" id="deletetask" class="button">
             <input type="number" name="taskid">
-            <input type="submit" value="deletetask">
+            <input type="submit" value="Delete A Task">
         </form>
     %end
 
