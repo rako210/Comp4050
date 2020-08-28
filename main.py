@@ -63,25 +63,34 @@ def route(db):
             'bannerMessage': 'Password must contain at least 1 capital letter, 1 number and be atleast 7 characters long'
     }
 
+    info2 = {'title': 'Creation Error',
+            'bannerMessage': 'Please enter all fields!'
+    }
+
+    username = request.forms.get("username")
+    if username.isspace() or not username:
+        return template('createAccount', info2, authenticated=users.session_user(db))
+
     password = request.forms.get("password")
     pWordResult = password_test(password)
     if not pWordResult:
         return template('createAccount', info1, authenticated=users.session_user(db))
 
     email = request.forms.get("email")
+
     "SHOULD PROBS ADD JAVASCRIPT TO CHECK name and suburb ARE FILLED AND CHECK FILE TYPE OF IMAGE"
     name = request.forms.get("name")
     suburb = request.forms.get("suburb")
     image = request.files.get("image")
-    log = database.add_user(db, password, email, name, suburb)
+    log = database.add_user(db, username, email, password, name, suburb)
 
     if log: #if user is valid
         if image is not None:
-            uid = users.return_userID(db, email)
+            uid = users.return_userID(db, username)
             imagePath = userImage_upload(uid, image)
             database.update_avatar(db, uid, imagePath)
 
-        users.generate_session(db, name)
+        users.generate_session(db, username)
         return redirect('/')
     else:
         return template('createAccount', info, authenticated=users.session_user(db))
@@ -106,6 +115,10 @@ def account_update(db):
                 flag = True
         else:
             flag = True
+
+    email = request.forms.get("email")
+    if len(email) > 0:
+        database.update_suburb(db, email, uid)
 
     suburb = request.forms.get("suburb")
     if len(suburb) > 0:
