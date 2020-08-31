@@ -1,11 +1,14 @@
 
 from bottle import Bottle, template, static_file, redirect, request, response
 import database
+
 import users
 import re
 import os
 
+
 app = Bottle()
+
 
 @app.route('/static/<filename:path>')
 def static(filename):
