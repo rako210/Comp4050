@@ -1,5 +1,19 @@
-% rebase('base.html')
 <html lang="en">
+<head>   <link rel="stylesheet" type="text/css" href="/static/stylesheet.css">
+ </head>
+<body>
+ <h1>COMMUNITY BARTER SITE</h1>
+    <img src="/static/images/cblogo.JPG" class="logo">
+    <div class='styled'>
+	  <ul>
+		 <li><a href="/">Home</a></li>
+          <li><a href="/about">About this site</a></li>
+          % if authenticated:
+          <li><a href="/accountSettings">Account Settings</a></li>
+          % end
+      </ul>
+    </div>
+
 <div class="about-section">
   <h1>About Us Page</h1>
   <p>Some text about who we are and what we do.</p>
@@ -73,5 +87,6 @@
     </div>
   </div>
 </div>
+</body>
 </html>
 

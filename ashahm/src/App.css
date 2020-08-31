@@ -1,0 +1,21 @@
+.App {
+  text-align: center;
+}
+
+.cblogo {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0px;
+  width: 50px;
+  float:left;
+}
+
+
+.App-header {
+  background-image: url("/pictures/Mq_backgroundcolor.JPG");
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
