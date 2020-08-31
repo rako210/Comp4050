@@ -15,9 +15,9 @@
     <img src="/static/images/cblogo.JPG" class="logo">
     <div class='styled'>
 	  <ul>
+	    % if authenticated:
 		 <li><a href="/">Home</a></li>
           <li><a href="/about">About this site</a></li>
-          % if authenticated:
           <li><a href="/accountSettings">Account Settings</a></li>
           % end
       </ul>
