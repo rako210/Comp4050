@@ -73,6 +73,7 @@ def create_tables(db):
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     username text,
+    email text,
     password text,
     userID integer unique primary key autoincrement,
     name test,
@@ -107,18 +108,18 @@ CREATE TABLE jobListing (
 "------------------------------------------------------------------------------------------------------------"
 "initial user addition"
 
-def add_user(db, password, email, name, suburb):
+def add_user(db, username, email, password, name, suburb):
     """"Adds a user to the database , ensures username is not already in use"""
     cursor = db.cursor()
     #check username is not in use
     sql = "SELECT 1 FROM users WHERE username=?"
-    data = cursor.execute(sql,(email,))
+    data = cursor.execute(sql,(username,))
     if data.fetchone():
         return False
     else:
         salt = generate_salt()
-        sql = "INSERT INTO users (username, password, name, suburb, rand) VALUES (?,?,?,?,?)"
-        cursor.execute(sql, [email, firstPassword_hash(password, salt), name, suburb, salt])
+        sql = "INSERT INTO users (username, email, password, name, suburb, rand) VALUES (?,?,?,?,?,?)"
+        cursor.execute(sql, [username, email, firstPassword_hash(password, salt), name, suburb, salt])
         db.commit()
         return True
 
@@ -134,6 +135,12 @@ def update_password(db, newPassword, userID):
     db.commit()
     return True
 
+def update_email(db, newEmail, userID):
+    cursor = db.cursor()
+    sql = "UPDATE users SET email =? WHERE userID=?"
+    cursor.execute(sql, (newEmail, userID))
+    db.commit()
+    return True
 
 def update_suburb(db, newSuburb, userID):
     cursor = db.cursor()
