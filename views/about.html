@@ -1,77 +1,111 @@
-% rebase('base.html')
 <html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/stylesheet.css">
+</head>
+<body>
+<nav>
+
+    <div class="mainLogo">
+
+        <h4>COMMUNITY BARTER</h4></div>
+    <ul class="nav-links">
+        % if authenticated:
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About this site</a></li>
+        <li><a href="/accountSettings">Account Settings</a></li>
+        % end
+    </ul>
+    <div class="burger">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+        <div class="line4"></div>
+    </div>
+</nav>
+
 <div class="about-section">
-  <h1>About Us Page</h1>
-  <p>Some text about who we are and what we do.</p>
-  <p>Resize the browser window to see that this page is responsive by the way.</p>
+    <h1>About Us Page</h1>
+    <p>Some text about who we are and what we do.</p>
+    <p>Resize the browser window to see that this page is responsive by the way.</p>
 </div>
 
 <h2 style="text-align:center">Our Team</h2>
 <div class="row">
-  <div class="column">
-    <div class="card">
-      <img src="/static/images/Ashpic.jpg" alt="Ashrey" style="width:100%">
-      <div class="container">
-        <h2>Ashrey Ranjit</h2>
-        <p class="title">Staff</p>
-        <p>Hi I am ASHREY RANJIT</p>
-        <p>ashrey.ranjit@students.mq.edu.au</p>
-        <p><button class="about_button">Contact</button></p>
-      </div>
+    <div class="column">
+        <div class="card">
+            <img src="/static/images/Ashpic.jpg" alt="Ashrey" style="width:100%">
+            <div class="container">
+                <h2>Ashrey Ranjit</h2>
+                <p class="title">Staff</p>
+                <p>Hi I am ASHREY RANJIT</p>
+                <p>ashrey.ranjit@students.mq.edu.au</p>
+                <p>
+                    <button class="about_button">Contact</button>
+                </p>
+            </div>
+        </div>
     </div>
-  </div>
-
-  <div class="column">
-    <div class="card">
-      <img src="/static/images/Ahmadpic.jpg" alt="Ahmad" style="width:100%">
-      <div class="container">
-        <h2>Ahmad Sikder</h2>
-        <p class="title">staff</p>
-        <p>i am Ahmad i am Ahmad</p>
-        <p>Ahmad.sikder@students.mq.edu.au</p>
-        <p><button class="about_button">Contact</button></p>
-      </div>
-    </div>
-  </div>
-
-  <div class="column">
-    <div class="card">
-      <img src="/static/images/connorpic.jpg" alt="Conor" style="width:100%">
-      <div class="container">
-        <h2>Connor Wilson</h2>
-        <p class="title">Staff</p>
-        <p>I am connor</p>
-        <p>conor.wilson@students.mq.edu.au</p>
-        <p><button class="about_button">Contact</button></p>
-      </div>
-    </div>
-  </div>
-
-  <div class="column">
-    <div class="card">
-      <img src="/static/images/burakpic.jpg" alt="Burak" style="width:100%">
-      <div class="container">
-        <h2>Burak Ozturker</h2>
-        <p class="title">Staff</p>
-        <p>Hi I AM BURAK</p>
-        <p>burak.Ozturker@students.mq.edu.au</p>
-        <p><button class="about_button">Contact</button></p>
-      </div>
-    </div>
-  </div>
 
     <div class="column">
-    <div class="card">
-      <img src="/static/images/Mohamedpic.jpg" alt="Mohamed" style="width:100%">
-      <div class="container">
-        <h2> Mohamed Maatouk</h2>
-        <p class="title">Staff</p>
-        <p>Hi I AM MOHAMED</p>
-        <p>Mohamed.Maatouk@students.mq.edu.au</p>
-        <p><button class="about_button">Contact</button></p>
-      </div>
+        <div class="card">
+            <img src="/static/images/Ahmadpic.jpg" alt="Ahmad" style="width:100%">
+            <div class="container">
+                <h2>Ahmad Sikder</h2>
+                <p class="title">staff</p>
+                <p>i am Ahmad i am Ahmad</p>
+                <p>Ahmad.sikder@students.mq.edu.au</p>
+                <p>
+                    <button class="about_button">Contact</button>
+                </p>
+            </div>
+        </div>
     </div>
-  </div>
+
+    <div class="column">
+        <div class="card">
+            <img src="/static/images/connorpic.jpg" alt="Conor" style="width:100%">
+            <div class="container">
+                <h2>Connor Wilson</h2>
+                <p class="title">Staff</p>
+                <p>I am connor</p>
+                <p>conor.wilson@students.mq.edu.au</p>
+                <p>
+                    <button class="about_button">Contact</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="card">
+            <img src="/static/images/burakpic.jpg" alt="Burak" style="width:100%">
+            <div class="container">
+                <h2>Burak Ozturker</h2>
+                <p class="title">Staff</p>
+                <p>Hi I AM BURAK</p>
+                <p>burak.Ozturker@students.mq.edu.au</p>
+                <p>
+                    <button class="about_button">Contact</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="card">
+            <img src="/static/images/Mohamedpic.jpg" alt="Mohamed" style="width:100%">
+            <div class="container">
+                <h2> Mohamed Maatouk</h2>
+                <p class="title">Staff</p>
+                <p>Hi I AM MOHAMED</p>
+                <p>Mohamed.Maatouk@students.mq.edu.au</p>
+                <p>
+                    <button class="about_button">Contact</button>
+                </p>
+            </div>
+        </div>
+    </div>
 </div>
+</body>
 </html>
 
