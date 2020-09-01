@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,37 +8,46 @@
     <meta name="author" content="">
     <title>{{title}}</title>
     <link rel="stylesheet" type="text/css" href="/static/stylesheet.css">
-  </head>
+</head>
 
-  <body>
-    <h1>COMMUNITY BARTER SITE</h1>
-    <img src="/static/images/cblogo.JPG" class="logo">
-    <div class='styled'>
-	  <ul>
-	    % if authenticated:
-		 <li><a href="/">Home</a></li>
-          <li><a href="/about">About this site</a></li>
-          <li><a href="/accountSettings">Account Settings</a></li>
-          % end
-      </ul>
+<body>
+<nav>
+
+    <div class="mainLogo">
+
+        <h4>COMMUNITY BARTER</h4></div>
+    <ul class="nav-links">
+        % if authenticated:
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About this site</a></li>
+        <li><a href="/accountSettings">Account Settings</a></li>
+        % end
+    </ul>
+    <div class="burger">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+        <div class="line4"></div>
     </div>
+</nav>
 
-    % if authenticated:
-        <h2>Logged in as {{ authenticated }}</h2>
 
-        <form action="/logout" method="POST" id="logoutform" class="button">
-            <input type="submit" value="logout">
-        </form>
-    % else:
-        <form action="/login" method="POST" id="loginform" class="poster1">
-            Username: <input type="text" name="name"><br>
-            Password: <input type="text" name="password"><br>
-            <input type="submit" value="Login">
-        </form>
-        <form action="/createAccount" method="get" target="_blank" class="button">
-          <input type="submit" value="Create Account">
-        </form>
-    % end
-    {{!base}}
-  </body>
+% if authenticated:
+<h2>Logged in as {{ authenticated }}</h2>
+
+<form action="/logout" method="POST" id="logoutform" class="button">
+    <input type="submit" value="logout">
+</form>
+% else:
+<form action="/login" method="POST" id="loginform" class="poster1">
+    Username: <input type="text" name="name"><br>
+    Password: <input type="text" name="password"><br>
+    <input type="submit" value="Login">
+</form>
+<form action="/createAccount" method="get" target="_blank" class="button">
+    <input type="submit" value="Create Account">
+</form>
+% end
+{{!base}}
+</body>
 </html>

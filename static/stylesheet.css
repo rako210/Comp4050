@@ -1,102 +1,64 @@
 html {
-    background-image: url("/static/images/Mq_backgroundcolor.JPG");
-    text-align: center;
-    color: white;
-    font-family: sans-serif;
+    /*background-image: url("/static/images/Mq_backgroundcolor.JPG");*/
+    background-color: #F8F8FF;
     margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
 }
 
-.logo{
-    border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 0px;
-  width: 50px;
-  float:left;
-}
+
 
 
 /*(navigation bar start)*/
-.styled ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #d2d9dd;
-	border-bottom: solid #008348;
+
+nav{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 8vh;
+    background-color: #606060;
 }
 
-.styled li {
-    float:left;
-}
-
-.styled li a {
-    display: block;
-    color: #000000;
-	font-size:15px;
-    text-align: left;
-    padding: 10px 10px;
-    text-decoration: none;
-	background-color:#d2d9dd;
-}
-
-.styled li a:hover {
-    background-color: #FFD700;
-}
-
-.styled1 input[type=text] {
-    float: right;
-    padding: 0;
-    border: none;
-    margin-top: 8px;
-    margin-right: 16px;
-    font-size: 17px;
-}
-/*(navigation bar end)*/
-/*(drop down menu start)*/
-.dropbtn {
-    background-color: #008348;
+.mainLogo{
     color: white;
-    padding: 13px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-	position: fixed;
-	right:8px;
-	top:17px;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    font-size: 20px;
 }
 
-.dropdown {
-    position: relative;
-    display: inline-block;
+.nav-links{
+    display: flex;
+    justify-content: space-around;
+    width: 30%;
 }
 
-.dropdown-content {
-    display: none;
-    position: fixed;
-	right:8px;
-	top:17px;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+.nav-links li{
+    list-style: none;
 }
 
-.dropdown-content a {
-    color: black;
-    padding: 4px 5px;
+.nav-links a{
+    color: white;
     text-decoration: none;
-    display: block;
+    letter-spacing: 3px;
+    font-weight: bold;
+    font-size:14px;
 }
 
-.dropdown-content a:hover {background-color: #FFD700}
-
-.dropdown:hover .dropdown-content {
-    display: block;
+.burger{
+    display: none;
+    cursor: pointer;
 }
 
-.dropdown:hover .dropbtn {
-    background-color: #3e8e41;
+.burger div{
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 3px;
 }
-/*(drop down menu end)*/
+
+
+/*(navigation bar end)*/
+
 
 .poster input[type=text], select {
     width: 100%;
@@ -267,9 +229,50 @@ color:#008348;}
   background-color: red;
 }
 
-@media screen and (max-width: 650px) {
-  .column {
-    width: 100%;
-    display: block;
+
+
+.addtask{
+    color: red;
+    align: right;
+}
+
+@media screen and (max-width: 1024px) {
+  .nav-links{
+    width: 50%;
   }
 }
+
+
+
+@media screen and (max-width: 750px) {
+  body{
+        overflow-x: hidden;
+    }
+  .nav-links{
+    position: absolute;
+    right: 0px;
+    height: 92vh;
+    top: 8vh;
+    background-color: #606060;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+    transform: translateX(100%);
+    transition: transform 0.5s ease-in;
+  }
+
+  .nav-links li{
+    opacity: 100;
+  }
+
+  .burger{
+    display: block;
+  }
+
+  .nav-active{
+    transform: translateX(0%);
+  }
+}
+
+
