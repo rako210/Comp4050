@@ -1,46 +1,73 @@
-
 from bottle import Bottle, template, static_file, redirect, request, response
+from bottlereact import BottleReact
 import database
 import users
 import re
 import os
 
 app = Bottle()
+br = BottleReact(app)
+
 
 @app.route('/static/<filename:path>')
 def static(filename):
-
     """Static file Handling method for all static files in root static"""
 
     return static_file(filename=filename, root='static')
 
+
 @app.route('/')
 def index(db):
     """handles routing to main page"""
-    pageInfo = {'title': 'Account'}
-    loginisTrue = False
-    tasksexist = False
+    user = str(users.session_user(db))
+    pageInfo = "About"
+    loginisTrue = str(True)
+    tasksexist = str(False)
 
     if users.session_user(db):
-        loginisTrue = True
+        loginisTrue = str(True)
 
-    return template('index', pageInfo, authenticated=users.session_user(db), tasksexist=tasksexist, loginIsTrue=loginisTrue)
+    return br.render_html(
+        br.Index({
+            'authenticated': user,
+            'loginisTrue': loginisTrue,
+            'tasksexist': tasksexist
+        }),
+        title=pageInfo,
+        template='default'
+    )
+
+    # return template('index', pageInfo, authenticated=users.session_user(db), tasksexist=tasksexist, loginIsTrue=loginisTrue, )
+
 
 @app.route('/about')
 def about(db):
     """made this page to test session cookie function"""
 
-    info = {'title': 'About'}
+    authenticated = str(users.session_user(db))
+    title = About
+    
+    return 0
 
-    return template('About', info, authenticated=users.session_user(db))
+    return br.render_html(
+        br.About({
+            'authenticated': authenticated
+        }),
+        title=title,
+        template='default'
+    )
+
+    # return template('About', info, authenticated=users.session_user(db))
+
 
 @app.get('/accountSettings')
 def account_settings(db):
     """Update account details or settings, must enter password to be able to do so"""
 
     info = {'title': 'Account',
-            'bannerMessage': '',}
-    return template('account', info, authenticated=users.session_user(db),validated=False, invalidPword=False)
+            'bannerMessage': '', }
+    return template('account', info, authenticated=users.session_user(db), validated=False, invalidPword=False)
+
 
 @app.route('/createAccount')
 def accountPage(db):
@@ -51,21 +78,22 @@ def accountPage(db):
 
     return template('createAccount', pageInfo, authenticated=users.session_user(db))
 
+
 @app.post('/createAcc')
 def route(db):
     """handles new account creation
     """
     info = {'title': 'Creation Error',
             'bannerMessage': 'An account under this email already exists please login or try another email'
-    }
+            }
 
     info1 = {'title': 'Creation Error',
-            'bannerMessage': 'Password must contain at least 1 capital letter, 1 number and be atleast 7 characters long'
-    }
+             'bannerMessage': 'Password must contain at least 1 capital letter, 1 number and be atleast 7 characters long'
+             }
 
     info2 = {'title': 'Creation Error',
-            'bannerMessage': 'Please enter all fields!'
-    }
+             'bannerMessage': 'Please enter all fields!'
+             }
 
     username = request.forms.get("username")
     if username.isspace() or not username:
@@ -84,7 +112,7 @@ def route(db):
     image = request.files.get("image")
     log = database.add_user(db, username, email, password, name, suburb)
 
-    if log: #if user is valid
+    if log:  # if user is valid
         if image is not None:
             uid = users.return_userID(db, username)
             imagePath = userImage_upload(uid, image)
@@ -94,6 +122,7 @@ def route(db):
         return redirect('/')
     else:
         return template('createAccount', info, authenticated=users.session_user(db))
+
 
 @app.post('/updateAccount')
 def account_update(db):
@@ -144,9 +173,9 @@ def password_test(pWord):
         return True
     return False
 
-def userImage_upload(user, image):
 
-    root = os.path.abspath(os.curdir)# does this line work on all os' ?
+def userImage_upload(user, image):
+    root = os.path.abspath(os.curdir)  # does this line work on all os' ?
     path = root + "/static/userImages/" + "DP user -- " + str(user) + " -- " + image.filename
     image.save(path, overwrite=True)
     return path
@@ -156,18 +185,17 @@ def userImage_upload(user, image):
 def acc(db):
     """validates password"""
     info = {'title': 'Account',
-            'bannerMessage':''}
+            'bannerMessage': ''}
     info1 = {'title': 'Account',
-            'bannerMessage': 'Wrong Password'}
+             'bannerMessage': 'Wrong Password'}
 
     password = request.forms.get("password")
-    usern= users.session_user(db)
-    result = users.check_password(db, usern, database.password_hash(db,password,usern))
-    if(result):
+    usern = users.session_user(db)
+    result = users.check_password(db, usern, database.password_hash(db, password, usern))
+    if (result):
         return template('account', info, authenticated=users.session_user(db), validated=True, invalidPword=False)
     else:
         return template('account', info1, authenticated=users.session_user(db), validated=False, invalidPword=False)
-
 
 
 @app.post('/login')
@@ -186,8 +214,8 @@ def route(db):
     name = request.forms.get("name")
     password = request.forms.get("password")
     log = users.check_login(db, name, password)
-    if(log):#if user is valid
-        users.generate_session(db,name)
+    if (log):  # if user is valid
+        users.generate_session(db, name)
         return redirect('/')
     else:
         return template('splash', info, authenticated=users.session_user(db))
@@ -206,6 +234,7 @@ def logout(db):
 
     redirect('/')
 
+
 @app.post('/addtask', methods=['GET'])
 def task(db):
     """"
@@ -215,7 +244,8 @@ def task(db):
     info = {'title': 'Add Task',
             'bannerMessage': 'yeanah'}
 
-    return template('addtask',info, authenticated=users.session_user(db))
+    return template('addtask', info, authenticated=users.session_user(db))
+
 
 @app.post('/addingtask', methods=['GET'])
 def task(db):
@@ -228,9 +258,10 @@ def task(db):
     location = request.forms.get("location")
     description = request.forms.get("descrip")
 
-    database.add_jobListing(db,userID, owner, title, location, description)
+    database.add_jobListing(db, userID, owner, title, location, description)
 
     redirect('/')
+
 
 @app.post('/gettask', methods=['GET'])
 def task(db):
@@ -242,7 +273,7 @@ def task(db):
 
     if tasktype == "1":
         usrid = users.session_user(db)
-        tasklist = database.position_list(db,usrid)
+        tasklist = database.position_list(db, usrid)
         newtrack = []
 
         loginisTrue = False
@@ -252,45 +283,45 @@ def task(db):
 
         for x in tasklist:
             dict1 = {
-                        'id': x[0],
-                        'time': x[1],
-                        'owner': x[2],
-                        'title': x[3],
-                        'location': x[4],
-                        'description': x[5]
-                    }
+                'id': x[0],
+                'time': x[1],
+                'owner': x[2],
+                'title': x[3],
+                'location': x[4],
+                'description': x[5]
+            }
             newtrack.append(dict1)
         info = {'title': 'Account',
                 'bannerMessage': '',
-                'task' : newtrack}
+                'task': newtrack}
 
-        return template('index',info, authenticated=users.session_user(db), tasksexist = True, loginIsTrue=loginisTrue )
+        return template('index', info, authenticated=users.session_user(db), tasksexist=True, loginIsTrue=loginisTrue)
 
     if tasktype == "0":
-            tasklist = database.position_list(db,None)
-            newtrack = []
+        tasklist = database.position_list(db, None)
+        newtrack = []
 
-            loginisTrue = False
+        loginisTrue = False
 
-            if users.session_user(db):
-                loginisTrue = True
+        if users.session_user(db):
+            loginisTrue = True
 
-            for x in tasklist:
-                dict1 = {
-                    'id': x[0],
-                    'time': x[1],
-                    'owner': x[2],
-                    'title': x[3],
-                    'location': x[4],
-                    'description': x[5]
-                }
-                newtrack.append(dict1)
-            info = {'title': 'Account',
-                    'bannerMessage': '',
-                    'task': newtrack}
+        for x in tasklist:
+            dict1 = {
+                'id': x[0],
+                'time': x[1],
+                'owner': x[2],
+                'title': x[3],
+                'location': x[4],
+                'description': x[5]
+            }
+            newtrack.append(dict1)
+        info = {'title': 'Account',
+                'bannerMessage': '',
+                'task': newtrack}
 
-            return template('index', info, authenticated=users.session_user(db), tasksexist=True,
-                            loginIsTrue=loginisTrue)
+        return template('index', info, authenticated=users.session_user(db), tasksexist=True,
+                        loginIsTrue=loginisTrue)
 
 
 @app.post('/deletetask', methods=['GET'])
@@ -303,12 +334,11 @@ def task(db):
     database.delete_jobListing(db, taskid)
     redirect('/')
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     from bottle.ext import sqlite
     from database import DATABASE_NAME
+
     # install the database plugin to utilise db parameter calling
     app.install(sqlite.Plugin(dbfile=DATABASE_NAME))
     app.run(debug=True, port=8010)
-
-
