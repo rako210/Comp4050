@@ -253,8 +253,15 @@ def task(db):
     info = {'title': 'Add Task',
             'bannerMessage': 'yeanah'}
 
-    return template('addtask', info, authenticated=users.session_user(db))
 
+    username = users.session_user(db);
+
+    # The user must be logged in order to add a task.
+    if(username == None):
+        print("Please login in order to add a task.")
+        return redirect('/')
+    else:
+        return template('addtask',info, authenticated=users.session_user(db))
 
 @app.post('/addingtask', methods=['GET'])
 def task(db):
@@ -349,6 +356,19 @@ def task(db):
     database.delete_jobListing(db, taskid)
     redirect('/')
 
+def get_user_id(db):
+    return users.return_userID(db, users.session_user(db))
+
+@app.post('/apply_for_task', methods=['GET'])
+def apply_for_task(db):
+    job_id = request.forms.get("id")
+    user_id = get_user_id(db)
+    database.apply_for_job(db, job_id, user_id)
+
+    return redirect('/')
+
+
+if __name__ == '__main__':
 
 if __name__ == '__main__':
     from bottle.ext import sqlite

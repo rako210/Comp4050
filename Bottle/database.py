@@ -70,6 +70,7 @@ def create_tables(db):
     on each call"""
 
     sql = """
+<<<<<<< HEAD:Bottle/database.py
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     username text,
@@ -101,6 +102,47 @@ CREATE TABLE jobListing (
     FOREIGN KEY(owner) REFERENCES users(username)
 );
 """
+=======
+    
+    DROP TABLE IF EXISTS users;
+    CREATE TABLE users (
+        username text,
+        password text,
+        userID integer unique primary key autoincrement,
+        name test,
+        suburb text,
+        rand text,
+        avatar text
+    );
+    
+    DROP TABLE IF EXISTS sessions;
+    CREATE TABLE sessions (
+        sessionid text unique primary key,
+        user text,
+        FOREIGN KEY(user) REFERENCES users(username)
+    );
+    
+    DROP TABLE IF EXISTS jobListing;
+    CREATE TABLE jobListing (
+        jobID integer unique primary key autoincrement,
+        timestamp text default CURRENT_TIMESTAMP,
+        owner text,
+        title text,
+        location text, 
+        description text,
+        FOREIGN KEY(owner) REFERENCES users(username)
+    );
+    
+    DROP TABLE IF EXISTS ;
+    CREATE TABLE "jobApplication" (
+        "jobID"	INTEGER NOT NULL,
+        "userID"	INTEGER NOT NULL,
+        "status"	INTEGER NOT NULL DEFAULT 0,
+        FOREIGN KEY("userID") REFERENCES "users"("userID"),
+        FOREIGN KEY("jobID") REFERENCES "jobListing"("jobID")
+    );
+    """
+>>>>>>> origin/feat/add_assign_tasks:database.py
 
     db.executescript(sql)
     db.commit()
@@ -194,7 +236,6 @@ def add_jobListing(db,userID,postOwner, title, location, description):
 
     return True
 
-
 def get_listing(db, id):
     """Return the details of the position with the given id
     or None if there is no position with this id
@@ -234,6 +275,15 @@ def position_list(db,userID, limit=10):
 
     data = cursor.execute(sql, (limit,))
     return list(data)
+
+def apply_for_job(db, job_id, user_id):
+    """ Simply associate a job with a user and set the status of the task"""
+
+    cursor = db.cursor()
+    sql = "INSERT INTO jobApplication(jobID, userID, status) VALUES (?, ?, ?);"
+
+    cursor.execute(sql, (job_id, user_id, 0))
+    db.commit()
 
 "------------------------------------------------------------------------------------------------------------"
 if __name__=='__main__':
