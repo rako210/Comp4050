@@ -8,16 +8,17 @@ import os
 app = Bottle()
 br = BottleReact(app)
 
-
 @app.route('/static/<filename:path>')
 def static(filename):
     """Static file Handling method for all static files in root static"""
 
     return static_file(filename=filename, root='static')
 
+
 @app.route('/user_login')
 def main(db):
     return {'data': str(users.session_user(db))}
+
 
 @app.route('/')
 def index(db):
@@ -42,13 +43,14 @@ def index(db):
 
     # return template('index', pageInfo, authenticated=users.session_user(db), tasksexist=tasksexist, loginIsTrue=loginisTrue, )
 
+
 @app.route('/about')
 def about(db):
     """made this page to test session cookie function"""
 
     authenticated = str(users.session_user(db))
     title = "About"
-    
+
     # return 0
 
     return br.render_html(
@@ -183,7 +185,8 @@ def password_test(pWord):
 
 def userImage_upload(user, image):
     root = os.path.abspath(os.curdir)  # does this line work on all os' ?
-    path = root + "/static/userImages/" + "DP user -- " + str(user) + " -- " + image.filename
+    path = root + "/static/userImages/" + "DP user -- " + \
+        str(user) + " -- " + image.filename
     image.save(path, overwrite=True)
     return path
 
@@ -198,7 +201,8 @@ def acc(db):
 
     password = request.forms.get("password")
     usern = users.session_user(db)
-    result = users.check_password(db, usern, database.password_hash(db, password, usern))
+    result = users.check_password(
+        db, usern, database.password_hash(db, password, usern))
     if (result):
         return {'result': str(True)}
         # return template('account', info, authenticated=users.session_user(db), validated=True, invalidPword=False)
@@ -253,15 +257,15 @@ def task(db):
     info = {'title': 'Add Task',
             'bannerMessage': 'yeanah'}
 
-
-    username = users.session_user(db);
+    username = users.session_user(db)
 
     # The user must be logged in order to add a task.
-    if(username == None):
+    if username == None:
         print("Please login in order to add a task.")
         return redirect('/')
     else:
-        return template('addtask',info, authenticated=users.session_user(db))
+        return template('addtask', info, authenticated=users.session_user(db))
+
 
 @app.post('/addingtask', methods=['GET'])
 def task(db):
@@ -342,9 +346,6 @@ def task(db):
 
         return {'result': newtrack}
 
-        # return template('index', info, authenticated=users.session_user(db), tasksexist=True,
-        #                 loginIsTrue=loginisTrue)
-
 
 @app.post('/deletetask', methods=['GET'])
 def task(db):
@@ -356,8 +357,10 @@ def task(db):
     database.delete_jobListing(db, taskid)
     redirect('/')
 
+
 def get_user_id(db):
     return users.return_userID(db, users.session_user(db))
+
 
 @app.post('/apply_for_task', methods=['GET'])
 def apply_for_task(db):
@@ -367,8 +370,6 @@ def apply_for_task(db):
 
     return redirect('/')
 
-
-if __name__ == '__main__':
 
 if __name__ == '__main__':
     from bottle.ext import sqlite

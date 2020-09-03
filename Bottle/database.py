@@ -70,39 +70,6 @@ def create_tables(db):
     on each call"""
 
     sql = """
-<<<<<<< HEAD:Bottle/database.py
-DROP TABLE IF EXISTS users;
-CREATE TABLE users (
-    username text,
-    email text,
-    password text,
-    userID integer unique primary key autoincrement,
-    name test,
-    suburb text,
-    rand text,
-    avatar text
-);
-
-DROP TABLE IF EXISTS sessions;
-CREATE TABLE sessions (
-    sessionid text unique primary key,
-    user text,
-    FOREIGN KEY(user) REFERENCES users(username)
-);
-
-DROP TABLE IF EXISTS jobListing;
-CREATE TABLE jobListing (
-    jobID integer unique primary key autoincrement,
-    timestamp text default CURRENT_TIMESTAMP,
-    userID text,
-    owner text,
-    title text,
-    location text, 
-    description text,
-    FOREIGN KEY(owner) REFERENCES users(username)
-);
-"""
-=======
     
     DROP TABLE IF EXISTS users;
     CREATE TABLE users (
@@ -142,7 +109,6 @@ CREATE TABLE jobListing (
         FOREIGN KEY("jobID") REFERENCES "jobListing"("jobID")
     );
     """
->>>>>>> origin/feat/add_assign_tasks:database.py
 
     db.executescript(sql)
     db.commit()
