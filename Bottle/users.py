@@ -74,7 +74,9 @@ def return_userID(db, user):
     sql = "SELECT userID FROM users WHERE username=?"
     cursor.execute(sql,(user,))
     data = cursor.fetchone()
-    return data[0]
+    if data:
+        return data[0]
+    return None
 
 def check_password(db, user, password):
     """verifies password for a logged in user , I MADE THIS BY ACCIDENT BUT KEPT IT CAUSE CBSS,

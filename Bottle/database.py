@@ -105,8 +105,9 @@ def create_tables(db):
         "jobID"	INTEGER NOT NULL,
         "userID"	INTEGER NOT NULL,
         "status"	INTEGER NOT NULL DEFAULT 0,
-        FOREIGN KEY("userID") REFERENCES "users"("userID"),
-        FOREIGN KEY("jobID") REFERENCES "jobListing"("jobID")
+        FOREIGN KEY("jobID") REFERENCES "users"("userID"),
+        FOREIGN KEY("userID") REFERENCES "jobListing"("jobID"),
+        PRIMARY KEY("jobID","userID")
     );
     """
 
@@ -251,10 +252,43 @@ def apply_for_job(db, job_id, user_id):
     cursor.execute(sql, (job_id, user_id, 0))
     db.commit()
 
+def get_user_jobs(db, user_id):
+
+    # Return list of jobs a user has applied for
+    cursor = db.cursor()
+    sql = "SELECT * from jobApplication where userID=?;"
+    data = cursor.execute(sql, (user_id,))
+    data = data.fetchall();
+
+    temp = [dict(zip([key[0] for key in cursor.description], row)) for row in data]
+
+    return temp
+
+
+    
+
+def check_apply_for_job(db, user_id, job_id):
+
+    # Return True if user has already applied for a particular job
+
+    cursor = db.cursor()
+    sql = "SELECT * from jobApplication where userID=? and jobID=?;"
+    data = cursor.execute(sql, (user_id,job_id,))
+    data = data.fetchall();
+
+    if (len(data) > 0):
+        return True
+
+    return False
+
+    # for row in data:
+    #     print(str(row[0]) + " " + str(row[1]) + " " + str(row[2]))
+    #     print(len(data))
+
 "------------------------------------------------------------------------------------------------------------"
 if __name__=='__main__':
 
-    """need to call this directly to intilise tables / clear tables"""
+    """Run this file with python to initilise tables and clear table data"""
     db = sqlite3.connect(DATABASE_NAME)
     create_tables(db)
 

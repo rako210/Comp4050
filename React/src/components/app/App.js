@@ -8,10 +8,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  useLocation,
-  useHistory,
-  Link,
-  Redirect,
 } from "react-router-dom";
 
 function App() {

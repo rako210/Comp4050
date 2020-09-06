@@ -1,12 +1,11 @@
 from bottle import Bottle, template, static_file, redirect, request, response
-from bottlereact import BottleReact
+import json
 import database
 import users
 import re
 import os
 
 app = Bottle()
-br = BottleReact(app)
 
 @app.route('/static/<filename:path>')
 def static(filename):
@@ -18,51 +17,6 @@ def static(filename):
 @app.route('/user_login')
 def main(db):
     return {'data': str(users.session_user(db))}
-
-
-@app.route('/')
-def index(db):
-    """handles routing to main page"""
-    user = str(users.session_user(db))
-    pageInfo = "About"
-    loginisTrue = str(True)
-    tasksexist = str(False)
-
-    if users.session_user(db):
-        loginisTrue = str(True)
-
-    return br.render_html(
-        br.Base({
-            'authenticated': user,
-            'loginisTrue': loginisTrue,
-            'tasksexist': tasksexist
-        }),
-        title=pageInfo,
-        template='default'
-    )
-
-    # return template('index', pageInfo, authenticated=users.session_user(db), tasksexist=tasksexist, loginIsTrue=loginisTrue, )
-
-
-@app.route('/about')
-def about(db):
-    """made this page to test session cookie function"""
-
-    authenticated = str(users.session_user(db))
-    title = "About"
-
-    # return 0
-
-    return br.render_html(
-        br.About({
-            'authenticated': authenticated
-        }),
-        title=title,
-        template='default'
-    )
-
-    # return template('About', info, authenticated=users.session_user(db))
-
 
 @app.get('/accountSettings')
 def account_settings(db):
@@ -361,14 +315,48 @@ def task(db):
 def get_user_id(db):
     return users.return_userID(db, users.session_user(db))
 
+@app.get('/api/getUserID')
+def getUserID(db):
+    return {'result': get_user_id(db)}
+    
 
 @app.post('/apply_for_task', methods=['GET'])
 def apply_for_task(db):
+    
+    # Retrieve Task ID
     job_id = request.forms.get("id")
+    # Retrieve User ID
     user_id = get_user_id(db)
-    database.apply_for_job(db, job_id, user_id)
 
-    return redirect('/')
+    # Check if User is logged in
+    if user_id:
+
+        # Check if user has already applied for the job
+        if not (database.check_apply_for_job(db, user_id, job_id)):
+            # Mark user as having been applied for the job
+            database.apply_for_job(db, job_id, user_id)
+        else:
+            print("You have already applied for the job!")
+            
+        # Return OK result
+        return {'result': "True"}
+
+    else:
+
+        # Return Fail Result
+        return {'result': "False"}
+
+@app.get('/api/getUserTasks')
+def getUserTasks(db):
+
+    ret_val = database.get_user_jobs(db, get_user_id(db))
+
+    return {'result': ret_val}
+
+# @app.post('/check_apply_for_task', methods=['GET']):
+# def check_apply_for_task(db):
+
+
 
 
 if __name__ == '__main__':
