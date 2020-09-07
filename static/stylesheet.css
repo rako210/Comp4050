@@ -259,8 +259,7 @@ color:#008348;}
   }
 
   .nav-links li{
-    display: none;
-    opacity: 0;
+    opacity: 100;
   }
 
   .burger{

@@ -9,11 +9,6 @@ const navSlide =() =>{
 
     });
 
-    /*animate links*/
-    navLinks.forEach((link, index) => {
-        console.log(index);
-        link.style.animate = 'navLinkFade 1s each forwards $(index/ 7)s';
-    });
 }
 
 navSlide();
