@@ -174,7 +174,7 @@ color:#008348;}
 
 ----------------
 ----------------
-/*about us page*/
+/*about us page start*/
 
 *, *:before, *:after {
   box-sizing: inherit;
@@ -229,12 +229,8 @@ color:#008348;}
   background-color: red;
 }
 
+/*about page ends*/
 
-
-.addtask{
-    color: red;
-    align: right;
-}
 
 @media screen and (max-width: 1024px) {
   .nav-links{
@@ -273,6 +269,18 @@ color:#008348;}
   .nav-active{
     transform: translateX(0%);
   }
+
+  @keyframes navLinkFade{
+    From{
+        opacity: 0;
+        transformation: translateX(50px);
+    }
+    to{
+        opacity: 1;
+        transform: translateX(0px);
+    }
+  }
 }
+
 
 
