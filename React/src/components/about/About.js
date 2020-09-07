@@ -1,13 +1,4 @@
-import React, { useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useLocation,
-  useHistory,
-  Link,
-  Redirect,
-} from "react-router-dom";
+import React from "react";
 
 class About extends React.Component {
   render() {
@@ -20,15 +11,11 @@ class About extends React.Component {
 }
 
 class Main extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div>
         <h1>COMMUNITY BARTER SITE</h1>
-        <img src="/static/images/cblogo.JPG" className="logo" />
+        <img src="/static/images/cblogo.JPG" className="logo" alt="Website Logo" />
         <div className="styled">
           <ul>
             <li>
@@ -149,10 +136,6 @@ class Main extends React.Component {
 }
 
 class Authenticated extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const authenticated = this.props.authenticated;
     let retVal;

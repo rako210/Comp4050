@@ -7,6 +7,7 @@ import os
 
 app = Bottle()
 
+
 @app.route('/static/<filename:path>')
 def static(filename):
     """Static file Handling method for all static files in root static"""
@@ -17,6 +18,7 @@ def static(filename):
 @app.route('/user_login')
 def main(db):
     return {'data': str(users.session_user(db))}
+
 
 @app.get('/accountSettings')
 def account_settings(db):
@@ -315,14 +317,15 @@ def task(db):
 def get_user_id(db):
     return users.return_userID(db, users.session_user(db))
 
+
 @app.get('/api/getUserID')
 def getUserID(db):
     return {'result': get_user_id(db)}
-    
+
 
 @app.post('/apply_for_task', methods=['GET'])
 def apply_for_task(db):
-    
+
     # Retrieve Task ID
     job_id = request.forms.get("id")
     # Retrieve User ID
@@ -337,7 +340,7 @@ def apply_for_task(db):
             database.apply_for_job(db, job_id, user_id)
         else:
             print("You have already applied for the job!")
-            
+
         # Return OK result
         return {'result': "True"}
 
@@ -346,6 +349,7 @@ def apply_for_task(db):
         # Return Fail Result
         return {'result': "False"}
 
+
 @app.get('/api/getUserTasks')
 def getUserTasks(db):
 
@@ -353,10 +357,83 @@ def getUserTasks(db):
 
     return {'result': ret_val}
 
-# @app.post('/check_apply_for_task', methods=['GET']):
-# def check_apply_for_task(db):
+
+@app.get('/api/list/task/all')
+def task(db):
+
+    all_tasks = database.position_list(db, None)
+    registerd_tasks = tasks_registered_by_user(db)
+    ret_val = []
+
+    for task in all_tasks:
+
+        is_registered = False
+
+        for registered_task in registerd_tasks:
+            if(registered_task['jobID'] == task[0]):
+                is_registered = True
+
+        ret_val.append({
+            'id': task[0],
+            'time': task[1],
+            'owner': task[3],
+            'title': task[4],
+            'location': task[5],
+            'description': task[6],
+            'isRegistered': is_registered
+        })
+
+    return {'result': ret_val}
 
 
+@app.get('/api/list/task/created-by-user')
+def task(db):
+
+    user_id = users.session_user(db)
+    task_list = database.position_list(db, user_id)
+    ret_val = []
+
+    for x in task_list:
+        ret_val.append({
+            'id': x[0],
+            'time': x[1],
+            'owner': x[3],
+            'title': x[4],
+            'location': x[5],
+            'description': x[6]
+        })
+
+    return {'result': ret_val}
+
+
+@app.get('/api/list/task/registered-by-user')
+def tasks_registered_by_user_json(db):
+
+    ret_val = database.get_user_jobs(db, get_user_id(db))
+
+    return {'result': ret_val}
+
+
+def tasks_registered_by_user(db):
+
+    ret_val = database.get_user_jobs(db, get_user_id(db))
+
+    return ret_val
+
+
+@app.post('/api/task/edit')
+def edit_task(db, methods=['GET']):
+
+    user_id = users.session_user(db)
+    job_id = request.forms.get("jobID")
+    owner = request.forms.get("owner")
+    title = request.forms.get("title")
+    location = request.forms.get("location")
+    description = request.forms.get("descrip")
+
+    database.edit_job_listing(db, owner, title, location, description, job_id)
+
+    return {'result': "True"}
 
 
 if __name__ == '__main__':

@@ -1,13 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Base from "../Base";
 import TaskManager from "../tasks/TaskManager"
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-} from "react-router-dom";
 
 function Home(props) {
   return (

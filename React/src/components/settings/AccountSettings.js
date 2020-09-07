@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Base from "../Base";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-} from "react-router-dom";
 
 function AccountSettings(props) {
   const [validation, setValidation] = useState(0);
@@ -50,7 +43,7 @@ class FormValidatePassword extends React.Component {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.result == "True") this.setState({ validPassword: "True" });
+        if (data.result === "True") this.setState({ validPassword: "True" });
       });
 
     this.setState({ bannerMessage: "Wrong Password" });
@@ -130,7 +123,7 @@ class FormUpdateAccount extends React.Component {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.result == "True") 
+        if (data.result === "True") 
             this.setState({validPassword: "True", bannerMessage: "Populated fields updated"});
         else
             this.setState({bannerMessage: "Password not updated! Password must contain at least 1 capital letter, 1 number and be atleast 7 characters long"})

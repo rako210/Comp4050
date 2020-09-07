@@ -3,4 +3,5 @@ venv/
 .idea/
 node_modules/
 Bottle/__pycache__/
-Bottle/.vscode/
+.vscode/
+.prettierrc

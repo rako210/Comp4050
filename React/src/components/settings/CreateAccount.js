@@ -1,19 +1,6 @@
-import React, { useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useLocation,
-  useHistory,
-  Link,
-  Redirect,
-} from "react-router-dom";
+import React from "react";
 
 class CreateAccount extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import About from "../about/About";
 import CreateAccount from "../settings/CreateAccount";
 import AccountSettings from "../settings/AccountSettings";
+import EditTask from '../tasks/EditTask'
 import Home from "../home/Home";
 import "./App.css";
 import {
@@ -27,6 +28,9 @@ function App() {
         {/* A <Switch> looks through its children <Route>s and
           renders the first one that matches the current URL. */}
         <Switch>
+        <Route path="/editTask">
+            <EditTask authenticated={login}></EditTask>
+          </Route>
           <Route path="/about">
             <About />
           </Route>

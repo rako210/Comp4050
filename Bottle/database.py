@@ -203,6 +203,23 @@ def add_jobListing(db,userID,postOwner, title, location, description):
 
     return True
 
+def edit_job_listing(db, owner, title, location, description, jobID):
+    """  
+        UPDATE jobListing
+        SET userID='', owner='', title='', location='', description=''
+        WHERE jobID=1;
+    """
+    cursor = db.cursor()
+    sql = """
+        UPDATE jobListing
+        SET owner=?, title=?, location=?, description=?
+        WHERE jobID=?;
+    """
+    cursor.execute(sql, (owner, title, location, description, jobID,))
+    db.commit()
+
+    return True
+
 def get_listing(db, id):
     """Return the details of the position with the given id
     or None if there is no position with this id
@@ -263,8 +280,6 @@ def get_user_jobs(db, user_id):
     temp = [dict(zip([key[0] for key in cursor.description], row)) for row in data]
 
     return temp
-
-
     
 
 def check_apply_for_job(db, user_id, job_id):

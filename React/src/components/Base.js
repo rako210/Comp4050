@@ -1,19 +1,6 @@
-import React, { useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useLocation,
-  useHistory,
-  Link,
-  Redirect,
-} from "react-router-dom";
+import React from "react";
 
 class Base extends React.Component {
-  componentDidMount() {
-    console.log(this.props.authenticated);
-  }
-
   render() {
     return (
       <div>
@@ -24,10 +11,6 @@ class Base extends React.Component {
 }
 
 class Main extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div>
@@ -47,10 +30,6 @@ class Main extends React.Component {
 }
 
 class NavBar extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const authenticated = this.props.authenticated;
     let retVal;
@@ -78,10 +57,6 @@ class NavBar extends React.Component {
 }
 
 class Login extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const authenticated = this.props.authenticated;
     let retVal;
