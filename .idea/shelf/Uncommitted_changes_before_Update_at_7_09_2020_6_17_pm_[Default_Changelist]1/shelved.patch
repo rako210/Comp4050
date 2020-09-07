@@ -1,0 +1,612 @@
+Index: views/base.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset=\"utf-8\">\r\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\r\n    <meta name=\"description\" content=\"\">\r\n    <meta name=\"author\" content=\"\">\r\n    <title>{{title}}</title>\r\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"/static/stylesheet.css\">\r\n</head>\r\n\r\n<body>\r\n<nav>\r\n\r\n    <div class=\"mainLogo\">\r\n\r\n        <h4>COMMUNITY BARTER</h4></div>\r\n    <ul class=\"nav-links\">\r\n        % if authenticated:\r\n        <li><a href=\"/\">Home</a></li>\r\n        <li><a href=\"/about\">About this site</a></li>\r\n        <li><a href=\"/accountSettings\">Account Settings</a></li>\r\n        % end\r\n    </ul>\r\n    <div class=\"burger\">\r\n        <div class=\"line1\"></div>\r\n        <div class=\"line2\"></div>\r\n        <div class=\"line3\"></div>\r\n        <div class=\"line4\"></div>\r\n    </div>\r\n</nav>\r\n\r\n\r\n% if authenticated:\r\n<h2>Logged in as {{ authenticated }}</h2>\r\n\r\n<form action=\"/logout\" method=\"POST\" id=\"logoutform\" class=\"button\">\r\n    <input type=\"submit\" value=\"logout\">\r\n</form>\r\n% else:\r\n<form action=\"/login\" method=\"POST\" id=\"loginform\" class=\"poster1\">\r\n    Username: <input type=\"text\" name=\"name\"><br>\r\n    Password: <input type=\"text\" name=\"password\"><br>\r\n    <input type=\"submit\" value=\"Login\">\r\n</form>\r\n<form action=\"/createAccount\" method=\"get\" target=\"_blank\" class=\"button\">\r\n    <input type=\"submit\" value=\"Create Account\">\r\n</form>\r\n% end\r\n{{!base}}\r\n</body>\r\n</html>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- views/base.html	(revision 1ea8602fe57d8be0d4f6aab359620be8abbb71aa)
++++ views/base.html	(date 1599465207436)
+@@ -1,53 +1,128 @@
+ <!DOCTYPE html>
+ <html lang="en">
+-<head>
+-    <meta charset="utf-8">
+-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+-    <meta name="viewport" content="width=device-width, initial-scale=1">
+-    <meta name="description" content="">
+-    <meta name="author" content="">
++  <head>
++    <meta charset="utf-8" />
++    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
++    <meta name="viewport" content="width=device-width, initial-scale=1" />
++    <meta name="description" content="" />
++    <meta name="author" content="" />
++    <script
++      src="https://code.jquery.com/jquery-3.5.1.min.js"
++      integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
++      crossorigin="anonymous"
++    ></script>
+     <title>{{title}}</title>
+-    <link rel="stylesheet" type="text/css" href="/static/stylesheet.css">
+-</head>
++    <link rel="stylesheet" type="text/css" href="/static/stylesheet.css" />
++    <link
++      href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
++      rel="stylesheet"
++    />
++    <script defer src="/static/script.js"></script>
++  </head>
+ 
+-<body>
+-<nav>
+-
+-    <div class="mainLogo">
+-
+-        <h4>COMMUNITY BARTER</h4></div>
+-    <ul class="nav-links">
++  <body>
++    <nav>
++      <div class="mainLogo">
++        <h4>COMMUNITY BARTER</h4>
++      </div>
++      <ul class="nav-links">
+         % if authenticated:
+         <li><a href="/">Home</a></li>
+         <li><a href="/about">About this site</a></li>
+         <li><a href="/accountSettings">Account Settings</a></li>
+         % end
+-    </ul>
+-    <div class="burger">
++      </ul>
++      <div class="burger">
+         <div class="line1"></div>
+         <div class="line2"></div>
+         <div class="line3"></div>
+         <div class="line4"></div>
+-    </div>
+-</nav>
++      </div>
++    </nav>
+ 
+-
+-% if authenticated:
+-<h2>Logged in as {{ authenticated }}</h2>
++    % if authenticated:
++    <h2>Logged in as {{ authenticated }}</h2>
+ 
+-<form action="/logout" method="POST" id="logoutform" class="button">
+-    <input type="submit" value="logout">
+-</form>
+-% else:
+-<form action="/login" method="POST" id="loginform" class="poster1">
+-    Username: <input type="text" name="name"><br>
+-    Password: <input type="text" name="password"><br>
+-    <input type="submit" value="Login">
+-</form>
+-<form action="/createAccount" method="get" target="_blank" class="button">
+-    <input type="submit" value="Create Account">
+-</form>
+-% end
++    <form action="/logout" method="POST" id="logoutform" class="button">
++      <input type="submit" value="logout" />
++    </form>
++    % else:
++    <form action="/login" method="POST" id="loginform" class="poster1">
++      <div class="login"><h2>Login</h2></div>
++      <input type="text" name="name" placeholder="Username" required /><br />
++      <input
++        type="password"
++        name="password"
++        placeholder="Password"
++        required
++      /><br />
++      <input type="submit" value="Sign in" />
++    </form>
++    <!-- <form action="/createAccount" method="get" target="_blank" class="button">
++      <input type="submit" value="Create Account" />
++    </form> -->
++    <button class="createAccount-button">Create Account</button>
++    <div class="createAccount-model">
++      <div class="model">
++        <form
++          action="/createAcc"
++          method="POST"
++          enctype="multipart/form-data"
++          id="register"
++          class="poster1"
++        >
++          <div class="sign-up"><h2>Register</h2></div>
++
++          <input
++            id="register-name"
++            type="text"
++            name="name"
++            placeholder="Full Name"
++            required
++          /><br />
++
++          <input
++            id="register-username"
++            type="text"
++            name="username"
++            placeholder="User Name"
++            required
++          /><br />
++
++          <input
++            id="register-email"
++            type="text"
++            name="email"
++            placeholder="Email Address"
++            required
++          /><br />
++
++          <input
++            id="register-suburb"
++            type="text"
++            name="suburb"
++            placeholder="Suburb"
++            required
++          /><br />
++
++          <input
++            type="password"
++            name="password"
++            id="createacc-passwd"
++            placeholder="password"
++          /><i class="fa fa-eye" id="eye"></i>
++          <br />
++
++          Avatar: <input type="file" name="image" /><br />
++          <input id="register-submit" type="submit" value="Create Account" />
++          <p class="form-message"></p>
++        </form>
++        <span class="model-close">X</span>
++      </div>
++    </div>
++
++    <!-- prettier-ignore -->
++    % end 
+ {{!base}}
+-</body>
++  </body>
+ </html>
+Index: static/stylesheet.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>html {\r\n    /*background-image: url(\"/static/images/Mq_backgroundcolor.JPG\");*/\r\n    background-color: #F8F8FF;\r\n    margin: 0px;\r\n    padding: 0px;\r\n    box-sizing: border-box;\r\n}\r\n\r\n\r\n\r\n\r\n/*(navigation bar start)*/\r\n\r\nnav{\r\n    display: flex;\r\n    justify-content: space-around;\r\n    align-items: center;\r\n    min-height: 8vh;\r\n    background-color: #606060;\r\n}\r\n\r\n.mainLogo{\r\n    color: white;\r\n    text-transform: uppercase;\r\n    letter-spacing: 5px;\r\n    font-size: 20px;\r\n}\r\n\r\n.nav-links{\r\n    display: flex;\r\n    justify-content: space-around;\r\n    width: 30%;\r\n}\r\n\r\n.nav-links li{\r\n    list-style: none;\r\n}\r\n\r\n.nav-links a{\r\n    color: white;\r\n    text-decoration: none;\r\n    letter-spacing: 3px;\r\n    font-weight: bold;\r\n    font-size:14px;\r\n}\r\n\r\n.burger{\r\n    display: none;\r\n    cursor: pointer;\r\n}\r\n\r\n.burger div{\r\n    width: 25px;\r\n    height: 3px;\r\n    background-color: white;\r\n    margin: 3px;\r\n}\r\n\r\n\r\n/*(navigation bar end)*/\r\n\r\n\r\n.poster input[type=text], select {\r\n    width: 100%;\r\n    padding: 12px 20px;\r\n    margin: 8px 0;\r\n    display: inline-block;\r\n    border: 1px solid #ccc;\r\n    border-radius: 4px;\r\n    box-sizing: border-box;\r\n}\r\n\r\n.poster input[type=submit] {\r\n    width: 20%%;\r\n    background-color: #4CAF50;\r\n    color: white;\r\n    padding: 14px 20px;\r\n    margin: 8px 0;\r\n    border: none;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n}\r\n\r\n.poster1{\r\n    width: 300px;\r\n    box-shadow: aquamarine;\r\n    background: wheat;\r\n    padding: 20px;\r\n    margin: 8% auto 0;\r\n    text-align: center;\r\n    color: black;\r\n}\r\n\r\n.poster input[type=submit]:hover {\r\n    background-color: red;\r\n}\r\n\r\n.poster1 input[type=text], select {\r\n    width: 20%%;\r\n    padding: 12px 20px;\r\n    margin: 8px 0;\r\n    display: inline-block;\r\n    border: 1px solid #ccc;\r\n    border-radius: 4px;\r\n    box-sizing: border-box;\r\n}\r\n\r\n.poster1 input[type=submit] {\r\n    width: 20%%;\r\n    background-color: #4CAF50;\r\n    color: white;\r\n    padding: 14px 20px;\r\n    margin: 8px 0;\r\n    border: none;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n}\r\n\r\n.poster1 input[type=submit]:hover {\r\n    background-color: #45a049;\r\n}\r\n\r\n.button input[type=submit] {\r\n    width: 20%%;\r\n    background-color: #4CAF50;\r\n    color: white;\r\n    padding: 14px 20px;\r\n    margin: 8px 0;\r\n    border: none;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n}\r\n\r\n.button input[type=submit]:hover {\r\n    background-color: #45a049;\r\n}\r\n.div1 {\r\n    border-radius: 5px;\r\n    background-color: #f2f2f2;\r\n    padding: 20px;\r\n}\r\n\r\n.banner{\r\n\twidth:100%;\r\n}\r\n\r\n.list li{\r\nlist-style-type: none;}\r\n\r\n.positionslist {\r\n        width: 85%;\r\n        background-color: #e8eeef;\r\n        margin-right: auto;\r\n        margin-left: auto;\r\n        margin-bottom: 50px;\r\n        margin-top:10px;\r\n        border-radius: 10px;\r\n        border: solid #f4f7f8;\r\n}\r\n\r\n.truncate {\r\n  width: 95%;\r\n  height:138px;\r\n  white-space: nowrap;\r\n  overflow: hidden;\r\n  text-overflow: ellipsis;\r\n}\r\n\r\n.head{\r\nfont-size: large;}\r\n\r\n.txt{\r\ncolor:#008348;}\r\n\r\n----------------\r\n----------------\r\n/*about us page*/\r\n\r\n*, *:before, *:after {\r\n  box-sizing: inherit;\r\n}\r\n\r\n.column {\r\n  float: left;\r\n  width: 33.3%;\r\n  margin-bottom: 16px;\r\n  padding: 0 8px;\r\n}\r\n\r\n.card {\r\n  box-shadow: 0 4px 8px 0 rgba(1, 1, 0, 2);\r\n  margin: 8px;\r\n}\r\n\r\n.about-section {\r\n  padding: 50px;\r\n  text-align: center;\r\n  background-color: #474e5d;\r\n  color: white;\r\n}\r\n\r\n.container {\r\n  padding: 0 16px;\r\n}\r\n\r\n.container::after, .row::after {\r\n  content: \"\";\r\n  clear: both;\r\n  display: table;\r\n}\r\n\r\n.title {\r\n  color: grey;\r\n}\r\n\r\n.about_button {\r\n  border: none;\r\n  outline: 0;\r\n  display: inline-block;\r\n  padding: 8px;\r\n  color: white;\r\n  background-color: #000;\r\n  text-align: center;\r\n  cursor: pointer;\r\n  width: 100%;\r\n}\r\n\r\n.about_button:hover {\r\n  background-color: red;\r\n}\r\n\r\n\r\n\r\n.addtask{\r\n    color: red;\r\n    align: right;\r\n}\r\n\r\n@media screen and (max-width: 1024px) {\r\n  .nav-links{\r\n    width: 50%;\r\n  }\r\n}\r\n\r\n\r\n\r\n@media screen and (max-width: 750px) {\r\n  body{\r\n        overflow-x: hidden;\r\n    }\r\n  .nav-links{\r\n    position: absolute;\r\n    right: 0px;\r\n    height: 92vh;\r\n    top: 8vh;\r\n    background-color: #606060;\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n    width: 50%;\r\n    transform: translateX(100%);\r\n    transition: transform 0.5s ease-in;\r\n  }\r\n\r\n  .nav-links li{\r\n    opacity: 100;\r\n  }\r\n\r\n  .burger{\r\n    display: block;\r\n  }\r\n\r\n  .nav-active{\r\n    transform: translateX(0%);\r\n  }\r\n}\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- static/stylesheet.css	(revision 1ea8602fe57d8be0d4f6aab359620be8abbb71aa)
++++ static/stylesheet.css	(date 1599020630570)
+@@ -1,182 +1,242 @@
+ html {
+-    /*background-image: url("/static/images/Mq_backgroundcolor.JPG");*/
+-    background-color: #F8F8FF;
+-    margin: 0px;
+-    padding: 0px;
+-    box-sizing: border-box;
++  /*background-image: url("/static/images/Mq_backgroundcolor.JPG");*/
++  background-color: #f8f8ff;
++  margin: 0px;
++  padding: 0px;
++  box-sizing: border-box;
+ }
+ 
+-
+-
+-
+ /*(navigation bar start)*/
+ 
+-nav{
+-    display: flex;
+-    justify-content: space-around;
+-    align-items: center;
+-    min-height: 8vh;
+-    background-color: #606060;
++nav {
++  display: flex;
++  justify-content: space-around;
++  align-items: center;
++  min-height: 8vh;
++  background-color: #606060;
+ }
+ 
+-.mainLogo{
+-    color: white;
+-    text-transform: uppercase;
+-    letter-spacing: 5px;
+-    font-size: 20px;
++.mainLogo {
++  color: white;
++  text-transform: uppercase;
++  letter-spacing: 5px;
++  font-size: 20px;
+ }
+ 
+-.nav-links{
+-    display: flex;
+-    justify-content: space-around;
+-    width: 30%;
++.nav-links {
++  display: flex;
++  justify-content: space-around;
++  width: 30%;
+ }
+ 
+-.nav-links li{
+-    list-style: none;
++.nav-links li {
++  list-style: none;
+ }
+ 
+-.nav-links a{
+-    color: white;
+-    text-decoration: none;
+-    letter-spacing: 3px;
+-    font-weight: bold;
+-    font-size:14px;
++.nav-links a {
++  color: white;
++  text-decoration: none;
++  letter-spacing: 3px;
++  font-weight: bold;
++  font-size: 14px;
+ }
+ 
+-.burger{
+-    display: none;
+-    cursor: pointer;
++.burger {
++  display: none;
++  cursor: pointer;
+ }
+ 
+-.burger div{
+-    width: 25px;
+-    height: 3px;
+-    background-color: white;
+-    margin: 3px;
++.burger div {
++  width: 25px;
++  height: 3px;
++  background-color: white;
++  margin: 3px;
+ }
+ 
+-
+ /*(navigation bar end)*/
+ 
++/*(create account)*/
++.createAccount-model {
++  position: fixed;
++  top: 0;
++  left: 0;
++  width: 100%;
++  height: 100vh;
++  background-color: rgba(0, 0, 0, 0.5);
++  display: flex;
++  justify-content: center;
++  align-items: center;
++  visibility: hidden;
++  opacity: 0;
++  transition: visibility 0s, opacity 0.5s;
++}
++
++.createAccount-active {
++  visibility: visible;
++  opacity: 1;
++}
+ 
+-.poster input[type=text], select {
+-    width: 100%;
+-    padding: 12px 20px;
+-    margin: 8px 0;
+-    display: inline-block;
+-    border: 1px solid #ccc;
+-    border-radius: 4px;
+-    box-sizing: border-box;
++.model {
++  position: relative;
++  display: flex;
++  justify-content: space-around;
++  align-items: center;
++  flex-direction: column;
++}
++.model-close {
++  position: absolute;
++  top: 25px;
++  right: 5px;
++  font-weight: bold;
++  cursor: pointer;
++}
++
++.poster input[type="text"],
++select {
++  width: 100%;
++  padding: 12px 20px;
++  margin: 8px 0;
++  display: inline-block;
++  border: 1px solid #ccc;
++  border-radius: 4px;
++  box-sizing: border-box;
+ }
+ 
+-.poster input[type=submit] {
+-    width: 20%%;
+-    background-color: #4CAF50;
+-    color: white;
+-    padding: 14px 20px;
+-    margin: 8px 0;
+-    border: none;
+-    border-radius: 4px;
+-    cursor: pointer;
++.poster input[type="submit"] {
++  width: 20%;
++  background-color: #4caf50;
++  color: white;
++  padding: 14px 20px;
++  margin: 8px 0;
++  border: none;
++  border-radius: 4px;
++  cursor: pointer;
+ }
+ 
+-.poster1{
+-    width: 300px;
+-    box-shadow: aquamarine;
+-    background: wheat;
+-    padding: 20px;
+-    margin: 8% auto 0;
+-    text-align: center;
+-    color: black;
++.poster1 {
++  width: 300px;
++  box-shadow: aquamarine;
++  background-color: #606060;
++  padding: 20px;
++  margin: 8% auto 0;
++  text-align: center;
++  color: black;
+ }
+ 
+-.poster input[type=submit]:hover {
+-    background-color: red;
++.poster input[type="submit"]:hover {
++  background-color: red;
+ }
+ 
+-.poster1 input[type=text], select {
+-    width: 20%%;
+-    padding: 12px 20px;
+-    margin: 8px 0;
+-    display: inline-block;
+-    border: 1px solid #ccc;
+-    border-radius: 4px;
+-    box-sizing: border-box;
++.login,
++.sign-up {
++  color: white;
++  text-transform: uppercase;
++  letter-spacing: 5px;
++  font-size: 20px;
++  padding: 13px 0;
++}
++
++.poster1 input[type="text"][type="password"],
++select {
++  width: 50%;
++  height: 20px;
++  padding: 12px 20px;
++  margin: 8px 0;
++  display: block;
++  text-align: center;
++  border: 1px solid #ccc;
++  border-radius: 4px;
++  box-sizing: border-box;
+ }
+ 
+-.poster1 input[type=submit] {
+-    width: 20%%;
+-    background-color: #4CAF50;
+-    color: white;
+-    padding: 14px 20px;
+-    margin: 8px 0;
+-    border: none;
+-    border-radius: 4px;
+-    cursor: pointer;
++.poster1 input[type="submit"] {
++  width: 50%;
++
++  background-color: #4caf50;
++  color: white;
++  padding: 14px 20px;
++  margin: 8px 0;
++  border: none;
++  border-radius: 4px;
++  cursor: pointer;
+ }
+ 
+-.poster1 input[type=submit]:hover {
+-    background-color: #45a049;
++.poster1 input[type="submit"]:hover {
++  background-color: #45a049;
+ }
+ 
+-.button input[type=submit] {
+-    width: 20%%;
+-    background-color: #4CAF50;
+-    color: white;
+-    padding: 14px 20px;
+-    margin: 8px 0;
+-    border: none;
+-    border-radius: 4px;
+-    cursor: pointer;
++.button input[type="submit"],
++.createAccount-button {
++  width: 20%;
++  background-color: #4caf50;
++  color: white;
++  padding: 14px 20px;
++  margin: 8px 0;
++  border: none;
++  border-radius: 4px;
++  cursor: pointer;
+ }
+ 
+-.button input[type=submit]:hover {
+-    background-color: #45a049;
++.button input[type="submit"],
++.createAccount-button:hover {
++  background-color: #45a049;
+ }
++.createAccount-button {
++  position: fixed;
++  left: 40%;
++}
++.fa.fa-eye {
++  cursor: pointer;
++}
++.fa.fa-eye:hover {
++  background-color: #ccc;
++}
+ .div1 {
+-    border-radius: 5px;
+-    background-color: #f2f2f2;
+-    padding: 20px;
++  border-radius: 5px;
++  background-color: #f2f2f2;
++  padding: 20px;
+ }
+ 
+-.banner{
+-	width:100%;
++.banner {
++  width: 100%;
+ }
+ 
+-.list li{
+-list-style-type: none;}
++.list li {
++  list-style-type: none;
++}
+ 
+ .positionslist {
+-        width: 85%;
+-        background-color: #e8eeef;
+-        margin-right: auto;
+-        margin-left: auto;
+-        margin-bottom: 50px;
+-        margin-top:10px;
+-        border-radius: 10px;
+-        border: solid #f4f7f8;
++  width: 85%;
++  background-color: #e8eeef;
++  margin-right: auto;
++  margin-left: auto;
++  margin-bottom: 50px;
++  margin-top: 10px;
++  border-radius: 10px;
++  border: solid #f4f7f8;
+ }
+ 
+ .truncate {
+   width: 95%;
+-  height:138px;
++  height: 138px;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+ }
+ 
+-.head{
+-font-size: large;}
++.head {
++  font-size: large;
++}
+ 
+-.txt{
+-color:#008348;}
++.txt {
++  color: #008348;
++}
+ 
+-----------------
+-----------------
+ /*about us page*/
+ 
+-*, *:before, *:after {
++*,
++*:before,
++*:after {
+   box-sizing: inherit;
+ }
+ 
+@@ -203,7 +263,8 @@
+   padding: 0 16px;
+ }
+ 
+-.container::after, .row::after {
++.container::after,
++.row::after {
+   content: "";
+   clear: both;
+   display: table;
+@@ -229,26 +290,22 @@
+   background-color: red;
+ }
+ 
+-
+-
+-.addtask{
+-    color: red;
+-    align: right;
++.addtask {
++  color: red;
++  align: right;
+ }
+ 
+ @media screen and (max-width: 1024px) {
+-  .nav-links{
++  .nav-links {
+     width: 50%;
+   }
+ }
+ 
+-
+-
+ @media screen and (max-width: 750px) {
+-  body{
+-        overflow-x: hidden;
+-    }
+-  .nav-links{
++  body {
++    overflow-x: hidden;
++  }
++  .nav-links {
+     position: absolute;
+     right: 0px;
+     height: 92vh;
+@@ -262,17 +319,15 @@
+     transition: transform 0.5s ease-in;
+   }
+ 
+-  .nav-links li{
++  .nav-links li {
+     opacity: 100;
+   }
+ 
+-  .burger{
++  .burger {
+     display: block;
+   }
+ 
+-  .nav-active{
++  .nav-active {
+     transform: translateX(0%);
+   }
+ }
+-
+-

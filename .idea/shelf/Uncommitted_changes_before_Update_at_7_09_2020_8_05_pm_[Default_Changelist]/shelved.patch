@@ -1,0 +1,938 @@
+Index: views/base.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset=\"utf-8\">\r\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\r\n    <meta name=\"description\" content=\"\">\r\n    <meta name=\"author\" content=\"\">\r\n    <title>{{title}}</title>\r\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"/static/stylesheet.css\">\r\n</head>\r\n\r\n<body>\r\n<nav>\r\n\r\n    <div class=\"mainLogo\">\r\n\r\n        <h4>COMMUNITY BARTER</h4></div>\r\n    <ul class=\"nav-links\">\r\n        % if authenticated:\r\n        <li><a href=\"/\">Home</a></li>\r\n        <li><a href=\"/about\">About this site</a></li>\r\n        <li><a href=\"/accountSettings\">Account Settings</a></li>\r\n        % end\r\n    </ul>\r\n    <div class=\"burger\">\r\n        <div class=\"line1\"></div>\r\n        <div class=\"line2\"></div>\r\n        <div class=\"line3\"></div>\r\n        <div class=\"line4\"></div>\r\n    </div>\r\n</nav>\r\n\r\n\r\n% if authenticated:\r\n<h2>Logged in as {{ authenticated }}</h2>\r\n\r\n<form action=\"/logout\" method=\"POST\" id=\"logoutform\" class=\"button\">\r\n    <input type=\"submit\" value=\"logout\">\r\n</form>\r\n% else:\r\n<form action=\"/login\" method=\"POST\" id=\"loginform\" class=\"poster1\">\r\n    Username: <input type=\"text\" name=\"name\"><br>\r\n    Password: <input type=\"text\" name=\"password\"><br>\r\n    <input type=\"submit\" value=\"Login\">\r\n</form>\r\n<form action=\"/createAccount\" method=\"get\" target=\"_blank\" class=\"button\">\r\n    <input type=\"submit\" value=\"Create Account\">\r\n</form>\r\n% end\r\n{{!base}}\r\n\r\n<script src=\"/static/app.js\"></script>\r\n</body>\r\n</html>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- views/base.html	(revision 1a627d36ee47e9d0c00d85098d00a77dffe8b456)
++++ views/base.html	(date 1599470187596)
+@@ -1,55 +1,136 @@
+ <!DOCTYPE html>
+ <html lang="en">
+-<head>
+-    <meta charset="utf-8">
+-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+-    <meta name="viewport" content="width=device-width, initial-scale=1">
+-    <meta name="description" content="">
+-    <meta name="author" content="">
++  <head>
++    <meta charset="utf-8" />
++    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
++    <meta name="viewport" content="width=device-width, initial-scale=1" />
++    <meta name="description" content="" />
++    <meta name="author" content="" />
++    <script
++      src="https://code.jquery.com/jquery-3.5.1.min.js"
++      integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
++      crossorigin="anonymous"
++    ></script>
+     <title>{{title}}</title>
+-    <link rel="stylesheet" type="text/css" href="/static/stylesheet.css">
+-</head>
++    <link rel="stylesheet" type="text/css" href="/static/stylesheet.css" />
++    <link
++      href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
++      rel="stylesheet"
++    />
++    <script defer src="/static/script.js"></script>
++  </head>
+ 
+-<body>
+-<nav>
+-
+-    <div class="mainLogo">
+-
+-        <h4>COMMUNITY BARTER</h4></div>
+-    <ul class="nav-links">
++  <body>
++    <nav>
++      <div class="mainLogo">
++        <h4>COMMUNITY BARTER</h4>
++      </div>
++      <ul class="nav-links">
+         % if authenticated:
+         <li><a href="/">Home</a></li>
+         <li><a href="/about">About this site</a></li>
+         <li><a href="/accountSettings">Account Settings</a></li>
+         % end
+-    </ul>
+-    <div class="burger">
++      </ul>
++      <div class="burger">
+         <div class="line1"></div>
+         <div class="line2"></div>
+         <div class="line3"></div>
+         <div class="line4"></div>
+-    </div>
+-</nav>
++      </div>
++    </nav>
+ 
+-
+-% if authenticated:
+-<h2>Logged in as {{ authenticated }}</h2>
++    % if authenticated:
++    <h2>Logged in as {{ authenticated }}</h2>
+ 
+-<form action="/logout" method="POST" id="logoutform" class="button">
+-    <input type="submit" value="logout">
+-</form>
+-% else:
+-<form action="/login" method="POST" id="loginform" class="poster1">
+-    Username: <input type="text" name="name"><br>
+-    Password: <input type="text" name="password"><br>
+-    <input type="submit" value="Login">
+-</form>
+-<form action="/createAccount" method="get" target="_blank" class="button">
+-    <input type="submit" value="Create Account">
+-</form>
+-% end
++    <form action="/logout" method="POST" id="logoutform" class="button">
++      <input type="submit" value="logout" />
++    </form>
++    % else:
++    <form action="/login" method="POST" id="loginform" class="poster1">
++      <div class="login"><h2>Login</h2></div>
++      <input type="text" name="name" placeholder="Username" required /><br />
++      <input
++        type="password"
++        name="password"
++        placeholder="Password"
++        required
++      /><br />
++      <input type="submit" value="Sign in" />
++    </form>
++    <!-- <form action="/createAccount" method="get" target="_blank" class="button">
++      <input type="submit" value="Create Account" />
++    </form> -->
++    <button class="createAccount-button">Create Account</button>
++    <div class="createAccount-model">
++      <div class="model">
++        <form
++          action="/createAcc"
++          method="POST"
++          enctype="multipart/form-data"
++          id="register"
++          class="poster1"
++        >
++          <div class="sign-up"><h2>Register</h2></div>
++
++          <input
++            id="register-name"
++            type="text"
++            name="name"
++            placeholder="Full Name"
++            required
++          /><br />
++
++          <input
++            id="register-username"
++            type="text"
++            name="username"
++            placeholder="User Name"
++            required
++          /><br />
++
++          <input
++            id="register-email"
++            type="text"
++            name="email"
++            placeholder="Email Address"
++            required
++          /><br />
++
++          <input
++            id="register-suburb"
++            type="text"
++            name="suburb"
++            placeholder="Suburb"
++            required
++          /><br />
++
++          <input
++            type="password"
++            name="password"
++            id="createacc-passwd"
++            placeholder="password"
++          /><i class="fa fa-eye" id="eye"></i>
++          <br />
++          <div class="pass_indicator">
++            <span class="weak"></span>
++            <span class="medium"></span>
++            <span class="strong"></span>
++          </div>
++          <div class="password_message">Your password is too weak</div>
++
++          Avatar: <input type="file" name="image" /><br />
++          <input id="register-submit" type="submit" value="Create Account" />
++          <p class="form-message"></p>
++        </form>
++        <span class="model-close">X</span>
++      </div>
++    </div>
++
++    <!-- prettier-ignore -->
++    % end 
+ {{!base}}
+ 
+-<script src="/static/app.js"></script>
+-</body>
++    <script src="/static/app.js"></script>
++  </body>
+ </html>
+Index: static/stylesheet.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>html {\r\n    /*background-image: url(\"/static/images/Mq_backgroundcolor.JPG\");*/\r\n    background-color: #F8F8FF;\r\n    margin: 0px;\r\n    padding: 0px;\r\n    box-sizing: border-box;\r\n}\r\n\r\n\r\n\r\n\r\n/*(navigation bar start)*/\r\n\r\nnav{\r\n    display: flex;\r\n    justify-content: space-around;\r\n    align-items: center;\r\n    min-height: 8vh;\r\n    background-color: #606060;\r\n}\r\n\r\n.mainLogo{\r\n    color: white;\r\n    text-transform: uppercase;\r\n    letter-spacing: 5px;\r\n    font-size: 20px;\r\n}\r\n\r\n.nav-links{\r\n    display: flex;\r\n    justify-content: space-around;\r\n    width: 30%;\r\n}\r\n\r\n.nav-links li{\r\n    list-style: none;\r\n}\r\n\r\n.nav-links a{\r\n    color: white;\r\n    text-decoration: none;\r\n    letter-spacing: 3px;\r\n    font-weight: bold;\r\n    font-size:14px;\r\n}\r\n\r\n.burger{\r\n    display: none;\r\n    cursor: pointer;\r\n}\r\n\r\n.burger div{\r\n    width: 25px;\r\n    height: 3px;\r\n    background-color: white;\r\n    margin: 3px;\r\n}\r\n\r\n\r\n/*(navigation bar end)*/\r\n\r\n\r\n.poster input[type=text], select {\r\n    width: 100%;\r\n    padding: 12px 20px;\r\n    margin: 8px 0;\r\n    display: inline-block;\r\n    border: 1px solid #ccc;\r\n    border-radius: 4px;\r\n    box-sizing: border-box;\r\n}\r\n\r\n.poster input[type=submit] {\r\n    width: 20%%;\r\n    background-color: #4CAF50;\r\n    color: white;\r\n    padding: 14px 20px;\r\n    margin: 8px 0;\r\n    border: none;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n}\r\n\r\n.poster1{\r\n    width: 300px;\r\n    box-shadow: aquamarine;\r\n    background: wheat;\r\n    padding: 20px;\r\n    margin: 8% auto 0;\r\n    text-align: center;\r\n    color: black;\r\n}\r\n\r\n.poster input[type=submit]:hover {\r\n    background-color: red;\r\n}\r\n\r\n.poster1 input[type=text], select {\r\n    width: 20%%;\r\n    padding: 12px 20px;\r\n    margin: 8px 0;\r\n    display: inline-block;\r\n    border: 1px solid #ccc;\r\n    border-radius: 4px;\r\n    box-sizing: border-box;\r\n}\r\n\r\n.poster1 input[type=submit] {\r\n    width: 20%%;\r\n    background-color: #4CAF50;\r\n    color: white;\r\n    padding: 14px 20px;\r\n    margin: 8px 0;\r\n    border: none;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n}\r\n\r\n.poster1 input[type=submit]:hover {\r\n    background-color: #45a049;\r\n}\r\n\r\n.button input[type=submit] {\r\n    width: 20%%;\r\n    background-color: #4CAF50;\r\n    color: white;\r\n    padding: 14px 20px;\r\n    margin: 8px 0;\r\n    border: none;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n}\r\n\r\n.button input[type=submit]:hover {\r\n    background-color: #45a049;\r\n}\r\n.div1 {\r\n    border-radius: 5px;\r\n    background-color: #f2f2f2;\r\n    padding: 20px;\r\n}\r\n\r\n.banner{\r\n\twidth:100%;\r\n}\r\n\r\n.list li{\r\nlist-style-type: none;}\r\n\r\n.positionslist {\r\n        width: 85%;\r\n        background-color: #e8eeef;\r\n        margin-right: auto;\r\n        margin-left: auto;\r\n        margin-bottom: 50px;\r\n        margin-top:10px;\r\n        border-radius: 10px;\r\n        border: solid #f4f7f8;\r\n}\r\n\r\n.truncate {\r\n  width: 95%;\r\n  height:138px;\r\n  white-space: nowrap;\r\n  overflow: hidden;\r\n  text-overflow: ellipsis;\r\n}\r\n\r\n.head{\r\nfont-size: large;}\r\n\r\n.txt{\r\ncolor:#008348;}\r\n\r\n----------------\r\n----------------\r\n/*about us page start*/\r\n\r\n*, *:before, *:after {\r\n  box-sizing: inherit;\r\n}\r\n\r\n.column {\r\n  float: left;\r\n  width: 33.3%;\r\n  margin-bottom: 16px;\r\n  padding: 0 8px;\r\n}\r\n\r\n.card {\r\n  box-shadow: 0 4px 8px 0 rgba(1, 1, 0, 2);\r\n  margin: 8px;\r\n}\r\n\r\n.about-section {\r\n  padding: 50px;\r\n  text-align: center;\r\n  background-color: #474e5d;\r\n  color: white;\r\n}\r\n\r\n.container {\r\n  padding: 0 16px;\r\n}\r\n\r\n.container::after, .row::after {\r\n  content: \"\";\r\n  clear: both;\r\n  display: table;\r\n}\r\n\r\n.title {\r\n  color: grey;\r\n}\r\n\r\n.about_button {\r\n  border: none;\r\n  outline: 0;\r\n  display: inline-block;\r\n  padding: 8px;\r\n  color: white;\r\n  background-color: #000;\r\n  text-align: center;\r\n  cursor: pointer;\r\n  width: 100%;\r\n}\r\n\r\n.about_button:hover {\r\n  background-color: red;\r\n}\r\n\r\n/*about page ends*/\r\n\r\n\r\n@media screen and (max-width: 1024px) {\r\n  .nav-links{\r\n    width: 50%;\r\n  }\r\n}\r\n\r\n\r\n\r\n@media screen and (max-width: 750px) {\r\n  body{\r\n        overflow-x: hidden;\r\n    }\r\n  .nav-links{\r\n    position: absolute;\r\n    right: 0px;\r\n    height: 92vh;\r\n    top: 8vh;\r\n    background-color: #606060;\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n    width: 50%;\r\n    transform: translateX(100%);\r\n    transition: transform 0.5s ease-in;\r\n  }\r\n\r\n  .nav-links li{\r\n    opacity: 100;\r\n  }\r\n\r\n  .burger{\r\n    display: block;\r\n  }\r\n\r\n  .nav-active{\r\n    transform: translateX(0%);\r\n  }\r\n\r\n  @keyframes navLinkFade{\r\n    From{\r\n        opacity: 0;\r\n        transformation: translateX(50px);\r\n    }\r\n    to{\r\n        opacity: 1;\r\n        transform: translateX(0px);\r\n    }\r\n  }\r\n}\r\n\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- static/stylesheet.css	(revision 1a627d36ee47e9d0c00d85098d00a77dffe8b456)
++++ static/stylesheet.css	(date 1599471764828)
+@@ -1,176 +1,299 @@
+ html {
+-    /*background-image: url("/static/images/Mq_backgroundcolor.JPG");*/
+-    background-color: #F8F8FF;
+-    margin: 0px;
+-    padding: 0px;
+-    box-sizing: border-box;
++  /*background-image: url("/static/images/Mq_backgroundcolor.JPG");*/
++  background-color: #f8f8ff;
++  margin: 0px;
++  padding: 0px;
++  box-sizing: border-box;
+ }
+ 
+-
+-
+-
+ /*(navigation bar start)*/
+ 
+-nav{
+-    display: flex;
+-    justify-content: space-around;
+-    align-items: center;
+-    min-height: 8vh;
+-    background-color: #606060;
++nav {
++  display: flex;
++  justify-content: space-around;
++  align-items: center;
++  min-height: 8vh;
++  background-color: #606060;
+ }
+ 
+-.mainLogo{
+-    color: white;
+-    text-transform: uppercase;
+-    letter-spacing: 5px;
+-    font-size: 20px;
++.mainLogo {
++  color: white;
++  text-transform: uppercase;
++  letter-spacing: 5px;
++  font-size: 20px;
+ }
+ 
+-.nav-links{
+-    display: flex;
+-    justify-content: space-around;
+-    width: 30%;
++.nav-links {
++  display: flex;
++  justify-content: space-around;
++  width: 30%;
+ }
+ 
+-.nav-links li{
+-    list-style: none;
++.nav-links li {
++  list-style: none;
+ }
+ 
+-.nav-links a{
+-    color: white;
+-    text-decoration: none;
+-    letter-spacing: 3px;
+-    font-weight: bold;
+-    font-size:14px;
++.nav-links a {
++  color: white;
++  text-decoration: none;
++  letter-spacing: 3px;
++  font-weight: bold;
++  font-size: 14px;
+ }
+ 
+-.burger{
+-    display: none;
+-    cursor: pointer;
++.burger {
++  display: none;
++  cursor: pointer;
+ }
+ 
+-.burger div{
+-    width: 25px;
+-    height: 3px;
+-    background-color: white;
+-    margin: 3px;
++.burger div {
++  width: 25px;
++  height: 3px;
++  background-color: white;
++  margin: 3px;
+ }
+ 
+-
+ /*(navigation bar end)*/
+ 
++/*(create account)*/
++.createAccount-model {
++  position: fixed;
++  top: 0;
++  left: 0;
++  width: 100%;
++  height: 100vh;
++  background-color: rgba(0, 0, 0, 0.5);
++  display: flex;
++  justify-content: center;
++  align-items: center;
++  visibility: hidden;
++  opacity: 0;
++  transition: visibility 0s, opacity 0.5s;
++}
++
++.createAccount-active {
++  visibility: visible;
++  opacity: 1;
++}
+ 
+-.poster input[type=text], select {
+-    width: 100%;
+-    padding: 12px 20px;
+-    margin: 8px 0;
+-    display: inline-block;
+-    border: 1px solid #ccc;
+-    border-radius: 4px;
+-    box-sizing: border-box;
++.model {
++  position: relative;
++  display: flex;
++  justify-content: space-around;
++  align-items: center;
++  flex-direction: column;
++}
++.model-close {
++  position: absolute;
++  top: 25px;
++  right: 5px;
++  font-weight: bold;
++  cursor: pointer;
++}
++
++.poster input[type="text"],
++select {
++  width: 100%;
++  padding: 12px 20px;
++  margin: 8px 0;
++  display: inline-block;
++  border: 1px solid #ccc;
++  border-radius: 4px;
++  box-sizing: border-box;
+ }
+ 
+-.poster input[type=submit] {
+-    width: 20%%;
+-    background-color: #4CAF50;
+-    color: white;
+-    padding: 14px 20px;
+-    margin: 8px 0;
+-    border: none;
+-    border-radius: 4px;
+-    cursor: pointer;
++.poster input[type="submit"] {
++  width: 20%;
++  background-color: #4caf50;
++  color: white;
++  padding: 14px 20px;
++  margin: 8px 0;
++  border: none;
++  border-radius: 4px;
++  cursor: pointer;
+ }
+ 
+-.poster1{
+-    width: 300px;
+-    box-shadow: aquamarine;
+-    background: wheat;
+-    padding: 20px;
+-    margin: 8% auto 0;
+-    text-align: center;
+-    color: black;
++.poster1 {
++  width: 300px;
++  box-shadow: aquamarine;
++  background-color: #606060;
++  padding: 20px;
++  margin: 8% auto 0;
++  text-align: center;
++  color: black;
+ }
+ 
+-.poster input[type=submit]:hover {
+-    background-color: red;
++.poster input[type="submit"]:hover {
++  background-color: red;
+ }
+ 
+-.poster1 input[type=text], select {
+-    width: 20%%;
+-    padding: 12px 20px;
+-    margin: 8px 0;
+-    display: inline-block;
+-    border: 1px solid #ccc;
+-    border-radius: 4px;
+-    box-sizing: border-box;
++.login,
++.sign-up {
++  color: white;
++  text-transform: uppercase;
++  letter-spacing: 5px;
++  font-size: 20px;
++  padding: 13px 0;
++}
++
++.poster1 input[type="text"][type="password"],
++select {
++  width: 50%;
++  height: 20px;
++  padding: 12px 20px;
++  margin: 8px 0;
++  display: block;
++  text-align: center;
++  border: 1px solid #ccc;
++  border-radius: 4px;
++  box-sizing: border-box;
+ }
+ 
+-.poster1 input[type=submit] {
+-    width: 20%%;
+-    background-color: #4CAF50;
+-    color: white;
+-    padding: 14px 20px;
+-    margin: 8px 0;
+-    border: none;
+-    border-radius: 4px;
+-    cursor: pointer;
++.poster1 input[type="submit"] {
++  width: 50%;
++
++  background-color: #4caf50;
++  color: white;
++  padding: 14px 20px;
++  margin: 8px 0;
++  border: none;
++  border-radius: 4px;
++  cursor: pointer;
+ }
+ 
+-.poster1 input[type=submit]:hover {
+-    background-color: #45a049;
++.poster1 input[type="submit"]:hover {
++  background-color: #45a049;
+ }
+ 
+-.button input[type=submit] {
+-    width: 20%%;
+-    background-color: #4CAF50;
+-    color: white;
+-    padding: 14px 20px;
+-    margin: 8px 0;
+-    border: none;
+-    border-radius: 4px;
+-    cursor: pointer;
++.button input[type="submit"],
++.createAccount-button {
++  width: 20%;
++  background-color: #4caf50;
++  color: white;
++  padding: 14px 20px;
++  margin: 8px 0;
++  border: none;
++  border-radius: 4px;
++  cursor: pointer;
+ }
+ 
+-.button input[type=submit]:hover {
+-    background-color: #45a049;
++.button input[type="submit"],
++.createAccount-button:hover {
++  background-color: #45a049;
+ }
++.createAccount-button {
++  position: fixed;
++  left: 40%;
++}
++.fa.fa-eye {
++  cursor: pointer;
++}
++.fa.fa-eye:hover {
++  background-color: #ccc;
++}
++
++.pass_indicator {
++  height: 10px;
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  margin: 10px 0;
++  display: none;
++}
++
++.pass_indicator span {
++  width: 100%;
++  height: 100%;
++  background: lightgray;
++  border-radius: 5px;
++  position: relative;
++}
++
++.pass_indicator span.medium {
++  margin: 0 3px;
++}
++
++.pass_indicator span:before {
++  content: "";
++  position: absolute;
++  top: 0;
++  left: 0;
++  width: 100%;
++  height: 100%;
++  border-radius: 5px;
++}
++
++.pass_indicator span.active.weak:before {
++  background-color: #ff4757;
++}
++
++.pass_indicator span.active.medium:before {
++  background-color: orange;
++}
++
++.pass_indicator span.active.strong:before {
++  background-color: #23ad5c;
++}
++
++.password_message {
++  font-size: 20px;
++  font-weight: 500;
++  margin-bottom: 10px;
++  display: none;
++}
++
++.password_message.weak {
++  background-color: #ff4757;
++}
++
++.password_message.medium {
++  background-color: orange;
++}
++
++.password_message.strong {
++  background-color: #23ad5c;
++}
++
+ .div1 {
+-    border-radius: 5px;
+-    background-color: #f2f2f2;
+-    padding: 20px;
++  border-radius: 5px;
++  background-color: #f2f2f2;
++  padding: 20px;
+ }
+ 
+-.banner{
+-	width:100%;
++.banner {
++  width: 100%;
+ }
+ 
+-.list li{
+-list-style-type: none;}
++.list li {
++  list-style-type: none;
++}
+ 
+ .positionslist {
+-        width: 85%;
+-        background-color: #e8eeef;
+-        margin-right: auto;
+-        margin-left: auto;
+-        margin-bottom: 50px;
+-        margin-top:10px;
+-        border-radius: 10px;
+-        border: solid #f4f7f8;
++  width: 85%;
++  background-color: #e8eeef;
++  margin-right: auto;
++  margin-left: auto;
++  margin-bottom: 50px;
++  margin-top: 10px;
++  border-radius: 10px;
++  border: solid #f4f7f8;
+ }
+ 
+ .truncate {
+   width: 95%;
+-  height:138px;
++  height: 138px;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+ }
+ 
+-.head{
+-font-size: large;}
++.head {
++  font-size: large;
++}
+ 
+-.txt{
+-color:#008348;}
++.txt {
++  color: #008348;
++}
+ 
+ ----------------
+ ----------------
+@@ -203,7 +326,8 @@
+   padding: 0 16px;
+ }
+ 
+-.container::after, .row::after {
++.container::after,
++.row::after {
+   content: "";
+   clear: both;
+   display: table;
+@@ -229,22 +353,23 @@
+   background-color: red;
+ }
+ 
++.addtask {
++  color: red;
++  align: right;
++}
+ /*about page ends*/
+ 
+-
+ @media screen and (max-width: 1024px) {
+-  .nav-links{
++  .nav-links {
+     width: 50%;
+   }
+ }
+ 
+-
+-
+ @media screen and (max-width: 750px) {
+-  body{
+-        overflow-x: hidden;
+-    }
+-  .nav-links{
++  body {
++    overflow-x: hidden;
++  }
++  .nav-links {
+     position: absolute;
+     right: 0px;
+     height: 92vh;
+@@ -258,29 +383,26 @@
+     transition: transform 0.5s ease-in;
+   }
+ 
+-  .nav-links li{
++  .nav-links li {
+     opacity: 100;
+   }
+ 
+-  .burger{
++  .burger {
+     display: block;
+   }
+ 
+-  .nav-active{
++  .nav-active {
+     transform: translateX(0%);
+   }
+ 
+-  @keyframes navLinkFade{
+-    From{
+-        opacity: 0;
+-        transformation: translateX(50px);
++  @keyframes navLinkFade {
++    from {
++      opacity: 0;
++      transformation: translateX(50px);
+     }
+-    to{
+-        opacity: 1;
+-        transform: translateX(0px);
++    to {
++      opacity: 1;
++      transform: translateX(0px);
+     }
+   }
+ }
+-
+-
+-
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_25_08_2020_10_47_am_[Default_Changelist]/shelved.patch
+===================================================================
+--- .idea/shelf/Uncommitted_changes_before_Update_at_25_08_2020_10_47_am_[Default_Changelist]/shelved.patch	(revision 1a627d36ee47e9d0c00d85098d00a77dffe8b456)
++++ .idea/shelf/Uncommitted_changes_before_Update_at_25_08_2020_10_47_am_[Default_Changelist]/shelved.patch	(revision 1a627d36ee47e9d0c00d85098d00a77dffe8b456)
+@@ -1,63 +0,0 @@
+-Index: main.py
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>\r\nfrom bottle import Bottle, template, static_file, redirect, request, response\r\nimport database\r\nimport users\r\nimport re\r\nimport os\r\n\r\napp = Bottle()\r\n\r\n@app.route('/static/<filename:path>')\r\ndef static(filename):\r\n\r\n    \"\"\"Static file Handling method for all static files in root static\"\"\"\r\n\r\n    return static_file(filename=filename, root='static')\r\n\r\n@app.route('/')\r\ndef index(db):\r\n    \"\"\"handles routing to main page\"\"\"\r\n\r\n    pageInfo = {'title': 'Account'}\r\n\r\n\r\n\r\n    return template('index', pageInfo, authenticated=users.session_user(db), tasksexist = False)\r\n\r\n@app.route('/about')\r\ndef about(db):\r\n    \"\"\"made this page to test session cookie function\"\"\"\r\n\r\n    info = {'title': 'About'}\r\n\r\n    return template('About', info, authenticated=users.session_user(db))\r\n\r\n@app.get('/accountSettings')\r\ndef account_settings(db):\r\n    \"\"\"Update account details or settings, must enter password to be able to do so\"\"\"\r\n\r\n    info = {'title': 'Account',\r\n            'bannerMessage': '',}\r\n    return template('account', info, authenticated=users.session_user(db),validated=False, invalidPword=False)\r\n\r\n@app.route('/createAccount')\r\ndef accountPage(db):\r\n    \"\"\"handles routing to account creation page\"\"\"\r\n\r\n    pageInfo = {'title': 'Create Account',\r\n                'bannerMessage': 'Create an account'}\r\n\r\n    return template('createAccount', pageInfo, authenticated=users.session_user(db))\r\n\r\n@app.post('/createAcc')\r\ndef route(db):\r\n    \"\"\"handles new account creation\r\n    \"\"\"\r\n    info = {'title': 'Creation Error',\r\n            'bannerMessage': 'An account under this email already exists please login or try another email'\r\n    }\r\n\r\n    info1 = {'title': 'Creation Error',\r\n            'bannerMessage': 'Password must contain at least 1 capital letter, 1 number and be atleast 7 characters long'\r\n    }\r\n\r\n    password = request.forms.get(\"password\")\r\n    pWordResult = password_test(password)\r\n    if not pWordResult:\r\n        return template('createAccount', info1, authenticated=users.session_user(db))\r\n\r\n    email = request.forms.get(\"email\")\r\n    \"SHOULD PROBS ADD JAVASCRIPT TO CHECK name and suburb ARE FILLED AND CHECK FILE TYPE OF IMAGE\"\r\n    name = request.forms.get(\"name\")\r\n    suburb = request.forms.get(\"suburb\")\r\n    image = request.files.get(\"image\")\r\n    log = database.add_user(db, password, email, name, suburb)\r\n\r\n    if log: #if user is valid\r\n        if image is not None:\r\n            uid = users.return_userID(db, email)\r\n            imagePath = userImage_upload(uid, image)\r\n            database.update_avatar(db, uid, imagePath)\r\n\r\n        users.generate_session(db, name)\r\n        return redirect('/')\r\n    else:\r\n        return template('createAccount', info, authenticated=users.session_user(db))\r\n\r\n@app.post('/updateAccount')\r\ndef account_update(db):\r\n    \"\"\"handles account updates\"\"\"\r\n\r\n    info = {'title': 'Account',\r\n            'bannerMessage': 'Populated fields updated'\r\n            }\r\n\r\n    flag = False\r\n    uid = users.return_userID(db, users.session_user(db))\r\n    password = request.forms.get(\"pword\")\r\n    if len(password) > 0:\r\n        if password_test(password):\r\n            newPassword = database.password_hash(db, password, uid)\r\n            if newPassword is not False:\r\n                database.update_password(db, newPassword, uid)\r\n            else:\r\n                flag = True\r\n        else:\r\n            flag = True\r\n\r\n    suburb = request.forms.get(\"suburb\")\r\n    if len(suburb) > 0:\r\n        database.update_suburb(db, suburb, uid)\r\n\r\n    name = request.forms.get(\"name\")\r\n    if len(name) > 0:\r\n        database.update_name(db, name, uid)\r\n\r\n    image = request.files.get(\"image\")\r\n    if image is not None:\r\n        imagePath = userImage_upload(uid, image)\r\n        database.update_avatar(db, uid, imagePath)\r\n\r\n    return template('account', info, authenticated=users.session_user(db), validated=True, invalidPword=flag)\r\n\r\n\r\ndef password_test(pWord):\r\n    \"\"\" Tests if password is atleast 7 characters and contains atleast 1 capital letter\"\"\"\r\n    password = pWord\r\n    rgx = re.compile(r'\\d.*?[A-Z].*?[a-z]')\r\n    if rgx.match(''.join(sorted(password))) and len(password) >= 7:\r\n        return True\r\n    return False\r\n\r\ndef userImage_upload(user, image):\r\n\r\n    root = os.path.abspath(os.curdir)# does this line work on all os' ?\r\n    path = root + \"/static/userImages/\" + \"DP user -- \" + str(user) + \" -- \" + image.filename\r\n    image.save(path, overwrite=True)\r\n    return path\r\n\r\n\r\n@app.post('/pwordCheck')\r\ndef acc(db):\r\n    \"\"\"validates password\"\"\"\r\n    info = {'title': 'Account',\r\n            'bannerMessage':''}\r\n    info1 = {'title': 'Account',\r\n            'bannerMessage': 'Wrong Password'}\r\n\r\n    password = request.forms.get(\"password\")\r\n    usern= users.session_user(db)\r\n    result = users.check_password(db, usern, database.password_hash(db,password,usern))\r\n    if(result):\r\n        return template('account', info, authenticated=users.session_user(db), validated=True, invalidPword=False)\r\n    else:\r\n        return template('account', info1, authenticated=users.session_user(db), validated=False, invalidPword=False)\r\n\r\n\r\n\r\n@app.post('/login')\r\ndef route(db):\r\n    \"\"\"handles login of users,\r\n    form data is proccessed (taken from the login form), from here data is checked to see if user is valid, if so\r\n    a session is generated for the user and then the user is redirected to the index page otherwise they are\r\n    redirected to a page where they must enter their credentials again, the user is kept on this page until correct\r\n    credentials are entered at which point they are redirected to the index page logged in,\r\n\r\n    A cookie is assigned to each valid user once they login through the function users.generate_session()\r\n    in order to track whether they are logged in or not\r\n    \"\"\"\r\n    info = {'title': 'Login Error, please try to login again or create an account'}\r\n\r\n    name = request.forms.get(\"name\")\r\n    password = request.forms.get(\"password\")\r\n    log = users.check_login(db, name, password)\r\n    if(log):#if user is valid\r\n        users.generate_session(db,name)\r\n        return redirect('/')\r\n    else:\r\n        return template('splash', info, authenticated=users.session_user(db))\r\n\r\n\r\n@app.post('/logout', methods=['GET'])\r\ndef logout(db):\r\n    \"\"\"\"handles logging out of  a user, once a user clicks the logout button they are logged out by removing their\r\n    current session from the database via the function users.delete_session(),\r\n    their cookie is also removed thus logging them out,\r\n    a redirect occurs once successfully logged out to index page where they will once again be asked to login\r\n    \"\"\"\r\n    users.delete_session(db, users.session_user(db))\r\n\r\n    response.delete_cookie(users.COOKIE_NAME)\r\n\r\n    redirect('/')\r\n\r\n@app.post('/addtask', methods=['GET'])\r\ndef task(db):\r\n    \"\"\"\"\r\n    redirects to the addtask form page\r\n    \"\"\"\r\n\r\n    info = {'title': 'Add Task',\r\n            'bannerMessage': 'yeanah'}\r\n\r\n    return template('addtask',info, authenticated=users.session_user(db))\r\n\r\n@app.post('/addingtask', methods=['GET'])\r\ndef task(db):\r\n    \"\"\"\"\r\n    Will take the form from addtask.html and add the respective task to the database\r\n    \"\"\"\r\n\r\n    owner = request.forms.get(\"owner\")\r\n    title = request.forms.get(\"title\")\r\n    location = request.forms.get(\"location\")\r\n    description = request.forms.get(\"descrip\")\r\n\r\n    database.add_jobListing(db, owner, title, location, description)\r\n\r\n    redirect('/')\r\n\r\n@app.post('/gettask', methods=['GET'])\r\ndef task(db):\r\n    \"\"\"\"\r\n    Gets the current list of tasks (top 10) and will display them in a table format.\r\n    \"\"\"\r\n\r\n    tasklist = database.position_list(db)\r\n    newtrack = []\r\n\r\n    for x in tasklist:\r\n        dict1 = {\r\n                    'id': x[0],\r\n                    'time': x[1],\r\n                    'owner': x[2],\r\n                    'title': x[3],\r\n                    'location': x[4],\r\n                    'description': x[5]\r\n                }\r\n        newtrack.append(dict1)\r\n    info = {'title': 'Account',\r\n            'bannerMessage': '',\r\n            'task' : newtrack}\r\n\r\n    return template('index',info, authenticated=users.session_user(db), tasksexist = True)\r\n\r\n@app.post('/deletetask', methods=['GET'])\r\ndef task(db):\r\n    \"\"\"\"\r\n    Deletes respective ID'd task\r\n    \"\"\"\r\n    taskid = request.forms.get(\"taskid\")\r\n    print(taskid)\r\n    database.delete_jobListing(db, taskid)\r\n    redirect('/')\r\n\r\nif __name__ == '__main__':\r\n\r\n    from bottle.ext import sqlite\r\n    from database import DATABASE_NAME\r\n    # install the database plugin to utilise db parameter calling\r\n    app.install(sqlite.Plugin(dbfile=DATABASE_NAME))\r\n    app.run(debug=True, port=8010)\r\n\r\n\r\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- main.py	(revision 5ab57a888dcda7203eb655dbc664147d393d97ec)
+-+++ main.py	(date 1598312263796)
+-@@ -1,12 +1,15 @@
+- 
+- from bottle import Bottle, template, static_file, redirect, request, response
+- import database
+-+
+- import users
+- import re
+- import os
+- 
+-+
+- app = Bottle()
+- 
+-+
+- @app.route('/static/<filename:path>')
+- def static(filename):
+- 
+-Index: .idea/misc.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ProjectRootManager\" version=\"2\" project-jdk-name=\"Python 3.7 (Comp4050)\" project-jdk-type=\"Python SDK\" />\r\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- .idea/misc.xml	(revision 5ab57a888dcda7203eb655dbc664147d393d97ec)
+-+++ .idea/misc.xml	(date 1597893949111)
+-@@ -1,4 +1,4 @@
+- <?xml version="1.0" encoding="UTF-8"?>
+- <project version="4">
+--  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.7 (Comp4050)" project-jdk-type="Python SDK" />
+-+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.8" project-jdk-type="Python SDK" />
+- </project>
+-\ No newline at end of file
+-Index: .idea/OnlineWebsiteComp4050.iml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<module type=\"PYTHON_MODULE\" version=\"4\">\r\n  <component name=\"NewModuleRootManager\">\r\n    <content url=\"file://$MODULE_DIR$\">\r\n      <excludeFolder url=\"file://$MODULE_DIR$/venv\" />\r\n    </content>\r\n    <orderEntry type=\"jdk\" jdkName=\"Python 3.7 (Comp4050)\" jdkType=\"Python SDK\" />\r\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\r\n  </component>\r\n  <component name=\"TestRunnerService\">\r\n    <option name=\"PROJECT_TEST_RUNNER\" value=\"Unittests\" />\r\n  </component>\r\n</module>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- .idea/OnlineWebsiteComp4050.iml	(revision 5ab57a888dcda7203eb655dbc664147d393d97ec)
+-+++ .idea/OnlineWebsiteComp4050.iml	(date 1597893949093)
+-@@ -4,10 +4,7 @@
+-     <content url="file://$MODULE_DIR$">
+-       <excludeFolder url="file://$MODULE_DIR$/venv" />
+-     </content>
+--    <orderEntry type="jdk" jdkName="Python 3.7 (Comp4050)" jdkType="Python SDK" />
+-+    <orderEntry type="jdk" jdkName="Python 3.8" jdkType="Python SDK" />
+-     <orderEntry type="sourceFolder" forTests="false" />
+-   </component>
+--  <component name="TestRunnerService">
+--    <option name="PROJECT_TEST_RUNNER" value="Unittests" />
+--  </component>
+- </module>
+-\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_29_08_2020_12_13_am__Default_Changelist_.xml
+===================================================================
+--- .idea/shelf/Uncommitted_changes_before_Update_at_29_08_2020_12_13_am__Default_Changelist_.xml	(revision 1a627d36ee47e9d0c00d85098d00a77dffe8b456)
++++ .idea/shelf/Uncommitted_changes_before_Update_at_29_08_2020_12_13_am__Default_Changelist_.xml	(revision 1a627d36ee47e9d0c00d85098d00a77dffe8b456)
+@@ -1,9 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Update_at_29_08_2020_12_13_am_[Default_Changelist]" date="1598624043451" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_29_08_2020_12_13_am_[Default_Changelist]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Update at 29/08/2020 12:13 am [Default Changelist]" />
+-  <binary>
+-    <option name="BEFORE_PATH" value="comp4050.db" />
+-    <option name="AFTER_PATH" value="comp4050.db" />
+-    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_29_08_2020_12_13_am_[Default_Changelist]/comp4050.db" />
+-  </binary>
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_28_08_2020_5_36_pm_[Default_Changelist]/shelved.patch
+===================================================================
+--- .idea/shelf/Uncommitted_changes_before_Update_at_28_08_2020_5_36_pm_[Default_Changelist]/shelved.patch	(revision 1a627d36ee47e9d0c00d85098d00a77dffe8b456)
++++ .idea/shelf/Uncommitted_changes_before_Update_at_28_08_2020_5_36_pm_[Default_Changelist]/shelved.patch	(revision 1a627d36ee47e9d0c00d85098d00a77dffe8b456)
+@@ -1,63 +0,0 @@
+-Index: main.py
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>\r\nfrom bottle import Bottle, template, static_file, redirect, request, response\r\nimport database\r\nimport users\r\nimport re\r\nimport os\r\n\r\napp = Bottle()\r\n\r\n@app.route('/static/<filename:path>')\r\ndef static(filename):\r\n\r\n    \"\"\"Static file Handling method for all static files in root static\"\"\"\r\n\r\n    return static_file(filename=filename, root='static')\r\n\r\n@app.route('/')\r\ndef index(db):\r\n    \"\"\"handles routing to main page\"\"\"\r\n    pageInfo = {'title': 'Account'}\r\n    loginisTrue = False\r\n    tasksexist = False\r\n\r\n    if users.session_user(db):\r\n        loginisTrue = True\r\n\r\n    return template('index', pageInfo, authenticated=users.session_user(db), tasksexist=tasksexist, loginIsTrue=loginisTrue)\r\n\r\n@app.route('/about')\r\ndef about(db):\r\n    \"\"\"made this page to test session cookie function\"\"\"\r\n\r\n    info = {'title': 'About'}\r\n\r\n    return template('About', info, authenticated=users.session_user(db))\r\n\r\n@app.get('/accountSettings')\r\ndef account_settings(db):\r\n    \"\"\"Update account details or settings, must enter password to be able to do so\"\"\"\r\n\r\n    info = {'title': 'Account',\r\n            'bannerMessage': '',}\r\n    return template('account', info, authenticated=users.session_user(db),validated=False, invalidPword=False)\r\n\r\n@app.route('/createAccount')\r\ndef accountPage(db):\r\n    \"\"\"handles routing to account creation page\"\"\"\r\n\r\n    pageInfo = {'title': 'Create Account',\r\n                'bannerMessage': 'Create an account'}\r\n\r\n    return template('createAccount', pageInfo, authenticated=users.session_user(db))\r\n\r\n@app.post('/createAcc')\r\ndef route(db):\r\n    \"\"\"handles new account creation\r\n    \"\"\"\r\n    info = {'title': 'Creation Error',\r\n            'bannerMessage': 'An account under this email already exists please login or try another email'\r\n    }\r\n\r\n    info1 = {'title': 'Creation Error',\r\n            'bannerMessage': 'Password must contain at least 1 capital letter, 1 number and be atleast 7 characters long'\r\n    }\r\n\r\n    password = request.forms.get(\"password\")\r\n    pWordResult = password_test(password)\r\n    if not pWordResult:\r\n        return template('createAccount', info1, authenticated=users.session_user(db))\r\n\r\n    email = request.forms.get(\"email\")\r\n    \"SHOULD PROBS ADD JAVASCRIPT TO CHECK name and suburb ARE FILLED AND CHECK FILE TYPE OF IMAGE\"\r\n    name = request.forms.get(\"name\")\r\n    suburb = request.forms.get(\"suburb\")\r\n    image = request.files.get(\"image\")\r\n    log = database.add_user(db, password, email, name, suburb)\r\n\r\n    if log: #if user is valid\r\n        if image is not None:\r\n            uid = users.return_userID(db, email)\r\n            imagePath = userImage_upload(uid, image)\r\n            database.update_avatar(db, uid, imagePath)\r\n\r\n        users.generate_session(db, name)\r\n        return redirect('/')\r\n    else:\r\n        return template('createAccount', info, authenticated=users.session_user(db))\r\n\r\n@app.post('/updateAccount')\r\ndef account_update(db):\r\n    \"\"\"handles account updates\"\"\"\r\n\r\n    info = {'title': 'Account',\r\n            'bannerMessage': 'Populated fields updated'\r\n            }\r\n\r\n    flag = False\r\n    uid = users.return_userID(db, users.session_user(db))\r\n    password = request.forms.get(\"pword\")\r\n    if len(password) > 0:\r\n        if password_test(password):\r\n            newPassword = database.password_hash(db, password, uid)\r\n            if newPassword is not False:\r\n                database.update_password(db, newPassword, uid)\r\n            else:\r\n                flag = True\r\n        else:\r\n            flag = True\r\n\r\n    suburb = request.forms.get(\"suburb\")\r\n    if len(suburb) > 0:\r\n        database.update_suburb(db, suburb, uid)\r\n\r\n    name = request.forms.get(\"name\")\r\n    if len(name) > 0:\r\n        database.update_name(db, name, uid)\r\n\r\n    image = request.files.get(\"image\")\r\n    if image is not None:\r\n        imagePath = userImage_upload(uid, image)\r\n        database.update_avatar(db, uid, imagePath)\r\n\r\n    return template('account', info, authenticated=users.session_user(db), validated=True, invalidPword=flag)\r\n\r\n\r\ndef password_test(pWord):\r\n    \"\"\" Tests if password is atleast 7 characters and contains atleast 1 capital letter\"\"\"\r\n    password = pWord\r\n    rgx = re.compile(r'\\d.*?[A-Z].*?[a-z]')\r\n    if rgx.match(''.join(sorted(password))) and len(password) >= 7:\r\n        return True\r\n    return False\r\n\r\ndef userImage_upload(user, image):\r\n\r\n    root = os.path.abspath(os.curdir)# does this line work on all os' ?\r\n    path = root + \"/static/userImages/\" + \"DP user -- \" + str(user) + \" -- \" + image.filename\r\n    image.save(path, overwrite=True)\r\n    return path\r\n\r\n\r\n@app.post('/pwordCheck')\r\ndef acc(db):\r\n    \"\"\"validates password\"\"\"\r\n    info = {'title': 'Account',\r\n            'bannerMessage':''}\r\n    info1 = {'title': 'Account',\r\n            'bannerMessage': 'Wrong Password'}\r\n\r\n    password = request.forms.get(\"password\")\r\n    usern= users.session_user(db)\r\n    result = users.check_password(db, usern, database.password_hash(db,password,usern))\r\n    if(result):\r\n        return template('account', info, authenticated=users.session_user(db), validated=True, invalidPword=False)\r\n    else:\r\n        return template('account', info1, authenticated=users.session_user(db), validated=False, invalidPword=False)\r\n\r\n\r\n\r\n@app.post('/login')\r\ndef route(db):\r\n    \"\"\"handles login of users,\r\n    form data is proccessed (taken from the login form), from here data is checked to see if user is valid, if so\r\n    a session is generated for the user and then the user is redirected to the index page otherwise they are\r\n    redirected to a page where they must enter their credentials again, the user is kept on this page until correct\r\n    credentials are entered at which point they are redirected to the index page logged in,\r\n\r\n    A cookie is assigned to each valid user once they login through the function users.generate_session()\r\n    in order to track whether they are logged in or not\r\n    \"\"\"\r\n    info = {'title': 'Login Error, please try to login again or create an account'}\r\n\r\n    name = request.forms.get(\"name\")\r\n    password = request.forms.get(\"password\")\r\n    log = users.check_login(db, name, password)\r\n    if(log):#if user is valid\r\n        users.generate_session(db,name)\r\n        return redirect('/')\r\n    else:\r\n        return template('splash', info, authenticated=users.session_user(db))\r\n\r\n\r\n@app.post('/logout', methods=['GET'])\r\ndef logout(db):\r\n    \"\"\"\"handles logging out of  a user, once a user clicks the logout button they are logged out by removing their\r\n    current session from the database via the function users.delete_session(),\r\n    their cookie is also removed thus logging them out,\r\n    a redirect occurs once successfully logged out to index page where they will once again be asked to login\r\n    \"\"\"\r\n    users.delete_session(db, users.session_user(db))\r\n\r\n    response.delete_cookie(users.COOKIE_NAME)\r\n\r\n    redirect('/')\r\n\r\n@app.post('/addtask', methods=['GET'])\r\ndef task(db):\r\n    \"\"\"\"\r\n    redirects to the addtask form page\r\n    \"\"\"\r\n\r\n    info = {'title': 'Add Task',\r\n            'bannerMessage': 'yeanah'}\r\n\r\n    return template('addtask',info, authenticated=users.session_user(db))\r\n\r\n@app.post('/addingtask', methods=['GET'])\r\ndef task(db):\r\n    \"\"\"\"\r\n    Will take the form from addtask.html and add the respective task to the database\r\n    \"\"\"\r\n    userID = users.session_user(db)\r\n    owner = request.forms.get(\"owner\")\r\n    title = request.forms.get(\"title\")\r\n    location = request.forms.get(\"location\")\r\n    description = request.forms.get(\"descrip\")\r\n\r\n    database.add_jobListing(db,userID, owner, title, location, description)\r\n\r\n    redirect('/')\r\n\r\n@app.post('/gettask', methods=['GET'])\r\ndef task(db):\r\n    \"\"\"\"\r\n    Will return based on the button pressed. It will then return the relative tasks in a top 10 format\r\n    \"\"\"\r\n\r\n    tasktype = request.forms.get(\"tasktype\")\r\n\r\n    if tasktype == \"1\":\r\n        usrid = users.session_user(db)\r\n        tasklist = database.position_list(db,usrid)\r\n        newtrack = []\r\n\r\n        loginisTrue = False\r\n\r\n        if users.session_user(db):\r\n            loginisTrue = True\r\n\r\n        for x in tasklist:\r\n            dict1 = {\r\n                        'id': x[0],\r\n                        'time': x[1],\r\n                        'owner': x[2],\r\n                        'title': x[3],\r\n                        'location': x[4],\r\n                        'description': x[5]\r\n                    }\r\n            newtrack.append(dict1)\r\n        info = {'title': 'Account',\r\n                'bannerMessage': '',\r\n                'task' : newtrack}\r\n\r\n        return template('index',info, authenticated=users.session_user(db), tasksexist = True, loginIsTrue=loginisTrue )\r\n\r\n    if tasktype == \"0\":\r\n            tasklist = database.position_list(db,None)\r\n            newtrack = []\r\n\r\n            loginisTrue = False\r\n\r\n            if users.session_user(db):\r\n                loginisTrue = True\r\n\r\n            for x in tasklist:\r\n                dict1 = {\r\n                    'id': x[0],\r\n                    'time': x[1],\r\n                    'owner': x[2],\r\n                    'title': x[3],\r\n                    'location': x[4],\r\n                    'description': x[5]\r\n                }\r\n                newtrack.append(dict1)\r\n            info = {'title': 'Account',\r\n                    'bannerMessage': '',\r\n                    'task': newtrack}\r\n\r\n            return template('index', info, authenticated=users.session_user(db), tasksexist=True,\r\n                            loginIsTrue=loginisTrue)\r\n\r\n\r\n@app.post('/deletetask', methods=['GET'])\r\ndef task(db):\r\n    \"\"\"\"\r\n    Deletes respective ID'd task\r\n    \"\"\"\r\n    taskid = request.forms.get(\"taskid\")\r\n    print(taskid)\r\n    database.delete_jobListing(db, taskid)\r\n    redirect('/')\r\n\r\nif __name__ == '__main__':\r\n\r\n    from bottle.ext import sqlite\r\n    from database import DATABASE_NAME\r\n    # install the database plugin to utilise db parameter calling\r\n    app.install(sqlite.Plugin(dbfile=DATABASE_NAME))\r\n    app.run(debug=True, port=8010)\r\n\r\n\r\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- main.py	(revision 9f58489c9104ad3fbf1a6284b5a7c2828476aa70)
+-+++ main.py	(date 1598316445572)
+-@@ -1,12 +1,15 @@
+- 
+- from bottle import Bottle, template, static_file, redirect, request, response
+- import database
+-+
+- import users
+- import re
+- import os
+- 
+-+
+- app = Bottle()
+- 
+-+
+- @app.route('/static/<filename:path>')
+- def static(filename):
+- 
+-Index: .idea/misc.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ProjectRootManager\" version=\"2\" project-jdk-name=\"Python 3.7 (Comp4050)\" project-jdk-type=\"Python SDK\" />\r\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- .idea/misc.xml	(revision 9f58489c9104ad3fbf1a6284b5a7c2828476aa70)
+-+++ .idea/misc.xml	(date 1598316445579)
+-@@ -1,4 +1,4 @@
+- <?xml version="1.0" encoding="UTF-8"?>
+- <project version="4">
+--  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.7 (Comp4050)" project-jdk-type="Python SDK" />
+-+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.8" project-jdk-type="Python SDK" />
+- </project>
+-\ No newline at end of file
+-Index: .idea/OnlineWebsiteComp4050.iml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<module type=\"PYTHON_MODULE\" version=\"4\">\r\n  <component name=\"NewModuleRootManager\">\r\n    <content url=\"file://$MODULE_DIR$\">\r\n      <excludeFolder url=\"file://$MODULE_DIR$/venv\" />\r\n    </content>\r\n    <orderEntry type=\"jdk\" jdkName=\"Python 3.7 (Comp4050)\" jdkType=\"Python SDK\" />\r\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\r\n  </component>\r\n  <component name=\"TestRunnerService\">\r\n    <option name=\"PROJECT_TEST_RUNNER\" value=\"Unittests\" />\r\n  </component>\r\n</module>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- .idea/OnlineWebsiteComp4050.iml	(revision 9f58489c9104ad3fbf1a6284b5a7c2828476aa70)
+-+++ .idea/OnlineWebsiteComp4050.iml	(date 1598316445586)
+-@@ -4,10 +4,7 @@
+-     <content url="file://$MODULE_DIR$">
+-       <excludeFolder url="file://$MODULE_DIR$/venv" />
+-     </content>
+--    <orderEntry type="jdk" jdkName="Python 3.7 (Comp4050)" jdkType="Python SDK" />
+-+    <orderEntry type="jdk" jdkName="Python 3.8" jdkType="Python SDK" />
+-     <orderEntry type="sourceFolder" forTests="false" />
+-   </component>
+--  <component name="TestRunnerService">
+--    <option name="PROJECT_TEST_RUNNER" value="Unittests" />
+--  </component>
+- </module>
+-\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_28_08_2020_5_36_pm__Default_Changelist_.xml
+===================================================================
+--- .idea/shelf/Uncommitted_changes_before_Update_at_28_08_2020_5_36_pm__Default_Changelist_.xml	(revision 1a627d36ee47e9d0c00d85098d00a77dffe8b456)
++++ .idea/shelf/Uncommitted_changes_before_Update_at_28_08_2020_5_36_pm__Default_Changelist_.xml	(revision 1a627d36ee47e9d0c00d85098d00a77dffe8b456)
+@@ -1,9 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Update_at_28_08_2020_5_36_pm_[Default_Changelist]" date="1598600208453" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_28_08_2020_5_36_pm_[Default_Changelist]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Update at 28/08/2020 5:36 pm [Default Changelist]" />
+-  <binary>
+-    <option name="BEFORE_PATH" value="comp4050.db" />
+-    <option name="AFTER_PATH" value="comp4050.db" />
+-    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_28_08_2020_5_36_pm_[Default_Changelist]/comp4050.db" />
+-  </binary>
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_25_08_2020_10_47_am__Default_Changelist_.xml
+===================================================================
+--- .idea/shelf/Uncommitted_changes_before_Update_at_25_08_2020_10_47_am__Default_Changelist_.xml	(revision 1a627d36ee47e9d0c00d85098d00a77dffe8b456)
++++ .idea/shelf/Uncommitted_changes_before_Update_at_25_08_2020_10_47_am__Default_Changelist_.xml	(revision 1a627d36ee47e9d0c00d85098d00a77dffe8b456)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Update_at_25_08_2020_10_47_am_[Default_Changelist]" date="1598316445603" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_08_2020_10_47_am_[Default_Changelist]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Update at 25/08/2020 10:47 am [Default Changelist]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_29_08_2020_12_13_am_[Default_Changelist]/shelved.patch
+===================================================================
+--- .idea/shelf/Uncommitted_changes_before_Update_at_29_08_2020_12_13_am_[Default_Changelist]/shelved.patch	(revision 1a627d36ee47e9d0c00d85098d00a77dffe8b456)
++++ .idea/shelf/Uncommitted_changes_before_Update_at_29_08_2020_12_13_am_[Default_Changelist]/shelved.patch	(revision 1a627d36ee47e9d0c00d85098d00a77dffe8b456)
+@@ -1,63 +0,0 @@
+-Index: main.py
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>\r\nfrom bottle import Bottle, template, static_file, redirect, request, response\r\nimport database\r\nimport users\r\nimport re\r\nimport os\r\n\r\napp = Bottle()\r\n\r\n@app.route('/static/<filename:path>')\r\ndef static(filename):\r\n\r\n    \"\"\"Static file Handling method for all static files in root static\"\"\"\r\n\r\n    return static_file(filename=filename, root='static')\r\n\r\n@app.route('/')\r\ndef index(db):\r\n    \"\"\"handles routing to main page\"\"\"\r\n    pageInfo = {'title': 'Account'}\r\n    loginisTrue = False\r\n    tasksexist = False\r\n\r\n    if users.session_user(db):\r\n        loginisTrue = True\r\n\r\n    return template('index', pageInfo, authenticated=users.session_user(db), tasksexist=tasksexist, loginIsTrue=loginisTrue)\r\n\r\n@app.route('/about')\r\ndef about(db):\r\n    \"\"\"made this page to test session cookie function\"\"\"\r\n\r\n    info = {'title': 'About'}\r\n\r\n    return template('About', info, authenticated=users.session_user(db))\r\n\r\n@app.get('/accountSettings')\r\ndef account_settings(db):\r\n    \"\"\"Update account details or settings, must enter password to be able to do so\"\"\"\r\n\r\n    info = {'title': 'Account',\r\n            'bannerMessage': '',}\r\n    return template('account', info, authenticated=users.session_user(db),validated=False, invalidPword=False)\r\n\r\n@app.route('/createAccount')\r\ndef accountPage(db):\r\n    \"\"\"handles routing to account creation page\"\"\"\r\n\r\n    pageInfo = {'title': 'Create Account',\r\n                'bannerMessage': 'Create an account'}\r\n\r\n    return template('createAccount', pageInfo, authenticated=users.session_user(db))\r\n\r\n@app.post('/createAcc')\r\ndef route(db):\r\n    \"\"\"handles new account creation\r\n    \"\"\"\r\n    info = {'title': 'Creation Error',\r\n            'bannerMessage': 'An account under this email already exists please login or try another email'\r\n    }\r\n\r\n    info1 = {'title': 'Creation Error',\r\n            'bannerMessage': 'Password must contain at least 1 capital letter, 1 number and be atleast 7 characters long'\r\n    }\r\n\r\n    password = request.forms.get(\"password\")\r\n    pWordResult = password_test(password)\r\n    if not pWordResult:\r\n        return template('createAccount', info1, authenticated=users.session_user(db))\r\n\r\n    email = request.forms.get(\"email\")\r\n    \"SHOULD PROBS ADD JAVASCRIPT TO CHECK name and suburb ARE FILLED AND CHECK FILE TYPE OF IMAGE\"\r\n    name = request.forms.get(\"name\")\r\n    suburb = request.forms.get(\"suburb\")\r\n    image = request.files.get(\"image\")\r\n    log = database.add_user(db, password, email, name, suburb)\r\n\r\n    if log: #if user is valid\r\n        if image is not None:\r\n            uid = users.return_userID(db, email)\r\n            imagePath = userImage_upload(uid, image)\r\n            database.update_avatar(db, uid, imagePath)\r\n\r\n        users.generate_session(db, name)\r\n        return redirect('/')\r\n    else:\r\n        return template('createAccount', info, authenticated=users.session_user(db))\r\n\r\n@app.post('/updateAccount')\r\ndef account_update(db):\r\n    \"\"\"handles account updates\"\"\"\r\n\r\n    info = {'title': 'Account',\r\n            'bannerMessage': 'Populated fields updated'\r\n            }\r\n\r\n    flag = False\r\n    uid = users.return_userID(db, users.session_user(db))\r\n    password = request.forms.get(\"pword\")\r\n    if len(password) > 0:\r\n        if password_test(password):\r\n            newPassword = database.password_hash(db, password, uid)\r\n            if newPassword is not False:\r\n                database.update_password(db, newPassword, uid)\r\n            else:\r\n                flag = True\r\n        else:\r\n            flag = True\r\n\r\n    suburb = request.forms.get(\"suburb\")\r\n    if len(suburb) > 0:\r\n        database.update_suburb(db, suburb, uid)\r\n\r\n    name = request.forms.get(\"name\")\r\n    if len(name) > 0:\r\n        database.update_name(db, name, uid)\r\n\r\n    image = request.files.get(\"image\")\r\n    if image is not None:\r\n        imagePath = userImage_upload(uid, image)\r\n        database.update_avatar(db, uid, imagePath)\r\n\r\n    return template('account', info, authenticated=users.session_user(db), validated=True, invalidPword=flag)\r\n\r\n\r\ndef password_test(pWord):\r\n    \"\"\" Tests if password is atleast 7 characters and contains atleast 1 capital letter\"\"\"\r\n    password = pWord\r\n    rgx = re.compile(r'\\d.*?[A-Z].*?[a-z]')\r\n    if rgx.match(''.join(sorted(password))) and len(password) >= 7:\r\n        return True\r\n    return False\r\n\r\ndef userImage_upload(user, image):\r\n\r\n    root = os.path.abspath(os.curdir)# does this line work on all os' ?\r\n    path = root + \"/static/userImages/\" + \"DP user -- \" + str(user) + \" -- \" + image.filename\r\n    image.save(path, overwrite=True)\r\n    return path\r\n\r\n\r\n@app.post('/pwordCheck')\r\ndef acc(db):\r\n    \"\"\"validates password\"\"\"\r\n    info = {'title': 'Account',\r\n            'bannerMessage':''}\r\n    info1 = {'title': 'Account',\r\n            'bannerMessage': 'Wrong Password'}\r\n\r\n    password = request.forms.get(\"password\")\r\n    usern= users.session_user(db)\r\n    result = users.check_password(db, usern, database.password_hash(db,password,usern))\r\n    if(result):\r\n        return template('account', info, authenticated=users.session_user(db), validated=True, invalidPword=False)\r\n    else:\r\n        return template('account', info1, authenticated=users.session_user(db), validated=False, invalidPword=False)\r\n\r\n\r\n\r\n@app.post('/login')\r\ndef route(db):\r\n    \"\"\"handles login of users,\r\n    form data is proccessed (taken from the login form), from here data is checked to see if user is valid, if so\r\n    a session is generated for the user and then the user is redirected to the index page otherwise they are\r\n    redirected to a page where they must enter their credentials again, the user is kept on this page until correct\r\n    credentials are entered at which point they are redirected to the index page logged in,\r\n\r\n    A cookie is assigned to each valid user once they login through the function users.generate_session()\r\n    in order to track whether they are logged in or not\r\n    \"\"\"\r\n    info = {'title': 'Login Error, please try to login again or create an account'}\r\n\r\n    name = request.forms.get(\"name\")\r\n    password = request.forms.get(\"password\")\r\n    log = users.check_login(db, name, password)\r\n    if(log):#if user is valid\r\n        users.generate_session(db,name)\r\n        return redirect('/')\r\n    else:\r\n        return template('splash', info, authenticated=users.session_user(db))\r\n\r\n\r\n@app.post('/logout', methods=['GET'])\r\ndef logout(db):\r\n    \"\"\"\"handles logging out of  a user, once a user clicks the logout button they are logged out by removing their\r\n    current session from the database via the function users.delete_session(),\r\n    their cookie is also removed thus logging them out,\r\n    a redirect occurs once successfully logged out to index page where they will once again be asked to login\r\n    \"\"\"\r\n    users.delete_session(db, users.session_user(db))\r\n\r\n    response.delete_cookie(users.COOKIE_NAME)\r\n\r\n    redirect('/')\r\n\r\n@app.post('/addtask', methods=['GET'])\r\ndef task(db):\r\n    \"\"\"\"\r\n    redirects to the addtask form page\r\n    \"\"\"\r\n\r\n    info = {'title': 'Add Task',\r\n            'bannerMessage': 'yeanah'}\r\n\r\n    return template('addtask',info, authenticated=users.session_user(db))\r\n\r\n@app.post('/addingtask', methods=['GET'])\r\ndef task(db):\r\n    \"\"\"\"\r\n    Will take the form from addtask.html and add the respective task to the database\r\n    \"\"\"\r\n    userID = users.session_user(db)\r\n    owner = request.forms.get(\"owner\")\r\n    title = request.forms.get(\"title\")\r\n    location = request.forms.get(\"location\")\r\n    description = request.forms.get(\"descrip\")\r\n\r\n    database.add_jobListing(db,userID, owner, title, location, description)\r\n\r\n    redirect('/')\r\n\r\n@app.post('/gettask', methods=['GET'])\r\ndef task(db):\r\n    \"\"\"\"\r\n    Will return based on the button pressed. It will then return the relative tasks in a top 10 format\r\n    \"\"\"\r\n\r\n    tasktype = request.forms.get(\"tasktype\")\r\n\r\n    if tasktype == \"1\":\r\n        usrid = users.session_user(db)\r\n        tasklist = database.position_list(db,usrid)\r\n        newtrack = []\r\n\r\n        loginisTrue = False\r\n\r\n        if users.session_user(db):\r\n            loginisTrue = True\r\n\r\n        for x in tasklist:\r\n            dict1 = {\r\n                        'id': x[0],\r\n                        'time': x[1],\r\n                        'owner': x[2],\r\n                        'title': x[3],\r\n                        'location': x[4],\r\n                        'description': x[5]\r\n                    }\r\n            newtrack.append(dict1)\r\n        info = {'title': 'Account',\r\n                'bannerMessage': '',\r\n                'task' : newtrack}\r\n\r\n        return template('index',info, authenticated=users.session_user(db), tasksexist = True, loginIsTrue=loginisTrue )\r\n\r\n    if tasktype == \"0\":\r\n            tasklist = database.position_list(db,None)\r\n            newtrack = []\r\n\r\n            loginisTrue = False\r\n\r\n            if users.session_user(db):\r\n                loginisTrue = True\r\n\r\n            for x in tasklist:\r\n                dict1 = {\r\n                    'id': x[0],\r\n                    'time': x[1],\r\n                    'owner': x[2],\r\n                    'title': x[3],\r\n                    'location': x[4],\r\n                    'description': x[5]\r\n                }\r\n                newtrack.append(dict1)\r\n            info = {'title': 'Account',\r\n                    'bannerMessage': '',\r\n                    'task': newtrack}\r\n\r\n            return template('index', info, authenticated=users.session_user(db), tasksexist=True,\r\n                            loginIsTrue=loginisTrue)\r\n\r\n\r\n@app.post('/deletetask', methods=['GET'])\r\ndef task(db):\r\n    \"\"\"\"\r\n    Deletes respective ID'd task\r\n    \"\"\"\r\n    taskid = request.forms.get(\"taskid\")\r\n    print(taskid)\r\n    database.delete_jobListing(db, taskid)\r\n    redirect('/')\r\n\r\nif __name__ == '__main__':\r\n\r\n    from bottle.ext import sqlite\r\n    from database import DATABASE_NAME\r\n    # install the database plugin to utilise db parameter calling\r\n    app.install(sqlite.Plugin(dbfile=DATABASE_NAME))\r\n    app.run(debug=True, port=8010)\r\n\r\n\r\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- main.py	(revision a8392746c0a8fff8b1b97784cf5098d6061a4667)
+-+++ main.py	(date 1598600173883)
+-@@ -1,12 +1,15 @@
+- 
+- from bottle import Bottle, template, static_file, redirect, request, response
+- import database
+-+
+- import users
+- import re
+- import os
+- 
+-+
+- app = Bottle()
+- 
+-+
+- @app.route('/static/<filename:path>')
+- def static(filename):
+- 
+-Index: .idea/misc.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ProjectRootManager\" version=\"2\" project-jdk-name=\"Python 3.7\" project-jdk-type=\"Python SDK\" />\r\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- .idea/misc.xml	(revision a8392746c0a8fff8b1b97784cf5098d6061a4667)
+-+++ .idea/misc.xml	(date 1598600229167)
+-@@ -1,4 +1,4 @@
+- <?xml version="1.0" encoding="UTF-8"?>
+- <project version="4">
+--  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.7" project-jdk-type="Python SDK" />
+-+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.8" project-jdk-type="Python SDK" />
+- </project>
+-\ No newline at end of file
+-Index: .idea/OnlineWebsiteComp4050.iml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<module type=\"PYTHON_MODULE\" version=\"4\">\r\n  <component name=\"NewModuleRootManager\">\r\n    <content url=\"file://$MODULE_DIR$\">\r\n      <excludeFolder url=\"file://$MODULE_DIR$/venv\" />\r\n    </content>\r\n    <orderEntry type=\"jdk\" jdkName=\"Python 3.7\" jdkType=\"Python SDK\" />\r\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\r\n  </component>\r\n  <component name=\"TestRunnerService\">\r\n    <option name=\"PROJECT_TEST_RUNNER\" value=\"Unittests\" />\r\n  </component>\r\n</module>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+---- .idea/OnlineWebsiteComp4050.iml	(revision a8392746c0a8fff8b1b97784cf5098d6061a4667)
+-+++ .idea/OnlineWebsiteComp4050.iml	(date 1598600229159)
+-@@ -4,10 +4,7 @@
+-     <content url="file://$MODULE_DIR$">
+-       <excludeFolder url="file://$MODULE_DIR$/venv" />
+-     </content>
+--    <orderEntry type="jdk" jdkName="Python 3.7" jdkType="Python SDK" />
+-+    <orderEntry type="jdk" jdkName="Python 3.8" jdkType="Python SDK" />
+-     <orderEntry type="sourceFolder" forTests="false" />
+-   </component>
+--  <component name="TestRunnerService">
+--    <option name="PROJECT_TEST_RUNNER" value="Unittests" />
+--  </component>
+- </module>
+-\ No newline at end of file
+diff --git .idea/shelf/Uncommitted_changes_before_Update_at_19_08_2020_5_14_pm__Default_Changelist_.xml .idea/shelf/Uncommitted_changes_before_Update_at_19_08_2020_5_14_pm__Default_Changelist_.xml
+diff --git static/registration.js static/registration.js
+new file mode 100644

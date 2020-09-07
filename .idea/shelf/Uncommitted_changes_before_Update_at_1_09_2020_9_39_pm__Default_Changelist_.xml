@@ -1,0 +1,24 @@
+<changelist name="Uncommitted_changes_before_Update_at_1_09_2020_9_39_pm_[Default_Changelist]" date="1598960377527" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_09_2020_9_39_pm_[Default_Changelist]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 1/09/2020 9:39 pm [Default Changelist]" />
+  <binary>
+    <option name="BEFORE_PATH" value="react-frontend/public/logo512.png" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="react-frontend/public/logo192.png" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="react-frontend/public/favicon.ico" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="react-frontend/yarn.lock" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+</changelist>
