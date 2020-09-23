@@ -6,7 +6,10 @@ function Home(props) {
   return (
     <div>
       <Base authenticated={props.authenticated}></Base>
-      <TaskManager authenticated={props.authenticated}></TaskManager>
+      {
+        (props.authenticated !== "None") &&
+        (<TaskManager authenticated={props.authenticated}></TaskManager>)
+      }
     </div>
   );
 }
