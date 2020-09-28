@@ -15,8 +15,7 @@ class Main extends React.Component {
     return (
       <div>
         <div>
-          <h1>COMMUNITY BARTER SITE</h1>
-          <img src="/static/images/cblogo.JPG" className="logo" />
+          <h1>FAVOUR SHARE</h1>
           <div className="styled">
             <ul>
               <NavBar authenticated={this.props.authenticated}></NavBar>
