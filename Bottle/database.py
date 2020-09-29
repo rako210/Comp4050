@@ -205,19 +205,14 @@ def add_jobListing(db,userID,postOwner, title, location, description):
 
     return True
 
-def edit_job_listing(db, owner, title, location, description, jobID):
-    """  
-        UPDATE jobListing
-        SET userID='', owner='', title='', location='', description=''
-        WHERE jobID=1;
-    """
+def edit_job_listing(db, owner, title, location, description, jobID, selectedUser):
     cursor = db.cursor()
     sql = """
         UPDATE jobListing
-        SET owner=?, title=?, location=?, description=?
+        SET owner=?, title=?, location=?, description=?, selectedUserID=?
         WHERE jobID=?;
     """
-    cursor.execute(sql, (owner, title, location, description, jobID,))
+    cursor.execute(sql, (owner, title, location, description, selectedUser, jobID,))
     db.commit()
 
     return True
@@ -284,13 +279,21 @@ def get_users_applied_for_job(db, job_id):
     """
 
     cursor = db.cursor()
-    sql = """SELECT userID FROM jobApplication where jobID=?;"""
+
+    sql = """
+        SELECT jobApplication.userID, users.name
+        FROM jobApplication
+        INNER JOIN users ON jobApplication.userID=users.userID
+        WHERE jobID=?
+    """
 
     data = cursor.execute(sql, (job_id,))
     data = data.fetchall()
 
     temp = [dict(zip([key[0] for key in cursor.description], row))
             for row in data]
+
+    print(temp)
 
     return temp
 

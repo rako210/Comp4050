@@ -440,8 +440,11 @@ def edit_task(db, methods=['GET']):
     title = request.forms.get("title")
     location = request.forms.get("location")
     description = request.forms.get("descrip")
+    selectedUser = request.forms.get('selectedUser')
 
-    database.edit_job_listing(db, owner, title, location, description, job_id)
+    print(selectedUser)
+
+    database.edit_job_listing(db, owner, title, location, description, job_id, selectedUser)
 
     return {'result': "True"}
 

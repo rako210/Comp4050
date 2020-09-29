@@ -1,15 +1,11 @@
 import React from 'react'
 import Base from '../Base'
-import { BrowserRouter as Router, Link, useLocation } from 'react-router-dom'
 
 class EditTask extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   render() {
     return (
       <div>
+        /** Load common page elements */
         <Base authenticated={this.props.authenticated}> </Base>
         <FromEditTask> </FromEditTask>
       </div>
@@ -71,16 +67,35 @@ class FromEditTask extends React.Component {
           this.setState({
             bannerMessage: 'Task details Updated!',
           })
-        else this.setState({ bannerMessage: 'Penis!' })
+        else this.setState({ bannerMessage: 'Oops! Something went wrong!' })
       })
   }
 
   render() {
+    const registeredUsers = this.state.registeredUsers
+    var listOfRegisteredUsers = (
+      <div>No users have registered for this task. :(</div>
+    )
+
+    if (registeredUsers != null) {
+      listOfRegisteredUsers = (
+        <select name="selectedUser" id="selectedUser" form="editTaskForm">
+          {registeredUsers.map((user) => (
+            <option value={user.userID}>{user.name}</option>
+          ))}
+        </select>
+      )
+    }
+
     return (
       <div>
         <h2> Update Task Details </h2>
         <h2> {this.state.bannerMessage} </h2>
-        <form onSubmit={this.handleSubmit} className="poster1">
+        <form
+          onSubmit={this.handleSubmit}
+          className="poster1"
+          id="editTaskForm"
+        >
           <input type="hidden" name="id" value={1} />
           Owner:
           <input type="text" name="owner" />
@@ -95,16 +110,7 @@ class FromEditTask extends React.Component {
           <input type="text" name="descrip" onChange={this.handleChange} />
           <br />
           Select user to perform task:
-          {(this.state.registeredUsers == null && (
-            <div>No user has applied for this job yet.</div>
-          )) ||
-            (this.state.registeredUsers != null && (
-              <select>
-                {this.state.registeredUsers.map((user) => (
-                  <option value={user.userID}>{user.userID}</option>
-                ))}
-              </select>
-            ))}
+          {listOfRegisteredUsers}
           <input type="submit" value="Save" />
         </form>
       </div>
