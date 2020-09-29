@@ -74,6 +74,7 @@ def create_tables(db):
     DROP TABLE IF EXISTS users;
     CREATE TABLE users (
         username text,
+        email text,
         password text,
         userID integer unique primary key autoincrement,
         name test,
