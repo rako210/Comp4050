@@ -94,6 +94,7 @@ def create_tables(db):
     CREATE TABLE jobListing (
         jobID integer unique primary key autoincrement,
         timestamp text default CURRENT_TIMESTAMP,
+        userID,
         owner text,
         title text,
         location text, 
