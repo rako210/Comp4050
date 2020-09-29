@@ -36,6 +36,9 @@ class ShowAllCreatedTasksTable extends React.Component {
                       </form>
                     ))}
                 </td>
+                <td>
+                  <DeleteButton callBack={this.props.forceUpdate} taskID={task.id}></DeleteButton>
+                </td>
               </tr>
             );
           })}
@@ -43,6 +46,43 @@ class ShowAllCreatedTasksTable extends React.Component {
       </div>
     );
   }
+}
+
+class DeleteButton extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(event) {
+    event.preventDefault();
+
+    const data = new FormData(event.target);
+
+    fetch('/deletetask', {
+      method: 'POST',
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {})
+
+    this.props.callBack();
+
+  }
+
+  render() {
+    return(
+      <form
+        onSubmit={this.handleClick}
+        className="button"
+      >
+        <input type="hidden" value={this.props.taskID} name="taskid" />
+        <input type="submit" value="Delete Task" />
+      </form>
+    );
+  }
+
 }
 
 export default ShowAllCreatedTasksTable;

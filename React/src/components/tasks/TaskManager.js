@@ -120,7 +120,7 @@ class TaskManager extends React.Component {
             ></ShowAllTasksTable>
           )) ||
             (this.state.apiURL === 'created-by-user' && (
-              <ShowAllCreatedTasksTable data={this.state.tasks}></ShowAllCreatedTasksTable>
+              <ShowAllCreatedTasksTable forceUpdate={this.updateTaskList} data={this.state.tasks}></ShowAllCreatedTasksTable>
             )))}
       </div>
     )

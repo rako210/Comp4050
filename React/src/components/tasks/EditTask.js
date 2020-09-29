@@ -5,7 +5,6 @@ class EditTask extends React.Component {
   render() {
     return (
       <div>
-        /** Load common page elements */
         <Base authenticated={this.props.authenticated}> </Base>
         <FromEditTask> </FromEditTask>
       </div>
