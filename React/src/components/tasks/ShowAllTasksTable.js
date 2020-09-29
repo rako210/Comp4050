@@ -12,6 +12,7 @@ class ShowAllTasksTable extends React.Component {
             <th>Title</th>
             <th>Location</th>
             <th>Description</th>
+            <td>Status</td>
           </tr>
           {this.props.data.map((task) => {
             return (
@@ -22,6 +23,7 @@ class ShowAllTasksTable extends React.Component {
                 <td>{task.title}</td>
                 <td>{task.location}</td>
                 <td>{task.description}</td>
+                <td>{task.status}</td>
                 <td>
                   {(task.isRegistered && (
                     <div>You have already applied!</div>

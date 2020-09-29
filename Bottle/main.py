@@ -373,6 +373,8 @@ def task(db):
             if(registered_task['jobID'] == task[0]):
                 is_registered = True
 
+        status = status_dict[str(task[8])]
+
         ret_val.append({
             'id': task[0],
             'time': task[1],
@@ -381,7 +383,7 @@ def task(db):
             'location': task[5],
             'description': task[6],
             'selectedUserID': task[7],
-            'status': task[8],
+            'status': status,
             'isRegistered': is_registered
         })
 
