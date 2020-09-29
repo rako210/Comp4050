@@ -22,8 +22,31 @@ class FromEditTask extends React.Component {
     super(props)
     this.state = {
       bannerMessage: '',
+      registeredUsers: null,
     }
     this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  componentDidMount() {
+    var url = window.location.href
+    var parameterRegex = /id=[0-9]*/g
+    var numberRegex = /[0-9]+/i
+    var jobID = url.match(parameterRegex)[0].match(numberRegex)[0]
+
+    var data = { jobID: jobID }
+
+    fetch('/api/list/task/registed-for-task', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.result.length > 0)
+          this.setState({ registeredUsers: data.result })
+      })
   }
 
   handleSubmit(event) {
@@ -35,7 +58,7 @@ class FromEditTask extends React.Component {
     var parameterRegex = /id=[0-9]*/g
     var numberRegex = /[0-9]+/i
 
-    var jobID = url.match(parameterRegex)[0].match(numberRegex)[0];
+    var jobID = url.match(parameterRegex)[0].match(numberRegex)[0]
     data.append('jobID', jobID)
 
     fetch('/api/task/edit', {
@@ -71,6 +94,17 @@ class FromEditTask extends React.Component {
           Description:
           <input type="text" name="descrip" onChange={this.handleChange} />
           <br />
+          Select user to perform task:
+          {(this.state.registeredUsers == null && (
+            <div>No user has applied for this job yet.</div>
+          )) ||
+            (this.state.registeredUsers != null && (
+              <select>
+                {this.state.registeredUsers.map((user) => (
+                  <option value={user.userID}>{user.userID}</option>
+                ))}
+              </select>
+            ))}
           <input type="submit" value="Save" />
         </form>
       </div>

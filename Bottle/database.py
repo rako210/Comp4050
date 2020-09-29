@@ -271,6 +271,29 @@ def apply_for_job(db, job_id, user_id):
     cursor.execute(sql, (job_id, user_id, 0))
     db.commit()
 
+def get_users_applied_for_job(db, job_id):
+    """
+        Get a list of users that have applied for a particular job given a job_id.
+
+        The data returned is described below:
+
+        [
+            {'userID': 3},
+            {'userID': 6}
+        ]
+    """
+
+    cursor = db.cursor()
+    sql = """SELECT userID FROM jobApplication where jobID=?;"""
+
+    data = cursor.execute(sql, (job_id,))
+    data = data.fetchall()
+
+    temp = [dict(zip([key[0] for key in cursor.description], row))
+            for row in data]
+
+    return temp
+
 def get_user_jobs(db, user_id):
 
     # Return list of jobs a user has applied for

@@ -4,3 +4,4 @@ venv/
 node_modules/
 Bottle/__pycache__/
 .vscode/
+package-lock.json

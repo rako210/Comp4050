@@ -421,6 +421,16 @@ def tasks_registered_by_user(db):
     return ret_val
 
 
+@app.post('/api/list/task/registed-for-task', methods=['GET'])
+def users_registered_for_task(db):
+
+    jobID = json.loads(str(request.body.read(), encoding='utf-8'))['jobID']
+
+    data = database.get_users_applied_for_job(db, jobID)
+
+    return {'result': data}
+
+
 @app.post('/api/task/edit')
 def edit_task(db, methods=['GET']):
 
