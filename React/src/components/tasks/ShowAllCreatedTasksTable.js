@@ -2,6 +2,7 @@ import React from "react";
 
 class ShowAllCreatedTasksTable extends React.Component {
   render() {
+
     return (
       <div>
         <table style={{ width: "100%" }}>
@@ -12,6 +13,8 @@ class ShowAllCreatedTasksTable extends React.Component {
             <th>Title</th>
             <th>Location</th>
             <th>Description</th>
+            <th>Chosen Helper</th>
+            <th>Task Status</th>
           </tr>
           {this.props.data.map((task) => {
             return (
@@ -22,6 +25,9 @@ class ShowAllCreatedTasksTable extends React.Component {
                 <td>{task.title}</td>
                 <td>{task.location}</td>
                 <td>{task.description}</td>
+                {(task.selectedUserID != null) ? 
+                  <p>{task.selectedUsername}</p> : <p>No User has been selected</p> }
+                <td>{task.status}</td>
                 <td>
                   {(task.isRegistered && (
                     <div>You have already applied!</div>
@@ -36,6 +42,12 @@ class ShowAllCreatedTasksTable extends React.Component {
                       </form>
                     ))}
                 </td>
+                <td>
+                  <DeleteButton callBack={this.props.forceUpdate} taskID={task.id}></DeleteButton>
+                </td>
+                <td>
+                  <MarkCompleteButton callBack={this.props.forceUpdate} taskID={task.id}></MarkCompleteButton>
+                </td>
               </tr>
             );
           })}
@@ -44,5 +56,80 @@ class ShowAllCreatedTasksTable extends React.Component {
     );
   }
 }
+
+class DeleteButton extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(event) {
+    event.preventDefault();
+
+    const data = new FormData(event.target);
+
+    fetch('/deletetask', {
+      method: 'POST',
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {})
+
+    this.props.callBack();
+
+  }
+
+  render() {
+    return(
+      <form
+        onSubmit={this.handleClick}
+        className="button"
+      >
+        <input type="hidden" value={this.props.taskID} name="taskid" />
+        <input type="submit" value="Delete Task" />
+      </form>
+    );
+  }
+
+}
+
+class MarkCompleteButton extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(event) {
+    event.preventDefault();
+
+    const data = new FormData(event.target);
+
+    fetch('/api/task/mark-complete', {
+      method: 'POST',
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {})
+
+    this.props.callBack();
+
+  }
+
+  render() {
+    return(
+      <form
+        onSubmit={this.handleClick}
+        className="button"
+      >
+        <input type="hidden" value={this.props.taskID} name="taskid" />
+        <input type="submit" value="Mark Task as Completed" />
+      </form>
+    );
+  }
+
+}
+
 
 export default ShowAllCreatedTasksTable;

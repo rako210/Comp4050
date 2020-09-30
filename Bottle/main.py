@@ -228,8 +228,8 @@ def task(db):
     """"
     Will take the form from addtask.html and add the respective task to the database
     """
-    userID = users.session_user(db)
-    owner = request.forms.get("owner")
+    userID = get_user_id(db)
+    owner = users.session_user(db)
     title = request.forms.get("title")
     location = request.forms.get("location")
     description = request.forms.get("descrip")
@@ -380,27 +380,42 @@ def task(db):
             'title': task[4],
             'location': task[5],
             'description': task[6],
+            'selectedUserID': task[7],
+            'status': task[8],
             'isRegistered': is_registered
         })
 
     return {'result': ret_val}
 
 
+status_dict = {
+    '0': "Looking for Helpers",
+    '1': "In Progress",
+    '2': "Task Complete"
+}
+
+
 @app.get('/api/list/task/created-by-user')
 def task(db):
 
-    user_id = users.session_user(db)
+    user_id = get_user_id(db)
     task_list = database.position_list(db, user_id)
     ret_val = []
 
     for x in task_list:
+
+        status = status_dict[str(x[8])]
+
         ret_val.append({
             'id': x[0],
             'time': x[1],
             'owner': x[3],
             'title': x[4],
             'location': x[5],
-            'description': x[6]
+            'description': x[6],
+            'selectedUserID': x[7],
+            'status': status,
+            'selectedUsername': database.get_username(db, x[7]),
         })
 
     return {'result': ret_val}
@@ -421,20 +436,44 @@ def tasks_registered_by_user(db):
     return ret_val
 
 
+@app.post('/api/list/task/registed-for-task', methods=['GET'])
+def users_registered_for_task(db):
+
+    jobID = json.loads(str(request.body.read(), encoding='utf-8'))['jobID']
+
+    data = database.get_users_applied_for_job(db, jobID)
+
+    return {'result': data}
+
+
 @app.post('/api/task/edit')
 def edit_task(db, methods=['GET']):
 
     user_id = users.session_user(db)
     job_id = request.forms.get("jobID")
-    owner = request.forms.get("owner")
+    owner = users.session_user(db)
     title = request.forms.get("title")
     location = request.forms.get("location")
     description = request.forms.get("descrip")
+    selectedUser = request.forms.get('selectedUser')
 
-    database.edit_job_listing(db, owner, title, location, description, job_id)
+    print(selectedUser)
+
+    # if((selectedUser != None) and (database.get_task_status(db, job_id) != 2)):
+    #     database.mark_task_as_in_progress(db, job_id)
+
+    database.edit_job_listing(db, owner, title, location, description, job_id, selectedUser)
 
     return {'result': "True"}
 
+@app.post('/api/task/mark-complete')
+def mark_task_as_complete(db, methods=['GET']):
+
+    job_id = request.forms.get("taskid")
+
+    database.mark_task_as_complete(db, job_id)
+
+    print(job_id)
 
 if __name__ == '__main__':
     from bottle.ext import sqlite
