@@ -15,7 +15,6 @@ class Main extends React.Component {
     return (
       <div>
         <h1>COMMUNITY BARTER SITE</h1>
-        <img src="/static/images/cblogo.JPG" className="logo" alt="Website Logo" />
         <div className="styled">
           <ul>
             <li>

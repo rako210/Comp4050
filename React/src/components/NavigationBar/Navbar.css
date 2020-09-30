@@ -1,0 +1,347 @@
+
+/*(navigation bar start)*/
+
+nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  min-height: 8vh;
+  background-color: red;
+}
+
+.mainLogo {
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  font-size: 20px;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: space-around;
+  width: 30%;
+}
+
+.nav-links li {
+  list-style: none;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  letter-spacing: 3px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.burger {
+  display: none;
+  cursor: pointer;
+}
+
+.burger div {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  margin: 3px;
+}
+
+
+/*(navigation bar end)*/
+
+/*(create account)*/
+.createAccount-model {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: pink;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.5s;
+}
+
+.createAccount-active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.model {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+}
+.model-close {
+  position: absolute;
+  top: 25px;
+  right: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.poster input[type="text"],
+select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.poster input[type="submit"] {
+  width: 20%;
+  background-color: pink;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.poster1 {
+  width: 300px;
+  box-shadow: aquamarine;
+  background-color: #606060;
+  padding: 20px;
+  margin: 8% auto 0;
+  text-align: center;
+  color: black;
+}
+
+.poster input[type="submit"]:hover {
+  background-color: red;
+}
+
+.login,
+.sign-up {
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  font-size: 20px;
+  padding: 13px 0;
+}
+
+.poster1 input[type="text"][type="password"],
+select {
+  width: 50%;
+  height: 20px;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: block;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.poster1 input[type="submit"] {
+  width: 50%;
+
+  background-color: pink;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.poster1 input[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+.button input[type="submit"],
+.createAccount-button {
+  width: 20%;
+  background-color: red;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button input[type="submit"],
+.createAccount-button:hover {
+  background-color: purple;
+}
+.createAccount-button {
+  position: fixed;
+  left: 40%;
+}
+.fa.fa-eye {
+  cursor: pointer;
+}
+.fa.fa-eye:hover {
+  background-color: black;
+}
+
+.pass_indicator {
+  height: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+  display: none;
+}
+
+.pass_indicator span {
+  width: 100%;
+  height: 100%;
+  background: red;
+  border-radius: 5px;
+  position: relative;
+}
+
+.pass_indicator span.medium {
+  margin: 0 3px;
+}
+
+.pass_indicator span:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+}
+
+.pass_indicator span.active.weak:before {
+  background-color: #ff4757;
+}
+
+.pass_indicator span.active.medium:before {
+  background-color: orange;
+}
+
+.pass_indicator span.active.strong:before {
+  background-color: #23ad5c;
+}
+
+.password_message {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  display: none;
+}
+
+.password_message.weak {
+  background-color: #ff4757;
+}
+
+.password_message.medium {
+  background-color: orange;
+}
+
+.password_message.strong {
+  background-color: #23ad5c;
+}
+
+.div1 {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+.banner {
+  width: 100%;
+}
+
+.list li {
+  list-style-type: none;
+}
+
+.positionslist {
+  width: 85%;
+  background-color: orange;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 50px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: solid #f4f7f8;
+}
+
+.truncate {
+  width: 95%;
+  height: 138px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.head {
+  font-size: large;
+}
+
+.txt {
+  color: #008348;
+}
+
+----------------
+----------------
+
+
+@media screen and (max-width: 1024px) {
+  .nav-links {
+    width: 50%;
+  }
+}
+
+
+
+@media screen and (max-width: 750px) {
+  body {
+    overflow-x: hidden;
+  }
+  .nav-links {
+    position: absolute;
+    right: 0px;
+    height: 92vh;
+    top: 8vh;
+    background-color: #606060;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+    transform: translateX(100%);
+    transition: transform 0.5s ease-in;
+  }
+
+  .nav-links li {
+    opacity: 100;
+  }
+
+  .burger {
+    display: block;
+  }
+
+  .nav-active {
+    transform: translateX(0%);
+  }
+
+  @keyframes navLinkFade {
+    from {
+      opacity: 0;
+      transformation: translateX(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+  }
+}
+
+
+

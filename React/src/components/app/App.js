@@ -4,7 +4,16 @@ import CreateAccount from "../settings/CreateAccount";
 import AccountSettings from "../settings/AccountSettings";
 import EditTask from '../tasks/EditTask'
 import Home from "../home/Home";
+
+/*---------------------------------------*/
+/*all the css file imports here */
 import "./App.css";
+import "../NavigationBar/Navbar.css";
+import "../about/About.css"
+
+/*---------------------------------------*/
+
+
 import {
   BrowserRouter as Router,
   Switch,
