@@ -4,8 +4,93 @@ import database
 import users
 import re
 import os
-
+######new
+import config
+import itsdangerous, smtplib
+from email.mime.text import MIMEText
 app = Bottle()
+
+
+def send_email(token, recpt):
+    sender = 'community.barter.reset@gmail.com'
+
+    receiver = recpt
+
+    content = "Please visit the following link to reset your password: """""http://127.0.0.1:8010/reset/""" + token
+
+    msg = MIMEText(content)
+    msg['From'] = sender
+    msg['To'] = receiver
+    msg['Subject'] = 'Password Reset'
+
+    smtp_server_name = 'smtp.gmail.com'
+    port = '465' # for secure messages
+    pword = config.cred['loginCred']
+
+    server = smtplib.SMTP_SSL('{}:{}'.format(smtp_server_name, port))
+
+    server.login(sender, pword)
+    server.send_message(msg)
+    server.quit()
+
+@app.route('/reset/<tok>')
+def pword(db, tok):
+    key = itsdangerous.URLSafeSerializer(config.cred['secretKeys'])
+    out = key.loads(tok)
+    res=database.check_user(db, out[0], out[1])
+    if res:
+        return template('pwordReset', user=tok, pwordError=False)
+    #return password reset form where the token is password into the form
+
+@app.post('/tokenReset')
+def token_reset(db):
+    key = itsdangerous.URLSafeSerializer(config.cred['secretKeys'])
+    user = request.forms.get("user")
+    out = key.loads(user)
+    password = request.forms.get("pword")
+    check = password_test(password)
+    if check:
+        userID = users.return_userID(db, out[0])
+        hash=database.password_hash(db, password, userID)
+        database.update_password(db, hash, userID)
+        return redirect('/') ########does this redirect not work anymore???
+    else:
+        return template('pwordReset', user=user, pwordError=True)
+    #if here say pwrod doesnt meet password requirements
+    #####tell user password must :     <h2>Password must contain at least
+    # 1 capital letter, 1 number and be atleast 7 characters long</h2>
+    #and provide them the same form
+
+
+@app.post('/rateUser')
+def rating(db):
+    newRating = request.forms['rate']
+    ###############################################################
+    ############################################################
+    #need to cahnge users.session_user(db) to be the username of the person being rated
+    database.update_rating(db, newRating, users.session_user(db))
+    return redirect('/') ################# does this redirrect not work???
+"new"
+
+##this will cause an error if no email exists for an account
+@app.post('/ForgotPassword')
+def password_reset(db):
+    name = request.forms.get("name")
+    flag = users.check_user(db, name)
+    if flag:
+        username = name
+        password = database.return_passwordHashV2(db,name)
+        key = itsdangerous.URLSafeSerializer(config.cred['secretKeys'])
+        token = key.dumps([username, password])
+        send_email(token,database.return_email(db, name))
+        return template('temp2')
+        ##return a redirect to a page where it says please check your email
+    else:
+        return template('temp3')
+        #return a message to the user saying the username is invalid
+
+
+
 
 
 @app.route('/static/<filename:path>')

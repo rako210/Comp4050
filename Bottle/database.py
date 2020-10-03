@@ -9,6 +9,97 @@ import datetime
 # The database name
 DATABASE_NAME = 'comp4050.db'
 
+#new
+def return_accountBalance(db, user):
+    cursor = db.cursor()
+    sql = "SELECT accountBalance FROM users WHERE username=?"
+    cursor.execute(sql, (user,))
+    data = cursor.fetchone()
+    if data is None:
+        return False
+    else:
+        return True
+
+def return_passwordHash(db, user):
+    cursor = db.cursor()
+    sql = "SELECT password FROM users WHERE username=?"
+    cursor.execute(sql,(user,))
+    data = cursor.fetchone()
+    if data is None:
+        return False
+    else:
+        return True
+
+def return_passwordHashV2(db, user):
+    cursor = db.cursor()
+    sql = "SELECT password FROM users WHERE username=?"
+    cursor.execute(sql,(user,))
+    data = cursor.fetchone()
+    if data is None:
+        return False
+    else:
+        return data[0]
+
+def return_email(db, user):
+    cursor = db.cursor()
+    sql = "SELECT email FROM users WHERE username=?"
+    cursor.execute(sql,(user,))
+    data = cursor.fetchone()
+    if data is None:
+        return False
+    else:
+        return data[0]
+
+def check_user(db, user, hash):
+    cursor = db.cursor()
+    sql = "SELECT username FROM users WHERE username=? and password=?"
+    cursor.execute(sql,(user,hash))
+    data = cursor.fetchone()
+    if data is None:
+        return False
+    else:
+        return data[0]
+
+
+
+def return_userRating(db,userName):
+    cursor = db.cursor()
+    sql = "SELECT userRating from users WHERE username =?"
+    cursor.execute(sql, (userName,))
+    userRating = cursor.fetchone()
+    return userRating[0]
+
+def update_amountOfRatings(db, userName):
+    cursor = db.cursor()
+    sql = "UPDATE users SET amountOfRatings = amountOfRatings + 1 WHERE username =?"
+    cursor.execute(sql, (userName,))
+    db.commit()
+    return True
+
+
+def update_rating(db, newRating, userName):
+    cursor = db.cursor()
+
+    update_amountOfRatings(db, userName)
+    sql = "SELECT amountOfRatings from users where username =?"
+    cursor.execute(sql, (userName,))
+    amountOfRatings = cursor.fetchone()
+    print(amountOfRatings[0])
+
+    sql = "SELECT userRating from users WHERE username =?"
+    cursor.execute(sql, (userName,))
+    userRating = cursor.fetchone()
+    print(userRating[0])
+    print(newRating)
+    userRating = userRating[0] + int(newRating)
+    print(userRating)
+    rating = userRating/amountOfRatings[0]
+    print(rating)
+
+    sql = "UPDATE users SET userRating =? where username=?"
+    cursor.execute(sql,(rating, userName))
+    db.commit()
+    return True
 "------------------------------------------------------------------------------------------------------------"
 "Password creation methods"
 
@@ -86,7 +177,10 @@ def create_tables(db):
         name test,
         suburb text,
         rand text,
-        avatar text
+        avatar text,
+        userRating integer DEFAULT 0,
+        amountOfRatings integer DEFAULT 0,
+        accountBalance integer DEFAULT 5
     );
     
     DROP TABLE IF EXISTS sessions;
@@ -206,6 +300,9 @@ def print_users(db):
         print(row[4])
         print(row[5])
         print(row[6])
+        print(row[7])
+        print(row[8])
+        print(row[9])
 
 
 "------------------------------------------------------------------------------------------------------------"

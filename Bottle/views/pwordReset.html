@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>reset</title>
+</head>
+<body>
+    % if pwordError:
+    <h2>Password must contain at least 1 capital letter, 1 number and be atleast 7 characters long</h2>
+    % end
+
+        <form action="/tokenReset" method="POST"  enctype="multipart/form-data" class="poster1">
+            <input name="user" value={{user}} type="hidden" readonly>
+            New Password: <input type="text" name="pword"><br>
+            <input type="submit" value ="Update Password">
+        </form>
+</body>
+</html>

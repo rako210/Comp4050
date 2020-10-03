@@ -89,4 +89,14 @@ def check_password(db, user, password):
         return True
     return False
 
+def check_user(db, username):
+    """checks if a user exists within the db"""
+    cursor = db.cursor()
+    sql = "SELECT username FROM users WHERE username=?"
+    cursor.execute(sql,(username,))
+    data = cursor.fetchone()
+    if data:
+        print(data[0])
+        return True
+    return False
 

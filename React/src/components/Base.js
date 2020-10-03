@@ -89,6 +89,10 @@ class Login extends React.Component {
             <br />
             <input type="submit" value="Login" />
           </form>
+          <form action="/ForgotPassword" method="POST">
+            Username: <input type="text" name="name"/><br/>
+            <input type="submit" value="Submit"/>
+          </form>
           <form
             action="/createAccount"
             method="get"
