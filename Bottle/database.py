@@ -18,7 +18,7 @@ def return_accountBalance(db, user):
     if data is None:
         return False
     else:
-        return True
+        return data[0]
 
 def return_passwordHash(db, user):
     cursor = db.cursor()
