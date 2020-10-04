@@ -3,6 +3,7 @@ import ShowAllTasksButton from './ShowAllTasksButton'
 import ShowAllTasksTable from './ShowAllTasksTable'
 import ShowAllCreatedTasksButton from './ShowAllCreatedTasksButton'
 import ShowAllCreatedTasksTable from './ShowAllCreatedTasksTable'
+import {AllTaskCard} from './Card.js'
 
 class TaskManager extends React.Component {
   constructor(props) {
@@ -114,17 +115,37 @@ class TaskManager extends React.Component {
         {this.state.displayTable === 'True' &&
           this.state.tasks != null &&
           ((this.state.apiURL === 'all' && (
-            <ShowAllTasksTable
-              data={this.state.tasks}
-              callBack={this.applyForTask}
-            ></ShowAllTasksTable>
+            <div>
+              <RenderAllCards
+                forceUpdate={this.updateTaskList}
+                data={this.state.tasks}
+                callBack = {this.applyForTask}
+              ></RenderAllCards>
+            </div>
           )) ||
             (this.state.apiURL === 'created-by-user' && (
-              <ShowAllCreatedTasksTable forceUpdate={this.updateTaskList} data={this.state.tasks}></ShowAllCreatedTasksTable>
+              <div>
+                <ShowAllCreatedTasksTable
+                  forceUpdate={this.updateTaskList}
+                  data={this.state.tasks}
+                ></ShowAllCreatedTasksTable>
+              </div>
             )))}
       </div>
     )
   }
 }
 
-export default TaskManager
+class RenderAllCards extends React.Component {
+
+  render() {
+    let render = this.props.data.map((task) => {
+      return <AllTaskCard data={task} callBack={this.props.callBack}></AllTaskCard>
+    })
+
+    return <div className="section">{render}</div>
+  }
+
+}
+
+export default TaskManager;
