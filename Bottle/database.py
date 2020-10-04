@@ -187,7 +187,7 @@ def deduct_accountBalance(db, user, value):
     at the cost they provide, will return true otherwise"""
     bal = return_accountBalance(db, user)
     if bal is not False:
-        newBal = bal - value
+        newBal = bal - int(value)
     if newBal < 0:
         return False
     else:
@@ -256,7 +256,7 @@ def create_tables(db):
         location text, 
         description text,
         selectedUserID INTEGER,
-        status INTEGER,
+        status INTEGER DEFAULT 0,
         cost INTEGER,
         FOREIGN KEY("selectedUserID") REFERENCES "users"("userID"),
         FOREIGN KEY("userID") REFERENCES "users"("userID"),

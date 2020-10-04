@@ -513,7 +513,7 @@ def task(db):
             'location': x[5],
             'description': x[6],
             'selectedUserID': x[7],
-            'cost': task[9],
+            'cost': x[9],
             'status': status,
             'selectedUsername': database.get_username(db, x[7]),
         })
@@ -559,8 +559,8 @@ def edit_task(db, methods=['GET']):
 
     print(selectedUser)
 
-    # if((selectedUser != None) and (database.get_task_status(db, job_id) != 2)):
-    #     database.mark_task_as_in_progress(db, job_id)
+    if((selectedUser != None) and (database.get_task_status(db, job_id) != 2)):
+        database.mark_task_as_in_progress(db, job_id)
 
     database.edit_job_listing(db, owner, title, location, description, job_id, selectedUser)
 

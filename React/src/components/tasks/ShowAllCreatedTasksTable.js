@@ -135,7 +135,7 @@ class MarkCompleteButton extends React.Component {
     else
       render = (
         <form onSubmit={this.handleClick} className="button">
-          <input type="hidden" value={this.props.taskID} name="taskid" />
+          <input type="hidden" value={this.props.data.id} name="taskid" />
           <input type="submit" value="Mark Task as Completed" />
         </form>
       )
