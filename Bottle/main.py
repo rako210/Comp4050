@@ -318,8 +318,15 @@ def task(db):
     title = request.forms.get("title")
     location = request.forms.get("location")
     description = request.forms.get("descrip")
+    cost = request.forms.get("cost")
 
-    database.add_jobListing(db, userID, owner, title, location, description)
+    balanceCheck = database.deduct_accountBalance(db, owner, cost)
+    if balanceCheck is False:
+        return {'result': "False",
+                'bannerMessage': 'You do not have enough coins in your account to post this job, '
+                                 'either complete jobs to gain coins or delete some of your other jobs'}
+
+    database.add_jobListing(db, userID, owner, title, location, description, cost)
 
     redirect('/')
 
@@ -394,7 +401,11 @@ def task(db):
     Deletes respective ID'd task
     """
     taskid = request.forms.get("taskid")
-    print(taskid)
+    checkIfComplete = database.get_task_status(db, taskid)
+
+    if checkIfComplete is not 2:
+        database.increase_accountBalance(db, users.session_user(db), database.return_jobCost(db, taskid))
+
     database.delete_jobListing(db, taskid)
     redirect('/')
 
@@ -468,6 +479,7 @@ def task(db):
             'location': task[5],
             'description': task[6],
             'selectedUserID': task[7],
+            'cost': task[9],
             'status': status,
             'isRegistered': is_registered
         })
@@ -501,6 +513,7 @@ def task(db):
             'location': x[5],
             'description': x[6],
             'selectedUserID': x[7],
+            'cost': task[9],
             'status': status,
             'selectedUsername': database.get_username(db, x[7]),
         })
@@ -557,6 +570,9 @@ def edit_task(db, methods=['GET']):
 def mark_task_as_complete(db, methods=['GET']):
 
     job_id = request.forms.get("taskid")
+    userAssigned = database.return_selected_user(db, job_id)
+    if userAssigned is not False:
+        database.increase_accountBalance(db, userAssigned, database.return_jobCost(db, job_id))
 
     database.mark_task_as_complete(db, job_id)
 

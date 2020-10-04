@@ -20,31 +20,9 @@ class FormAddTask extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      owner: "",
-      title: "",
-      location: "",
-      description: "",
       bannerMessage: "",
     };
-    this.handleChangeOwner = this.handleChangeOwner.bind(this);
-    this.handleChangeTitle = this.handleChangeTitle.bind(this);
-    this.handleChangeLocation = this.handleChangeLocation.bind(this);
-    this.handleChangeDescription = this.handleChangeDescription.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChangeOwner(event) {
-    this.setState({ owner: event.target.value });
-  }
-
-  handleChangeTitle(event) {
-    this.setState({ title: event.target.value });
-  }
-  handleChangeLocation(event) {
-    this.setState({ location: event.target.value });
-  }
-  handleChangeDescription(event) {
-    this.setState({ description: event.target.value });
   }
 
   handleSubmit(event) {
@@ -76,34 +54,33 @@ class FormAddTask extends React.Component {
           <input
             type="text"
             name="owner"
-            value={this.state.owner}
-            onChange={this.handleChangeEmail}
           />
           <br />
           Title:{" "}
           <input
             type="text"
             name="title"
-            value={this.state.title}
-            onChange={this.handleChangePassword}
           />
           <br />
           Location:{" "}
           <input
             type="text"
             name="location"
-            value={this.state.location}
-            onChange={this.handleChangeSuburb}
           />
           <br />
           Description:{" "}
           <input
             type="text"
             name="descrip"
-            value={this.state.description}
-            onChange={this.handleChangeName}
           />
           <br />
+          Payment: {" "}
+          <select name="cost">
+              <option value="1">1 Coin (Low Effort)</option>
+              <option value="2">2 Coins (Medium Effort)</option>
+              <option value="3">3 Coins (High Effort)</option>
+          </select>
+
           <input type="submit" defaultValue="Update Details" />
         </form>
       </div>

@@ -157,6 +157,62 @@ def return_salt(db, user):
     else:
         return data[0]
 
+#new
+def return_jobCost(db, jobID):
+    cursor = db.cursor()
+    sql = "SELECT cost FROM jobListing WHERE jobID=?"
+    cursor.execute(sql, (jobID,))
+    data = cursor.fetchone()
+    if data is None:
+        return False
+    else:
+        return data[0]
+
+def return_accountBalance(db, user):
+    """returns account balance value or false if no value is initialised"""
+    cursor = db.cursor()
+    sql = "SELECT accountBalance FROM users WHERE username=?"
+    cursor.execute(sql, (user,))
+    data = cursor.fetchone()
+    if data is None:
+        return False
+    else:
+        return data[0]
+
+def deduct_accountBalance(db, user, value):
+    """ use this when creating a joblisting,
+    user= owner of the task
+    value= cost of task
+    if this function returns false the user does not have enough balance to create a task
+    at the cost they provide, will return true otherwise"""
+    bal = return_accountBalance(db, user)
+    if bal is not False:
+        newBal = bal - value
+    if newBal < 0:
+        return False
+    else:
+        cursor = db.cursor()
+        sql = "UPDATE users set accountBalance=? WHERE username=?"
+        cursor.execute(sql, (newBal,user))
+        db.commit()
+        return True
+
+def increase_accountBalance(db, user, value):
+    """use this when CLOSING a job listing to give money to the person who completed the job
+    OR USE WHEN DELETING a task to put the money back into the owners account
+    user= Owner when deleting a task OR
+    user= person who completed a task when closing the task
+    value= cost of job obtained using return_jobCost"""
+    cursor = db.cursor()
+    sql = "UPDATE users SET accountBalance = accountBalance + ? WHERE username = ?"
+    cursor.execute(sql, (value, user))
+    db.commit()
+    return True
+
+
+
+
+
 
 "------------------------------------------------------------------------------------------------------------"
 "table creation"
@@ -194,15 +250,20 @@ def create_tables(db):
     CREATE TABLE jobListing (
         jobID integer unique primary key autoincrement,
         timestamp text default CURRENT_TIMESTAMP,
-        userID,
+        userID integer,
         owner text,
         title text,
         location text, 
         description text,
-        FOREIGN KEY(owner) REFERENCES users(username)
+        selectedUserID integer,
+        status    INTEGER NOT NULL DEFAULT 0,
+        cost integer,
+        FOREIGN KEY("selectedUserID") REFERENCES "users"("userID"),
+        FOREIGN KEY("userID") REFERENCES "users"("userID"),
+        FOREIGN KEY("owner") REFERENCES "users"("username"),
     );
     
-    DROP TABLE IF EXISTS ;
+    DROP TABLE IF EXISTS jobApplication;
     CREATE TABLE "jobApplication" (
         "jobID"	INTEGER NOT NULL,
         "userID"	INTEGER NOT NULL,
@@ -309,14 +370,14 @@ def print_users(db):
 "job advert methods"
 
 
-def add_jobListing(db, userID, postOwner, title, location, description):
+def add_jobListing(db, userID, postOwner, title, location, description, cost):
     """CHANGE THIS LATER Add a new job post to the database.
     The date of the post will be the current time and date.
 
     Return True if the record was added, False if not."""
     cursor = db.cursor()
-    sql = """INSERT INTO jobListing (userID ,owner, title, location, description) VALUES (?,?, ?, ?, ?)"""
-    cursor.execute(sql, [userID, postOwner, title, location, description])
+    sql = """INSERT INTO jobListing (userID ,owner, title, location, description, cost) VALUES (?,?,?, ?, ?, ?)"""
+    cursor.execute(sql, [userID, postOwner, title, location, description, cost])
     db.commit()
 
     return True
@@ -510,12 +571,21 @@ def get_task_status(db, jobID):
     
     return data[0]
 
-
+def return_selected_user(db, jobID):
+    cursor = db.cursor()
+    sql = "SELECT selectedUserID FROM jobListing WHERE jobID = ?"
+    cursor.execute(sql, (jobID,))
+    data = cursor.fetchone()
+    if data is None:
+        return False
+    else:
+        return data[0]
 
 
 "------------------------------------------------------------------------------------------------------------"
 if __name__ == '__main__':
 
     """Run this file with python to initilise tables and clear table data"""
-    db = sqlite3.connect(DATABASE_NAME)
-    create_tables(db)
+    #db = sqlite3.connect(DATABASE_NAME)
+    #create_tables(db)
+
