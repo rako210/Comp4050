@@ -7,7 +7,6 @@ import React from 'react'
  */
 export class ApplyButton extends React.Component {
     render() {
-
         let render;
 
         console.log(this.props.data)
@@ -18,7 +17,7 @@ export class ApplyButton extends React.Component {
         else
             render =
             <form onSubmit={this.props.callBack} className="button">
-                <input type="hidden" value={this.props.taskID} name="id" />
+                <input type="hidden" value={this.props.data.id} name="id" />
                 <input type="submit" value="Apply for Task" />
             </form>
 
