@@ -12,7 +12,7 @@ export class AllTaskCard extends React.Component {
               <h2>{this.props.data.title}</h2>
             </div>
             <div className="card-col2">
-              <h2>16,000 SP</h2>
+              <h2>{this.props.data.cost} Points</h2>
             </div>
           </div>
   
