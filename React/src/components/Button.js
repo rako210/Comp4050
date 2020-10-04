@@ -9,8 +9,6 @@ export class ApplyButton extends React.Component {
     render() {
         let render;
 
-        console.log(this.props.data)
-
         if(this.props.data.isRegistered)
             render = <div style={{color: 'green'}}>You have already applied!</div>;
 

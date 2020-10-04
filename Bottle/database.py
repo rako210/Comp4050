@@ -238,36 +238,36 @@ def create_tables(db):
         amountOfRatings integer DEFAULT 0,
         accountBalance integer DEFAULT 5
     );
-    
+
     DROP TABLE IF EXISTS sessions;
     CREATE TABLE sessions (
         sessionid text unique primary key,
         user text,
         FOREIGN KEY(user) REFERENCES users(username)
     );
-    
+
     DROP TABLE IF EXISTS jobListing;
     CREATE TABLE jobListing (
         jobID integer unique primary key autoincrement,
         timestamp text default CURRENT_TIMESTAMP,
-        userID integer,
+        userID INTEGER,
         owner text,
         title text,
         location text, 
         description text,
-        selectedUserID integer,
-        status    INTEGER NOT NULL DEFAULT 0,
-        cost integer,
+        selectedUserID INTEGER,
+        status INTEGER,
+        cost INTEGER,
         FOREIGN KEY("selectedUserID") REFERENCES "users"("userID"),
         FOREIGN KEY("userID") REFERENCES "users"("userID"),
-        FOREIGN KEY("owner") REFERENCES "users"("username"),
+        FOREIGN KEY("owner") REFERENCES "users"("username")
     );
-    
+
     DROP TABLE IF EXISTS jobApplication;
     CREATE TABLE "jobApplication" (
-        "jobID"	INTEGER NOT NULL,
-        "userID"	INTEGER NOT NULL,
-        "status"	INTEGER NOT NULL DEFAULT 0,
+        "jobID"    INTEGER NOT NULL,
+        "userID"    INTEGER NOT NULL,
+        "status"    INTEGER NOT NULL DEFAULT 0,
         FOREIGN KEY("jobID") REFERENCES "users"("userID"),
         FOREIGN KEY("userID") REFERENCES "jobListing"("jobID"),
         PRIMARY KEY("jobID","userID")
@@ -586,6 +586,6 @@ def return_selected_user(db, jobID):
 if __name__ == '__main__':
 
     """Run this file with python to initilise tables and clear table data"""
-    #db = sqlite3.connect(DATABASE_NAME)
-    #create_tables(db)
+    db = sqlite3.connect(DATABASE_NAME)
+    create_tables(db)
 

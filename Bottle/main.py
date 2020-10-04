@@ -4,7 +4,6 @@ import database
 import users
 import re
 import os
-######new
 import config
 import itsdangerous, smtplib
 from email.mime.text import MIMEText
@@ -65,10 +64,11 @@ def token_reset(db):
 @app.post('/rateUser')
 def rating(db):
     newRating = request.forms['rate']
+    userID = request.forms['userID']
     ###############################################################
     ############################################################
     #need to cahnge users.session_user(db) to be the username of the person being rated
-    database.update_rating(db, newRating, users.session_user(db))
+    database.update_rating(db, newRating, database.get_username(db, userID))
     return redirect('/') ################# does this redirrect not work???
 "new"
 
