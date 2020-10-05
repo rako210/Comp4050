@@ -1,4 +1,6 @@
 import React from "react";
+import Base from "../Base";
+import cartoon from "../../cartoon2.jpg";
 
 class About extends React.Component {
   render() {
@@ -9,6 +11,7 @@ class About extends React.Component {
     );
   }
 }
+
 
 class Main extends React.Component {
   render() {
@@ -133,6 +136,19 @@ class Main extends React.Component {
     );
   }
 }
+
+/*
+class Main extends React.Component {
+  render() {
+    return (
+      <div className="userCard1">
+        <h1 className="userTitle">User Profile Page</h1>
+        <img src={cartoon} alt="a cartoon"/>
+      </div>
+    );
+  }
+}
+*/
 
 class Authenticated extends React.Component {
   render() {

@@ -4,6 +4,7 @@ import CreateAccount from "../settings/CreateAccount";
 import AccountSettings from "../settings/AccountSettings";
 import EditTask from '../tasks/EditTask'
 import Home from "../home/Home";
+import UserProfile from "../userProfile/UserProfile"
 
 /*---------------------------------------*/
 /*all the css file imports here */
