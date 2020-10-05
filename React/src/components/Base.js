@@ -45,6 +45,9 @@ class NavBar extends React.Component {
           <li>
             <a href="/accountSettings">Account Settings</a>
           </li>
+          <li>
+            <a href="/accountProfile">profile page</a>
+          </li>
         </div>
       );
     } else {

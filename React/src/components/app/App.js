@@ -38,6 +38,9 @@ function App() {
         {/* A <Switch> looks through its children <Route>s and
           renders the first one that matches the current URL. */}
         <Switch>
+        <Route path="/accountProfile">
+            <UserProfile authenticated={login}></UserProfile>
+          </Route>
         <Route path="/editTask">
             <EditTask authenticated={login}></EditTask>
           </Route>
