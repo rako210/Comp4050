@@ -1,4 +1,7 @@
-import React from "react";
+import React from 'react'
+import './Base.css'
+import SimpleMenu from './DropDown'
+import Typography from '@material-ui/core/Typography'
 
 class Base extends React.Component {
   render() {
@@ -6,7 +9,7 @@ class Base extends React.Component {
       <div>
         <Main authenticated={this.props.authenticated}></Main>
       </div>
-    );
+    )
   }
 }
 
@@ -15,52 +18,70 @@ class Main extends React.Component {
     return (
       <div>
         <div>
-          <h1>FAVOUR SHARE</h1>
-          <div className="styled">
-            <ul>
-              <NavBar authenticated={this.props.authenticated}></NavBar>
-            </ul>
-          </div>
+          <NavBar authenticated={this.props.authenticated}></NavBar>
           <Login authenticated={this.props.authenticated}></Login>
         </div>
       </div>
-    );
+    )
   }
 }
 
 class NavBar extends React.Component {
   render() {
-    const authenticated = this.props.authenticated;
-    let retVal;
+    var retVal = <div></div>
 
-    if (authenticated !== "None") {
+    if (this.props.authenticated !== 'None')
       retVal = (
-        <div>
-          <li>
-            <a href="/">Home</a>
-          </li>
-          <li>
-            <a href="/about">About this site</a>
-          </li>
-          <li>
-            <a href="/accountSettings">Account Settings</a>
-          </li>
-        </div>
-      );
-    } else {
-      retVal = <div></div>;
-    }
+        <div className="header">
+          <div className="nav-bar">
+            <div className="nav-left">
+              <div className="nav-logo-container">
+                <img className="nav-logo" src={require('../images/logo.png')} />
+              </div>
+              <ul className="nav-bar-list">
+                <a href="/">
+                  <li>
+                    <Typography variant="button">Home</Typography>
+                  </li>
+                </a>
+                <a href="/about">
+                  <li>
+                    <Typography variant="button">About Us</Typography>
+                  </li>
+                </a>
+                <a href="/accountSettings">
+                  <li>
+                    <Typography variant="button">Account Settings</Typography>
+                  </li>
+                </a>
+              </ul>
+            </div>
 
-    return <div>{retVal}</div>;
+            <div className="nav-right">
+              <ul className="nav-bar-list">
+                <a href="#">
+                  <li>
+                    <SimpleMenu
+                      authenticated={this.props.authenticated}
+                    ></SimpleMenu>
+                  </li>
+                </a>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )
+
+    return retVal
   }
 }
 
 class Login extends React.Component {
   render() {
-    const authenticated = this.props.authenticated;
-    let retVal;
+    const authenticated = this.props.authenticated
+    let retVal
 
-    if (authenticated !== "None") {
+    if (authenticated !== 'None') {
       retVal = (
         <div>
           <h2>Logged in as {authenticated}</h2>
@@ -73,7 +94,7 @@ class Login extends React.Component {
             <input type="submit" value="Logout" />
           </form>
         </div>
-      );
+      )
     } else {
       retVal = (
         <div>
@@ -90,8 +111,9 @@ class Login extends React.Component {
             <input type="submit" value="Login" />
           </form>
           <form action="/ForgotPassword" method="POST">
-            Username: <input type="text" name="name"/><br/>
-            <input type="submit" value="Submit"/>
+            Username: <input type="text" name="name" />
+            <br />
+            <input type="submit" value="Submit" />
           </form>
           <form
             action="/createAccount"
@@ -102,11 +124,11 @@ class Login extends React.Component {
             <input type="submit" value="Create Account" />
           </form>
         </div>
-      );
+      )
     }
 
-    return <div>{retVal}</div>;
+    return <div>{retVal}</div>
   }
 }
 
-export default Base;
+export default Base
