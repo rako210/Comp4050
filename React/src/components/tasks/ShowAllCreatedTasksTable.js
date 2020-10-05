@@ -113,8 +113,6 @@ class MarkCompleteButton extends React.Component {
       method: 'POST',
       body: data,
     })
-      .then((res) => res.json())
-      .then((data) => {})
 
     // this.props.callBack();
     this.setState({ redirect: true })
