@@ -1,10 +1,12 @@
 import React from "react";
+import Base from '../Base'
 
 class About extends React.Component {
   render() {
     return (
       <div>
-        <Main authenticated={this.props.authenticated}>Hello</Main>
+        <Base authenticated={this.props.authenticated}></Base>
+        <Main></Main>
       </div>
     );
   }
@@ -14,21 +16,6 @@ class Main extends React.Component {
   render() {
     return (
       <div>
-        <h1>COMMUNITY BARTER SITE</h1>
-        <img src="/static/images/cblogo.JPG" className="logo" alt="Website Logo" />
-        <div className="styled">
-          <ul>
-            <li>
-              <a href="/">Home</a>
-            </li>
-            <li>
-              <a href="/about">About this site</a>
-            </li>
-            <Authenticated
-              authenticated={this.props.authenticated}
-            ></Authenticated>
-          </ul>
-        </div>
         <div className="about-section">
           <h1>About Us Page</h1>
           <p>Some text about who we are and what we do.</p>
@@ -132,25 +119,6 @@ class Main extends React.Component {
         </div>
       </div>
     );
-  }
-}
-
-class Authenticated extends React.Component {
-  render() {
-    const authenticated = this.props.authenticated;
-    let retVal;
-
-    if (authenticated !== "None") {
-      retVal = (
-        <li>
-          <a href="/accountSettings">Account Settings</a>
-        </li>
-      );
-    } else {
-      retVal = <div></div>;
-    }
-
-    return <div>{retVal}</div>;
   }
 }
 

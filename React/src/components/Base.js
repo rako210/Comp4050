@@ -54,6 +54,11 @@ class NavBar extends React.Component {
                     <Typography variant="button">Account Settings</Typography>
                   </li>
                 </a>
+                <a href="/accountProfile">
+                  <li>
+                    <Typography variant="button">Account Profile</Typography>
+                  </li>
+                </a>
               </ul>
             </div>
 

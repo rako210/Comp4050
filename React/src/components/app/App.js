@@ -5,6 +5,7 @@ import AccountSettings from '../settings/AccountSettings'
 import EditTask from '../tasks/EditTask'
 import Review from '../review/Review'
 import Home from '../home/Home'
+import AccountProfile from '../profile/AccountProfile'
 import './App.css'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
@@ -28,8 +29,11 @@ function App() {
           <Route path="/editTask">
             <EditTask authenticated={login}></EditTask>
           </Route>
+          <Route path="/accountProfile">
+            <AccountProfile authenticated={login} />
+          </Route>
           <Route path="/about">
-            <About />
+            <About authenticated={login} />
           </Route>
           <Route path="/accountSettings">
             <AccountSettings authenticated={login} />
