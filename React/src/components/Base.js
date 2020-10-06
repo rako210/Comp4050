@@ -2,12 +2,13 @@ import React from 'react'
 import './Base.css'
 import SimpleMenu from './DropDown'
 import Typography from '@material-ui/core/Typography'
+import { orange } from '@material-ui/core/colors'
 
 class Base extends React.Component {
   render() {
     return (
       <div>
-        <Main authenticated={this.props.authenticated}></Main>
+        <Main authenticated={this.props.authenticated} userData={this.props.userData}></Main>
       </div>
     )
   }
@@ -18,7 +19,7 @@ class Main extends React.Component {
     return (
       <div>
         <div>
-          <NavBar authenticated={this.props.authenticated}></NavBar>
+          <NavBar authenticated={this.props.authenticated} userData={this.props.userData}></NavBar>
           <Login authenticated={this.props.authenticated}></Login>
         </div>
       </div>
@@ -30,7 +31,10 @@ class NavBar extends React.Component {
   render() {
     var retVal = <div></div>
 
+    
+
     if (this.props.authenticated !== 'None')
+    // console.log(this.props.userData.id)
       retVal = (
         <div className="header">
           <div className="nav-bar">
@@ -64,6 +68,11 @@ class NavBar extends React.Component {
 
             <div className="nav-right">
               <ul className="nav-bar-list">
+              <a href="#">
+                  <li style={{color: 'orange'}}>
+                  {this.props.userData.accountBalance} Coins
+                  </li>
+                </a>
                 <a href="#">
                   <li>
                     <SimpleMenu
@@ -109,24 +118,26 @@ class Login extends React.Component {
             id="loginform"
             className="poster1"
           >
-            Username: <input type="text" name="name" />
-            <br />
-            Password: <input type="text" name="password" />
-            <br />
+            <h3>Sign In</h3>
+            Username: <input type="text" name="name" /> <br />
+            Password: <input type="text" name="password" /> <br />
             <input type="submit" value="Login" />
           </form>
-          <form action="/ForgotPassword" method="POST">
-            Username: <input type="text" name="name" />
-            <br />
-            <input type="submit" value="Submit" />
-          </form>
+
           <form
             action="/createAccount"
             method="get"
             target="_blank"
             className="button"
           >
+            <h3>Dont have an Account?</h3>
             <input type="submit" value="Create Account" />
+          </form>
+
+          <form action="/ForgotPassword" method="POST" className="poster1">
+            <h3>Forgot Password?</h3>
+            Username: <input type="text" name="name" /> <br />
+            <input type="submit" value="Submit" />
           </form>
         </div>
       )

@@ -17,7 +17,7 @@ class Review extends React.Component {
     console.log(this.props.location.state.data)
     return (
       <div>
-        <Base authenticated={this.props.authenticated}> </Base>
+        <Base authenticated={this.props.authenticated} userData={this.props.userData}> </Base>
         <Main data={this.props.location.state.data}></Main>
       </div>
     )

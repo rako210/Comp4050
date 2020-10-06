@@ -11,7 +11,6 @@ import smtplib
 
 app = Bottle()
 
-
 @app.route('/static/<filename:path>')
 def static(filename):
     """Static file Handling method for all static files in root static"""
@@ -29,6 +28,19 @@ def get_user_id(db):
 def get_user_id_json(db):
     return {'result': get_user_id(db)}
 
+# API call to return data for a particular user
+@app.get('/api/data/user/<username>')
+def get_user_data_json(db, username):
+
+    user_data = database.get_user_data(db, username)
+
+    return {'result': user_data}
+
+# API call to return data for currently signed in user
+@app.get('/api/data/current-user')
+def get_current_user_data(db):
+
+    return get_user_data_json(db, users.session_user(db))
 
 """ Password Reset """
 
@@ -339,9 +351,7 @@ def task(db):
     database.add_jobListing(db, userID, owner, title,
                             location, description, cost)
 
-    redirect('/')
-
-    return {'result': "True"}
+    return {'result': "True", 'bannerMessage': "Task Successfully Added"}
 
 
 @app.post('/gettask', methods=['GET'])

@@ -445,6 +445,37 @@ def position_list(db, userID, limit=10):
     data = cursor.execute(sql, (limit,))
     return list(data)
 
+def get_user_data(db, userID):
+
+    cursor = db.cursor()
+    sql = """
+        SELECT username, email, userID, name, suburb, avatar, userRating, amountOfRatings, accountBalance
+        FROM users 
+        WHERE userID=?
+    """
+    data = cursor.execute(sql, (userID,))
+    data = data.fetchone()
+
+    ret_val = dict( zip([key[0] for key in cursor.description], [value for value in data]) )
+
+    return ret_val
+
+def get_user_data(db, username):
+
+    cursor = db.cursor()
+    sql = """
+        SELECT username, email, userID, name, suburb, avatar, userRating, amountOfRatings, accountBalance
+        FROM users 
+        WHERE username=?
+    """
+    data = cursor.execute(sql, (username,))
+    data = data.fetchone()
+
+    ret_val = dict( zip([key[0] for key in cursor.description], [value for value in data]) )
+
+    return ret_val
+
+
 def get_username(db, userID):
 
     if(userID == None):

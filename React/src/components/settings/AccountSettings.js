@@ -14,7 +14,7 @@ function AccountSettings(props) {
 
   return (
     <div>
-      <Base authenticated={props.authenticated}></Base>
+      <Base authenticated={props.authenticated} userData={props.userData}></Base>
       <FormValidatePassword></FormValidatePassword>
     </div>
   );

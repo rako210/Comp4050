@@ -94,7 +94,7 @@ class TaskManager extends React.Component {
   render() {
     return (
       <div>
-        <form action="/addtask" method="POST" id="addtask" className="button">
+        <form action="/addtask" method="get" id="addtask" className="button">
           <input type="submit" value="Create a new Task" />
         </form>
 

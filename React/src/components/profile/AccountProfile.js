@@ -6,7 +6,7 @@ class AccountProfile extends React.Component {
   render() {
     return (
       <div>
-        <Base authenticated={this.props.authenticated}> </Base>
+        <Base authenticated={this.props.authenticated} userData={this.props.userData}></Base>
         <Main></Main>
       </div>
     )
