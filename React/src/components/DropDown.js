@@ -15,6 +15,11 @@ export default function SimpleMenu(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleLogout = () => {
+  fetch('/logout',{method:'POST'},(req,res) => {
+  res.redirect('/');
+  })
+  };
 
   return (
     <div>
@@ -28,9 +33,10 @@ export default function SimpleMenu(props) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <a href="/accountProfile"><MenuItem onClick={handleClose}>Profile</MenuItem></a>
         <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+
       </Menu>
     </div>
   );

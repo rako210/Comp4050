@@ -90,14 +90,6 @@ class Login extends React.Component {
       retVal = (
         <div>
           <h2>Logged in as {authenticated}</h2>
-          <form
-            action="/logout"
-            method="POST"
-            id="logoutform"
-            className="button"
-          >
-            <input type="submit" value="Logout" />
-          </form>
         </div>
       )
     } else {
