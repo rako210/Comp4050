@@ -1,15 +1,39 @@
 from bottle import Bottle, template, static_file, redirect, request, response
+from email.mime.text import MIMEText
 import json
 import database
 import users
 import re
 import os
 import config
-import itsdangerous, smtplib
-from email.mime.text import MIMEText
+import itsdangerous
+import smtplib
+
 app = Bottle()
 
 
+@app.route('/static/<filename:path>')
+def static(filename):
+    """Static file Handling method for all static files in root static"""
+
+    return static_file(filename=filename, root='static')
+
+
+# Return currently signed in user id
+def get_user_id(db):
+    return users.return_userID(db, users.session_user(db))
+
+
+# API call to return currently signed in user id
+@app.get('/api/getUserID')
+def get_user_id_json(db):
+    return {'result': get_user_id(db)}
+
+
+""" Password Reset """
+
+
+# this will cause an error if no email exists for an account
 def send_email(token, recpt):
     sender = 'community.barter.reset@gmail.com'
 
@@ -23,7 +47,7 @@ def send_email(token, recpt):
     msg['Subject'] = 'Password Reset'
 
     smtp_server_name = 'smtp.gmail.com'
-    port = '465' # for secure messages
+    port = '465'  # for secure messages
     pword = config.cred['loginCred']
 
     server = smtplib.SMTP_SSL('{}:{}'.format(smtp_server_name, port))
@@ -32,14 +56,16 @@ def send_email(token, recpt):
     server.send_message(msg)
     server.quit()
 
+
 @app.route('/reset/<tok>')
 def pword(db, tok):
     key = itsdangerous.URLSafeSerializer(config.cred['secretKeys'])
     out = key.loads(tok)
-    res=database.check_user(db, out[0], out[1])
+    res = database.check_user(db, out[0], out[1])
     if res:
         return template('pwordReset', user=tok, pwordError=False)
-    #return password reset form where the token is password into the form
+    # return password reset form where the token is password into the form
+
 
 @app.post('/tokenReset')
 def token_reset(db):
@@ -50,78 +76,86 @@ def token_reset(db):
     check = password_test(password)
     if check:
         userID = users.return_userID(db, out[0])
-        hash=database.password_hash(db, password, userID)
+        hash = database.password_hash(db, password, userID)
         database.update_password(db, hash, userID)
-        return redirect('/') ########does this redirect not work anymore???
+        return redirect('/')  # does this redirect not work anymore???
     else:
         return template('pwordReset', user=user, pwordError=True)
-    #if here say pwrod doesnt meet password requirements
-    #####tell user password must :     <h2>Password must contain at least
+    # if here say pwrod doesnt meet password requirements
+    # tell user password must :     <h2>Password must contain at least
     # 1 capital letter, 1 number and be atleast 7 characters long</h2>
-    #and provide them the same form
+    # and provide them the same form
 
 
-@app.post('/rateUser')
-def rating(db):
-    newRating = request.forms['rate']
-    userID = request.forms['userID']
-    ###############################################################
-    ############################################################
-    #need to cahnge users.session_user(db) to be the username of the person being rated
-    database.update_rating(db, newRating, database.get_username(db, userID))
-    return redirect('/') ################# does this redirrect not work???
-"new"
-
-##this will cause an error if no email exists for an account
 @app.post('/ForgotPassword')
 def password_reset(db):
     name = request.forms.get("name")
     flag = users.check_user(db, name)
     if flag:
         username = name
-        password = database.return_passwordHashV2(db,name)
+        password = database.return_passwordHashV2(db, name)
         key = itsdangerous.URLSafeSerializer(config.cred['secretKeys'])
         token = key.dumps([username, password])
-        send_email(token,database.return_email(db, name))
+        send_email(token, database.return_email(db, name))
         return template('temp2')
-        ##return a redirect to a page where it says please check your email
+        # return a redirect to a page where it says please check your email
     else:
         return template('temp3')
-        #return a message to the user saying the username is invalid
+        # return a message to the user saying the username is invalid
 
 
+# Review Users
 
 
+@app.post('/rateUser')
+def rating(db):
+    newRating = request.forms['rate']
+    userID = request.forms['userID']
+    database.update_rating(db, newRating, database.get_username(db, userID))
 
-@app.route('/static/<filename:path>')
-def static(filename):
-    """Static file Handling method for all static files in root static"""
 
-    return static_file(filename=filename, root='static')
+# Login / Register Account
+
+@app.post('/login')
+def route(db):
+    """handles login of users,
+    form data is proccessed (taken from the login form), from here data is checked to see if user is valid, if so
+    a session is generated for the user and then the user is redirected to the index page otherwise they are
+    redirected to a page where they must enter their credentials again, the user is kept on this page until correct
+    credentials are entered at which point they are redirected to the index page logged in,
+
+    A cookie is assigned to each valid user once they login through the function users.generate_session()
+    in order to track whether they are logged in or not
+    """
+    info = {'title': 'Login Error, please try to login again or create an account'}
+
+    name = request.forms.get("name")
+    password = request.forms.get("password")
+    log = users.check_login(db, name, password)
+    if (log):  # if user is valid
+        users.generate_session(db, name)
+        return redirect('/')
+    else:
+        return template('splash', info, authenticated=users.session_user(db))
+
+
+@app.post('/logout', methods=['GET'])
+def logout(db):
+    """"handles logging out of  a user, once a user clicks the logout button they are logged out by removing their
+    current session from the database via the function users.delete_session(),
+    their cookie is also removed thus logging them out,
+    a redirect occurs once successfully logged out to index page where they will once again be asked to login
+    """
+    users.delete_session(db, users.session_user(db))
+
+    response.delete_cookie(users.COOKIE_NAME)
+
+    redirect('/')
 
 
 @app.route('/user_login')
 def main(db):
     return {'data': str(users.session_user(db))}
-
-
-@app.get('/accountSettings')
-def account_settings(db):
-    """Update account details or settings, must enter password to be able to do so"""
-
-    info = {'title': 'Account',
-            'bannerMessage': '', }
-    return template('account', info, authenticated=users.session_user(db), validated=False, invalidPword=False)
-
-
-@app.route('/createAccount')
-def accountPage(db):
-    """handles routing to account creation page"""
-
-    pageInfo = {'title': 'Create Account',
-                'bannerMessage': 'Create an account'}
-
-    return template('createAccount', pageInfo, authenticated=users.session_user(db))
 
 
 @app.post('/createAcc')
@@ -169,6 +203,25 @@ def route(db):
         return template('createAccount', info, authenticated=users.session_user(db))
 
 
+def userImage_upload(user, image):
+    root = os.path.abspath(os.curdir)  # does this line work on all os' ?
+    path = root + "/static/userImages/" + "DP user -- " + \
+        str(user) + " -- " + image.filename
+    image.save(path, overwrite=True)
+    return path
+
+
+# Update Account
+
+@app.get('/accountSettings')
+def account_settings(db):
+    """Update account details or settings, must enter password to be able to do so"""
+
+    info = {'title': 'Account',
+            'bannerMessage': '', }
+    return template('account', info, authenticated=users.session_user(db), validated=False, invalidPword=False)
+
+
 @app.post('/updateAccount')
 def account_update(db):
     """handles account updates"""
@@ -207,7 +260,7 @@ def account_update(db):
         imagePath = userImage_upload(uid, image)
         database.update_avatar(db, uid, imagePath)
 
-    if(flag):
+    if (flag):
         return {'result': "False"}
     else:
         return {'result': "True"}
@@ -222,14 +275,6 @@ def password_test(pWord):
     if rgx.match(''.join(sorted(password))) and len(password) >= 7:
         return True
     return False
-
-
-def userImage_upload(user, image):
-    root = os.path.abspath(os.curdir)  # does this line work on all os' ?
-    path = root + "/static/userImages/" + "DP user -- " + \
-        str(user) + " -- " + image.filename
-    image.save(path, overwrite=True)
-    return path
 
 
 @app.post('/pwordCheck')
@@ -252,42 +297,7 @@ def acc(db):
         # return template('account', info1, authenticated=users.session_user(db), validated=False, invalidPword=False)
 
 
-@app.post('/login')
-def route(db):
-    """handles login of users,
-    form data is proccessed (taken from the login form), from here data is checked to see if user is valid, if so
-    a session is generated for the user and then the user is redirected to the index page otherwise they are
-    redirected to a page where they must enter their credentials again, the user is kept on this page until correct
-    credentials are entered at which point they are redirected to the index page logged in,
-
-    A cookie is assigned to each valid user once they login through the function users.generate_session()
-    in order to track whether they are logged in or not
-    """
-    info = {'title': 'Login Error, please try to login again or create an account'}
-
-    name = request.forms.get("name")
-    password = request.forms.get("password")
-    log = users.check_login(db, name, password)
-    if (log):  # if user is valid
-        users.generate_session(db, name)
-        return redirect('/')
-    else:
-        return template('splash', info, authenticated=users.session_user(db))
-
-
-@app.post('/logout', methods=['GET'])
-def logout(db):
-    """"handles logging out of  a user, once a user clicks the logout button they are logged out by removing their
-    current session from the database via the function users.delete_session(),
-    their cookie is also removed thus logging them out,
-    a redirect occurs once successfully logged out to index page where they will once again be asked to login
-    """
-    users.delete_session(db, users.session_user(db))
-
-    response.delete_cookie(users.COOKIE_NAME)
-
-    redirect('/')
-
+# Task Creation / Edit / Deletion / Apply
 
 @app.post('/addtask', methods=['GET'])
 def task(db):
@@ -326,7 +336,8 @@ def task(db):
                 'bannerMessage': 'You do not have enough coins in your account to post this job, '
                                  'either complete jobs to gain coins or delete some of your other jobs'}
 
-    database.add_jobListing(db, userID, owner, title, location, description, cost)
+    database.add_jobListing(db, userID, owner, title,
+                            location, description, cost)
 
     redirect('/')
 
@@ -404,24 +415,15 @@ def task(db):
     checkIfComplete = database.get_task_status(db, taskid)
 
     if checkIfComplete is not 2:
-        database.increase_accountBalance(db, users.session_user(db), database.return_jobCost(db, taskid))
+        database.increase_accountBalance(db, users.session_user(
+            db), database.return_jobCost(db, taskid))
 
     database.delete_jobListing(db, taskid)
     redirect('/')
 
 
-def get_user_id(db):
-    return users.return_userID(db, users.session_user(db))
-
-
-@app.get('/api/getUserID')
-def getUserID(db):
-    return {'result': get_user_id(db)}
-
-
 @app.post('/apply_for_task', methods=['GET'])
 def apply_for_task(db):
-
     # Retrieve Task ID
     job_id = request.forms.get("id")
     # Retrieve User ID
@@ -446,9 +448,52 @@ def apply_for_task(db):
         return {'result': "False"}
 
 
+@app.post('/api/task/edit')
+def edit_task(db, methods=['GET']):
+    user_id = users.session_user(db)
+    job_id = request.forms.get("jobID")
+    owner = users.session_user(db)
+    title = request.forms.get("title")
+    location = request.forms.get("location")
+    description = request.forms.get("descrip")
+    selectedUser = request.forms.get('selectedUser')
+
+    print(selectedUser)
+
+    if ((selectedUser != None) and (database.get_task_status(db, job_id) != 2)):
+        database.mark_task_as_in_progress(db, job_id)
+
+    database.edit_job_listing(
+        db, owner, title, location, description, job_id, selectedUser)
+
+    return {'result': "True"}
+
+
+@app.post('/api/task/mark-complete')
+def mark_task_as_complete(db, methods=['GET']):
+    job_id = request.forms.get("taskid")
+    userAssigned = database.return_selected_user(db, job_id)
+    if userAssigned is not False:
+        database.increase_accountBalance(
+            db, userAssigned, database.return_jobCost(db, job_id))
+
+    database.mark_task_as_complete(db, job_id)
+
+    print(job_id)
+
+
+# Task GET Methods
+
+# Task Status Dictionary
+status_dict = {
+    '0': "Looking for Helpers",
+    '1': "In Progress",
+    '2': "Task Complete"
+}
+
+
 @app.get('/api/getUserTasks')
 def getUserTasks(db):
-
     ret_val = database.get_user_jobs(db, get_user_id(db))
 
     return {'result': ret_val}
@@ -456,7 +501,6 @@ def getUserTasks(db):
 
 @app.get('/api/list/task/all')
 def task(db):
-
     all_tasks = database.position_list(db, None)
     registerd_tasks = tasks_registered_by_user(db)
     ret_val = []
@@ -466,7 +510,7 @@ def task(db):
         is_registered = False
 
         for registered_task in registerd_tasks:
-            if(registered_task['jobID'] == task[0]):
+            if (registered_task['jobID'] == task[0]):
                 is_registered = True
 
         status = status_dict[str(task[8])]
@@ -487,22 +531,13 @@ def task(db):
     return {'result': ret_val}
 
 
-status_dict = {
-    '0': "Looking for Helpers",
-    '1': "In Progress",
-    '2': "Task Complete"
-}
-
-
 @app.get('/api/list/task/created-by-user')
 def task(db):
-
     user_id = get_user_id(db)
     task_list = database.position_list(db, user_id)
     ret_val = []
 
     for x in task_list:
-
         status = status_dict[str(x[8])]
 
         ret_val.append({
@@ -523,14 +558,12 @@ def task(db):
 
 @app.get('/api/list/task/registered-by-user')
 def tasks_registered_by_user_json(db):
-
     ret_val = database.get_user_jobs(db, get_user_id(db))
 
     return {'result': ret_val}
 
 
 def tasks_registered_by_user(db):
-
     ret_val = database.get_user_jobs(db, get_user_id(db))
 
     return ret_val
@@ -538,45 +571,12 @@ def tasks_registered_by_user(db):
 
 @app.post('/api/list/task/registed-for-task', methods=['GET'])
 def users_registered_for_task(db):
-
     jobID = json.loads(str(request.body.read(), encoding='utf-8'))['jobID']
 
     data = database.get_users_applied_for_job(db, jobID)
 
     return {'result': data}
 
-
-@app.post('/api/task/edit')
-def edit_task(db, methods=['GET']):
-
-    user_id = users.session_user(db)
-    job_id = request.forms.get("jobID")
-    owner = users.session_user(db)
-    title = request.forms.get("title")
-    location = request.forms.get("location")
-    description = request.forms.get("descrip")
-    selectedUser = request.forms.get('selectedUser')
-
-    print(selectedUser)
-
-    if((selectedUser != None) and (database.get_task_status(db, job_id) != 2)):
-        database.mark_task_as_in_progress(db, job_id)
-
-    database.edit_job_listing(db, owner, title, location, description, job_id, selectedUser)
-
-    return {'result': "True"}
-
-@app.post('/api/task/mark-complete')
-def mark_task_as_complete(db, methods=['GET']):
-
-    job_id = request.forms.get("taskid")
-    userAssigned = database.return_selected_user(db, job_id)
-    if userAssigned is not False:
-        database.increase_accountBalance(db, userAssigned, database.return_jobCost(db, job_id))
-
-    database.mark_task_as_complete(db, job_id)
-
-    print(job_id)
 
 if __name__ == '__main__':
     from bottle.ext import sqlite

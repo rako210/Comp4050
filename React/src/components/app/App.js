@@ -41,9 +41,12 @@ function App() {
           <Route path="/createAccount">
             <CreateAccount></CreateAccount>
           </Route>
-          <Route path="/review" render={props => <Review {...props} authenticated={login} ></Review>}>
-            {/* <Review authenticated={login}></Review> */}
-          </Route>
+          <Route
+            path="/review"
+            render={(props) => (
+              <Review {...props} authenticated={login}></Review>
+            )}
+          />
           <Route path="/">
             <Home authenticated={login}></Home>
           </Route>
