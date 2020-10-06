@@ -7,7 +7,7 @@ class AccountProfile extends React.Component {
     return (
       <div>
         <Base authenticated={this.props.authenticated} userData={this.props.userData}></Base>
-        <Main></Main>
+        <Main userData={this.props.userData}></Main>
       </div>
     )
   }
@@ -27,13 +27,13 @@ class Main extends React.Component {
               />
             </div>
             <div className="profile-nav-info">
-              <h3 className="user-name">Ashrey Ranjit</h3>
+            <h3 className="user-name">{this.props.userData.name}</h3>
               <div className="address">
-                <p id="state" className="state">
+                {/* <p id="state" className="state">
                   Sydney,
-                </p>
+                </p> */}
                 <span id="country" className="country">
-                  Australia.
+                {this.props.userData.suburb}
                 </span>
               </div>
             </div>
@@ -45,7 +45,7 @@ class Main extends React.Component {
                   <i className="fa fa-phone" /> +61 444 777 859
                 </p>
                 <p className="user-mail">
-                  <i className="fa fa-envelope" /> fname.lastname@gmail.com
+                  <i className="fa fa-envelope" /> {this.props.userData.email}
                 </p>
                 <div className="user-bio">
                   <h3>Bio</h3>
@@ -58,7 +58,7 @@ class Main extends React.Component {
                 </div>
                 <div className="user-rating">
                   <h1>RATING: </h1>
-                  <h3 className="rating">4.5</h3>
+                    <h3 className="rating">{this.props.userData.userRating}</h3>
                 </div>
               </div>
             </div>
