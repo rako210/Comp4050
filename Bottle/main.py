@@ -257,7 +257,7 @@ def account_update(db):
 
     email = request.forms.get("email")
     if len(email) > 0:
-        database.update_suburb(db, email, uid)
+        database.update_email(db, email, uid)
 
     suburb = request.forms.get("suburb")
     if len(suburb) > 0:
