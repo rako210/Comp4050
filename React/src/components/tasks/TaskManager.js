@@ -3,6 +3,7 @@ import ShowAllTasksButton from './ShowAllTasksButton'
 import ShowAllTasksTable from './ShowAllTasksTable'
 import ShowAllCreatedTasksButton from './ShowAllCreatedTasksButton'
 import ShowAllCreatedTasksTable from './ShowAllCreatedTasksTable'
+import BannerMessageController from '../materialUI/BannerMessageController'
 import {AllTaskCard} from './Card.js'
 
 class TaskManager extends React.Component {
@@ -15,6 +16,7 @@ class TaskManager extends React.Component {
       tasks: null,
       registeredTasks: [],
       bannerMessage: '',
+      function: null
     }
 
     this.displayAllTasks = this.displayAllTasks.bind(this)
@@ -91,6 +93,8 @@ class TaskManager extends React.Component {
           this.setState({ bannerMessage: 'Please sign in to apply for tasks!' })
       })
 
+      console.log(this.state.bannerMessage)
+
     // Update table data
     this.updateTaskList()
   }
@@ -116,14 +120,15 @@ class TaskManager extends React.Component {
         </form>
 
         {this.state.bannerMessage}
+        <BannerMessageController bannerMessage={this.state.bannerMessage} />
         {this.state.displayTable === 'True' &&
           this.state.tasks != null &&
           ((this.state.apiURL === 'all' && (
             <div>
               <RenderAllCards
-                forceUpdate={this.updateTaskList}
                 data={this.state.tasks}
                 callBack = {this.applyForTask}
+                updateRender={this.updateTaskList}
               ></RenderAllCards>
             </div>
           )) ||
@@ -145,7 +150,7 @@ class RenderAllCards extends React.Component {
 
   render() {
     let render = this.props.data.map((task) => {
-      return <AllTaskCard data={task} callBack={this.props.callBack}></AllTaskCard>
+      return <AllTaskCard {...this.props} data={task}></AllTaskCard>
     })
 
     return <div className="section">{render}</div>

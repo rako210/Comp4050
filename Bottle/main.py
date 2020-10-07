@@ -17,6 +17,13 @@ def static(filename):
 
     return static_file(filename=filename, root='static')
 
+# Banner Messages
+
+banner_messages = {
+    'DeleteSuccess': "Task Successfuly Deleted!",
+    'ApplySuccess': "Sucessfully applied for task!",
+    'ApplyFail': 'Please sign in to apply for tasks!'
+}
 
 # Return currently signed in user id
 def get_user_id(db):
@@ -429,7 +436,8 @@ def task(db):
             db), database.return_jobCost(db, taskid))
 
     database.delete_jobListing(db, taskid)
-    redirect('/')
+    
+    return {'result': 'true', 'bannerMessage': banner_messages['DeleteSuccess']}
 
 
 @app.post('/apply_for_task', methods=['GET'])
@@ -450,12 +458,12 @@ def apply_for_task(db):
             print("You have already applied for the job!")
 
         # Return OK result
-        return {'result': "True"}
+        return {'result': "true", 'bannerMessage': banner_messages['ApplySuccess']}
 
     else:
 
         # Return Fail Result
-        return {'result': "False"}
+        return {'result': "false", 'bannerMessage': banner_messages['ApplyFail']}
 
 
 @app.post('/api/task/edit')

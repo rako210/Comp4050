@@ -67,6 +67,9 @@ class ShowAllCreatedTasksTable extends React.Component {
 class DeleteButton extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      bannerMessage: ""
+    }
     this.handleClick = this.handleClick.bind(this)
   }
 

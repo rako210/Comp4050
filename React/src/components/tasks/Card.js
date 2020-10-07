@@ -25,7 +25,7 @@ export class AllTaskCard extends React.Component {
                 <p>{this.props.data.location}</p>
                 <p><UserOutlined /> {this.props.data.owner}</p>
                 <p>{this.props.data.status}</p>
-                <p><ApplyButton callBack={this.props.callBack} data={this.props.data}></ApplyButton></p>
+                <p><ApplyButton {...this.props}></ApplyButton></p>
               </div>
               <div className="bot">
                 <p>{this.props.data.time}</p>
