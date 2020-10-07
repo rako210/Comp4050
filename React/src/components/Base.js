@@ -1,6 +1,7 @@
 import React from 'react'
 import './Base.css'
 import SimpleMenu from './DropDown'
+import MenuListComposition from './MenuItem'
 import Typography from '@material-ui/core/Typography'
 import { orange } from '@material-ui/core/colors'
 
@@ -75,9 +76,9 @@ class NavBar extends React.Component {
                 </a>
                 <a href="#">
                   <li>
-                    <SimpleMenu
+                    <MenuListComposition
                       authenticated={this.props.authenticated}
-                    ></SimpleMenu>
+                    ></MenuListComposition>
                   </li>
                 </a>
               </ul>

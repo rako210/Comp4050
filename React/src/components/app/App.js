@@ -50,7 +50,7 @@ class App extends React.Component {
   }
 
   render() {
-    let render
+    var render = <div></div>
     let props = {
       authenticated: this.state.username,
       userData: this.state.userData,
@@ -61,8 +61,6 @@ class App extends React.Component {
       render = (
         <Router>
           <div>
-            {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
             <Switch>
               <Route
                 path="/addtask"
@@ -106,7 +104,7 @@ class App extends React.Component {
           </div>
         </Router>
       )
-    } else render = <div></div>
+    }
 
     return render
   }
