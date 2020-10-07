@@ -67,6 +67,10 @@ class TaskManager extends React.Component {
       .then((data) => {
         this.setState({ tasks: data.result })
       })
+
+    // Update react state to display data correctly
+    this.props.updateData();
+
   }
 
   applyForTask(event) {
@@ -128,6 +132,7 @@ class TaskManager extends React.Component {
                 <ShowAllCreatedTasksTable
                   forceUpdate={this.updateTaskList}
                   data={this.state.tasks}
+                  {...this.props}
                 ></ShowAllCreatedTasksTable>
               </div>
             )))}

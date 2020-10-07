@@ -6,8 +6,8 @@ class AddTask extends React.Component {
   render() {
     return (
       <div>
-        <Base authenticated={this.props.authenticated} userData={this.props.userData}></Base>
-        <FormAddTask userData={this.props.userData}></FormAddTask>
+        <Base {...this.props} ></Base>
+        <FormAddTask {...this.props} ></FormAddTask>
       </div>
     )
   }
@@ -41,6 +41,10 @@ class FormAddTask extends React.Component {
           this.setState({bannerMessage: data.bannerMessage})
         }
       })
+
+    // Update react state to display data correctly
+    this.props.updateData();
+
   }
 
   render() {

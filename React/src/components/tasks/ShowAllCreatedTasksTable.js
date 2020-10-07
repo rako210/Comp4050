@@ -46,6 +46,7 @@ class ShowAllCreatedTasksTable extends React.Component {
                   <DeleteButton
                     callBack={this.props.forceUpdate}
                     taskID={task.id}
+                    {...this.props}
                   ></DeleteButton>
                 </td>
                 <td>
@@ -81,7 +82,11 @@ class DeleteButton extends React.Component {
       .then((res) => res.json())
       .then((data) => {})
 
+    // Update task list to re-render list of created tasks.
     this.props.callBack()
+
+    // Update react state to display data correctly
+    this.props.updateData();
   }
 
   render() {

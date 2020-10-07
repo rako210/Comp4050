@@ -17,11 +17,17 @@ class App extends React.Component {
     this.state = {
       username: 'null',
       userData: null,
-      render: null,
+      render: false,
     }
+
+    this.updateData = this.updateData.bind(this)
   }
 
   componentDidMount() {
+    this.updateData()
+  }
+
+  updateData() {
     var getUserData = async () => {
       await fetch('/user_login')
         .then((res) => res.json())
@@ -29,16 +35,15 @@ class App extends React.Component {
           this.setState({ username: data.data })
         })
 
-      if(this.state.username !== 'None') {
+      if (this.state.username !== 'None') {
         await fetch('/api/data/current-user')
-        .then((res) => res.json())
-        .then((data) => {
-          this.setState({ userData: data.result })
-        })
+          .then((res) => res.json())
+          .then((data) => {
+            this.setState({ userData: data.result })
+          })
       }
 
-      this.setState({render: true})
-
+      this.setState({ render: true })
     }
 
     getUserData()
@@ -46,51 +51,57 @@ class App extends React.Component {
 
   render() {
     let render
+    let props = {
+      authenticated: this.state.username,
+      userData: this.state.userData,
+      updateData: this.updateData,
+    }
 
     if (this.state.render) {
-      
       render = (
         <Router>
           <div>
             {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
             <Switch>
-              <Route path="/addtask">
-                <AddTask authenticated={this.state.username} userData={this.state.userData}></AddTask>
-              </Route>
-              <Route path="/editTask">
-                <EditTask authenticated={this.state.username} userData={this.state.userData}></EditTask>
-              </Route>
-              <Route path="/accountProfile">
-                <AccountProfile authenticated={this.state.username} userData={this.state.userData}/>
-              </Route>
-              <Route path="/about">
-                <About authenticated={this.state.username} userData={this.state.userData}/>
-              </Route>
-              <Route path="/accountSettings">
-                <AccountSettings authenticated={this.state.username} userData={this.state.userData} />
-              </Route>
-              <Route path="/createAccount">
-                <CreateAccount></CreateAccount>
-              </Route>
               <Route
-                path="/review"
-                render={(props) => (
-                  <Review
-                    {...props}
-                    authenticated={this.state.username}
-                    userData={this.state.userData}
-                  ></Review>
+                path="/addtask"
+                render={(extraProps) => <AddTask {...props} {...extraProps} />}
+              />
+              <Route
+                path="/editTask"
+                render={(extraProps) => <EditTask {...props} {...extraProps} />}
+              />
+              <Route
+                path="/accountProfile"
+                render={(extraProps) => (
+                  <AccountProfile {...props} {...extraProps} />
                 )}
               />
-              <Route path="/" render={(props) => (<Home
-                  {...props}
-                  authenticated={this.state.username}
-                  userData={this.state.userData}
-                ></Home>)}>
-                
-                
-              </Route>
+              <Route
+                path="/about"
+                render={(extraProps) => <About {...props} {...extraProps} />}
+              />
+              <Route
+                path="/accountSettings"
+                render={(extraProps) => (
+                  <AccountSettings {...props} {...extraProps} />
+                )}
+              />
+              <Route
+                path="/createAccount"
+                render={(extraProps) => (
+                  <CreateAccount {...props} {...extraProps} />
+                )}
+              />
+              <Route
+                path="/review"
+                render={(extraProps) => <Review {...props} {...extraProps} />}
+              />
+              <Route
+                path="/"
+                render={(extraProps) => <Home {...props} {...extraProps} />}
+              />
             </Switch>
           </div>
         </Router>

@@ -12,11 +12,11 @@ function Home(props) {
     bannerMessage = props.location.state.bannerMessage
 
   if(props.authenticated !== "None")
-    taskManager = <TaskManager authenticated={props.authenticated}></TaskManager>
+    taskManager = <TaskManager {...props} ></TaskManager>
 
   return (
     <div>
-      <Base authenticated={props.authenticated} userData={props.userData}></Base>
+      <Base {...props} ></Base>
       {bannerMessage}
       {taskManager}
     </div>
