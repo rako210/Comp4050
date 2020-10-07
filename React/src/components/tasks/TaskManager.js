@@ -1,10 +1,9 @@
 import React from 'react'
-import ShowAllTasksButton from './ShowAllTasksButton'
-import ShowAllTasksTable from './ShowAllTasksTable'
+import BannerMessageController from '../materialUI/BannerMessageController'
+import { AllTaskCard } from './Card.js'
 import ShowAllCreatedTasksButton from './ShowAllCreatedTasksButton'
 import ShowAllCreatedTasksTable from './ShowAllCreatedTasksTable'
-import BannerMessageController from '../materialUI/BannerMessageController'
-import {AllTaskCard} from './Card.js'
+import ShowAllTasksButton from './ShowAllTasksButton'
 
 class TaskManager extends React.Component {
   constructor(props) {
@@ -15,15 +14,13 @@ class TaskManager extends React.Component {
       apiURL: null,
       tasks: null,
       registeredTasks: [],
-      bannerMessage: '',
-      function: null
+      bannerMessage: ''
     }
 
     this.displayAllTasks = this.displayAllTasks.bind(this)
     this.displayCreatedTasks = this.displayCreatedTasks.bind(this)
-    this.deleteTask = this.deleteTask.bind(this)
-    this.applyForTask = this.applyForTask.bind(this)
     this.updateTaskList = this.updateTaskList.bind(this)
+    this.updateBannerMessage = this.updateBannerMessage.bind(this)
   }
 
   displayAllTasks(data) {
@@ -55,48 +52,8 @@ class TaskManager extends React.Component {
     })
   }
 
-  deleteTask(event) {
-    event.preventDefault()
-
-    const data = new FormData(event.target)
-
-    // Delete the selected task
-    fetch('/deletetask', {
-      method: 'POST',
-      body: data,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        this.setState({ tasks: data.result })
-      })
-
-    // Update react state to display data correctly
-    this.props.updateData();
-
-  }
-
-  applyForTask(event) {
-    event.preventDefault()
-
-    const data = new FormData(event.target)
-
-    // Mark the selected task as applied for by the user.
-    fetch('/apply_for_task', {
-      method: 'POST',
-      body: data,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.result === 'True')
-          this.setState({ bannerMessage: 'Sucessfully applied for task!' })
-        else
-          this.setState({ bannerMessage: 'Please sign in to apply for tasks!' })
-      })
-
-      console.log(this.state.bannerMessage)
-
-    // Update table data
-    this.updateTaskList()
+  updateBannerMessage(bannerMessage) {
+    this.setState({bannerMessage: bannerMessage})
   }
 
   render() {
@@ -114,13 +71,9 @@ class TaskManager extends React.Component {
           callBack={this.displayAllTasks}
         ></ShowAllTasksButton>
 
-        <form onSubmit={this.deleteTask} className="button">
-          <input type="number" name="taskid" />
-          <input type="submit" value="Delete a Task" />
-        </form>
-
         {this.state.bannerMessage}
         <BannerMessageController bannerMessage={this.state.bannerMessage} />
+
         {this.state.displayTable === 'True' &&
           this.state.tasks != null &&
           ((this.state.apiURL === 'all' && (
@@ -135,9 +88,10 @@ class TaskManager extends React.Component {
             (this.state.apiURL === 'created-by-user' && (
               <div>
                 <ShowAllCreatedTasksTable
-                  forceUpdate={this.updateTaskList}
-                  data={this.state.tasks}
                   {...this.props}
+                  updateList={this.updateTaskList}
+                  updateBannerMessage={this.updateBannerMessage}
+                  data={this.state.tasks}
                 ></ShowAllCreatedTasksTable>
               </div>
             )))}
@@ -150,7 +104,7 @@ class RenderAllCards extends React.Component {
 
   render() {
     let render = this.props.data.map((task) => {
-      return <AllTaskCard {...this.props} data={task}></AllTaskCard>
+      return <AllTaskCard key={task.id} {...this.props} data={task}></AllTaskCard>
     })
 
     return <div className="section">{render}</div>

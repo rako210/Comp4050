@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import About from '../about/About'
-import CreateAccount from '../settings/CreateAccount'
-import AccountSettings from '../settings/AccountSettings'
-import EditTask from '../tasks/EditTask'
-import AddTask from '../tasks/AddTask'
-import Review from '../review/Review'
 import Home from '../home/Home'
 import AccountProfile from '../profile/AccountProfile'
+import Review from '../review/Review'
+import AccountSettings from '../settings/AccountSettings'
+import CreateAccount from '../settings/CreateAccount'
+import AddTask from '../tasks/AddTask'
+import EditTask from '../tasks/EditTask'
 import './App.css'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 class App extends React.Component {
   constructor(props) {
@@ -20,14 +20,14 @@ class App extends React.Component {
       render: false,
     }
 
-    this.updateData = this.updateData.bind(this)
+    this.updateUserData = this.updateUserData.bind(this)
   }
 
   componentDidMount() {
-    this.updateData()
+    this.updateUserData()
   }
 
-  updateData() {
+  updateUserData() {
     var getUserData = async () => {
       await fetch('/user_login')
         .then((res) => res.json())
@@ -54,7 +54,7 @@ class App extends React.Component {
     let props = {
       authenticated: this.state.username,
       userData: this.state.userData,
-      updateData: this.updateData,
+      updateUserData: this.updateUserData,
     }
 
     if (this.state.render) {

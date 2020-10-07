@@ -1,11 +1,11 @@
 import React from "react";
-import Base from '../Base'
+import Base from '../Base';
 
 class About extends React.Component {
   render() {
     return (
       <div>
-        <Base authenticated={this.props.authenticated} userData={this.props.userData}></Base>
+        <Base {...this.props }></Base>
         <Main></Main>
       </div>
     );

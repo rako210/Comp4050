@@ -1,152 +1,66 @@
-import React from 'react'
-import { Redirect } from 'react-router-dom'
+import React, { Component } from 'react'
+import { DeleteButton, EditButton, MarkCompleteButton } from '../common/Button'
 
-class ShowAllCreatedTasksTable extends React.Component {
+class ShowAllCreatedTasksTable extends Component {
   render() {
     return (
       <div>
         <table style={{ width: '100%' }}>
-          <tr>
-            <th>ID</th>
-            <th>Time Created</th>
-            <th>owner</th>
-            <th>Title</th>
-            <th>Location</th>
-            <th>Description</th>
-            <th>Chosen Helper</th>
-            <th>Task Status</th>
-          </tr>
-          {this.props.data.map((task) => {
-            return (
-              <tr>
-                <td>{task.id}</td>
-                <td>{task.time}</td>
-                <td>{task.owner}</td>
-                <td>{task.title}</td>
-                <td>{task.location}</td>
-                <td>{task.description}</td>
-                {task.selectedUserID != null ? (
-                  <p>{task.selectedUsername}</p>
-                ) : (
-                  <p>No User has been selected</p>
-                )}
-                <td>{task.status}</td>
-                <td>
-                  {(task.isRegistered && (
-                    <div>You have already applied!</div>
-                  )) ||
-                    (!task.isRegistered && (
-                      <form action="/editTask" className="button">
-                        <input type="hidden" value={task.id} name="id" />
-                        <input type="submit" value="Edit Task" />
-                      </form>
-                    ))}
-                </td>
-                <td>
-                  <DeleteButton
-                    callBack={this.props.forceUpdate}
-                    taskID={task.id}
-                    {...this.props}
-                  ></DeleteButton>
-                </td>
-                <td>
-                  <MarkCompleteButton
-                    callBack={this.props.forceUpdate}
-                    data={task}
-                  ></MarkCompleteButton>
-                </td>
-              </tr>
-            )
-          })}
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Time Created</th>
+              <th>owner</th>
+              <th>Title</th>
+              <th>Location</th>
+              <th>Description</th>
+              <th>Chosen Helper</th>
+              <th>Task Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.props.data.map((task) => {
+              return (
+                <tr key={task.id}>
+                  <td>{task.id}</td>
+                  <td>{task.time}</td>
+                  <td>{task.owner}</td>
+                  <td>{task.title}</td>
+                  <td>{task.location}</td>
+                  <td>{task.description}</td>
+                  {task.selectedUserID != null ? (
+                    <p>{task.selectedUsername}</p>
+                  ) : (
+                    <p>No User has been selected</p>
+                  )}
+                  <td>{task.status}</td>
+                  <td>
+                    {(task.isRegistered && (
+                      <div>You have already applied!</div>
+                    )) ||
+                      (!task.isRegistered && (
+                        <EditButton data={task}></EditButton>
+                      ))}
+                  </td>
+                  <td>
+                    <DeleteButton
+                      {...this.props}
+                      taskID={task.id}
+                    ></DeleteButton>
+                  </td>
+                  <td>
+                    <MarkCompleteButton
+                      {...this.props}
+                      data={task}
+                    ></MarkCompleteButton>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
         </table>
       </div>
     )
-  }
-}
-
-class DeleteButton extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      bannerMessage: ""
-    }
-    this.handleClick = this.handleClick.bind(this)
-  }
-
-  handleClick(event) {
-    event.preventDefault()
-
-    const data = new FormData(event.target)
-
-    fetch('/deletetask', {
-      method: 'POST',
-      body: data,
-    })
-      .then((res) => res.json())
-      .then((data) => {})
-
-    // Update task list to re-render list of created tasks.
-    this.props.callBack()
-
-    // Update react state to display data correctly
-    this.props.updateData();
-  }
-
-  render() {
-    return (
-      <form onSubmit={this.handleClick} className="button">
-        <input type="hidden" value={this.props.taskID} name="taskid" />
-        <input type="submit" value="Delete Task" />
-      </form>
-    )
-  }
-}
-
-class MarkCompleteButton extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      redirect: false,
-    }
-    this.handleClick = this.handleClick.bind(this)
-  }
-
-  handleClick(event) {
-    event.preventDefault()
-
-    const data = new FormData(event.target)
-
-    fetch('/api/task/mark-complete', {
-      method: 'POST',
-      body: data,
-    })
-
-    // this.props.callBack();
-    this.setState({ redirect: true })
-  }
-
-  render() {
-    let render
-
-    if (this.state.redirect)
-      render = (
-        <Redirect
-          to={{
-            pathname: '/review',
-            state: { data: this.props.data },
-          }}
-        />
-      )
-    else
-      render = (
-        <form onSubmit={this.handleClick} className="button">
-          <input type="hidden" value={this.props.data.id} name="taskid" />
-          <input type="submit" value="Mark Task as Completed" />
-        </form>
-      )
-
-    return render
   }
 }
 

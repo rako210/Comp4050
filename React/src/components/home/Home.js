@@ -1,8 +1,7 @@
-import { ConsoleSqlOutlined } from "@ant-design/icons";
 import React from "react";
 import Base from "../Base";
-import BannerMessageController from "../materialUI/BannerMessageController"
-import TaskManager from "../tasks/TaskManager"
+import BannerMessageController from "../materialUI/BannerMessageController";
+import TaskManager from "../tasks/TaskManager";
 
 function Home(props) {
 

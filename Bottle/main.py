@@ -1,13 +1,15 @@
-from bottle import Bottle, template, static_file, redirect, request, response
-from email.mime.text import MIMEText
 import json
+import os
+import re
+import smtplib
+from email.mime.text import MIMEText
+
+import itsdangerous
+from bottle import Bottle, redirect, request, response, static_file, template
+
+import config
 import database
 import users
-import re
-import os
-import config
-import itsdangerous
-import smtplib
 
 app = Bottle()
 
@@ -22,7 +24,10 @@ def static(filename):
 banner_messages = {
     'DeleteSuccess': "Task Successfuly Deleted!",
     'ApplySuccess': "Sucessfully applied for task!",
-    'ApplyFail': 'Please sign in to apply for tasks!'
+    'ApplyFail': 'Please sign in to apply for tasks!',
+    'UpdateAccountDetailsSuccess': 'Successfully updated your Account Details',
+    'UpdateAccountDetailsFailPassword': 'Error! Password must contain a number, capital and lowercase letter and must be longer than 7 characters.',
+    'UpdateAccountDetailsFailEmpty': 'Error! Please fill in all fields!'
 }
 
 # Return currently signed in user id
@@ -230,59 +235,48 @@ def userImage_upload(user, image):
     return path
 
 
-# Update Account
-
-@app.get('/accountSettings')
-def account_settings(db):
-    """Update account details or settings, must enter password to be able to do so"""
-
-    info = {'title': 'Account',
-            'bannerMessage': '', }
-    return template('account', info, authenticated=users.session_user(db), validated=False, invalidPword=False)
-
-
 @app.post('/updateAccount')
 def account_update(db):
-    """handles account updates"""
 
-    info = {'title': 'Account',
-            'bannerMessage': 'Populated fields updated'
-            }
-
-    flag = False
-    uid = users.return_userID(db, users.session_user(db))
-    password = request.forms.get("pword")
-    if len(password) > 0:
-        if password_test(password):
-            newPassword = database.password_hash(db, password, uid)
+    user_id         = users.return_userID(db, users.session_user(db))
+    email           = request.forms.get("email")
+    password        = request.forms.get("pword")
+    suburb          = request.forms.get("suburb")
+    name            = request.forms.get("name")
+    image           = request.files.get("image")
+    password_flag    = False
+    empty_flag      = False
+    
+    if (len(password) > 0):
+        if (password_test(password)):
+            newPassword = database.password_hash(db, password, user_id)
             if newPassword is not False:
-                database.update_password(db, newPassword, uid)
+                database.update_password(db, newPassword, user_id)
             else:
-                flag = True
+                password_flag = True
         else:
-            flag = True
-
-    email = request.forms.get("email")
-    if len(email) > 0:
-        database.update_email(db, email, uid)
-
-    suburb = request.forms.get("suburb")
-    if len(suburb) > 0:
-        database.update_suburb(db, suburb, uid)
-
-    name = request.forms.get("name")
-    if len(name) > 0:
-        database.update_name(db, name, uid)
-
-    image = request.files.get("image")
-    if image is not None:
-        imagePath = userImage_upload(uid, image)
-        database.update_avatar(db, uid, imagePath)
-
-    if (flag):
-        return {'result': "False"}
+            password_flag = True
     else:
-        return {'result': "True"}
+        empty_flag = True
+
+    if (len(email) > 0) and (len(suburb) > 0) and (len(name) > 0):
+        database.update_email(db, email, user_id)
+        database.update_suburb(db, suburb, user_id)
+        database.update_name(db, name, user_id)
+    else:
+        empty_flag = True
+    
+    if image is not None:
+        imagePath = userImage_upload(user_id, image)
+        database.update_avatar(db, user_id, imagePath)
+
+    if empty_flag:
+        return {'result': 'false', 'bannerMessage': banner_messages['UpdateAccountDetailsFailEmpty']}
+
+    if password_flag:
+        return {'result': 'false', 'bannerMessage': banner_messages['UpdateAccountDetailsFailPassword']}
+
+    return {'result': "True", 'bannerMessage': banner_messages['UpdateAccountDetailsSuccess']}
 
     # return template('account', info, authenticated=users.session_user(db), validated=True, invalidPword=flag)
 
@@ -537,6 +531,7 @@ def task(db):
             'id': task[0],
             'time': task[1],
             'owner': task[3],
+            'name': database.get_user_data(db, task[3])['name'],
             'title': task[4],
             'location': task[5],
             'description': task[6],
@@ -598,6 +593,7 @@ def users_registered_for_task(db):
 
 if __name__ == '__main__':
     from bottle.ext import sqlite
+
     from database import DATABASE_NAME
 
     # install the database plugin to utilise db parameter calling

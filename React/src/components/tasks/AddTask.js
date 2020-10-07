@@ -1,6 +1,6 @@
 import React from 'react'
-import Base from '../Base'
 import { Redirect } from 'react-router-dom'
+import Base from '../Base'
 
 class AddTask extends React.Component {
   render() {
@@ -43,7 +43,7 @@ class FormAddTask extends React.Component {
       })
 
     // Update react state to display data correctly
-    this.props.updateData();
+    this.props.updateUserData();
 
   }
 
@@ -64,7 +64,7 @@ class FormAddTask extends React.Component {
           <form onSubmit={this.handleSubmit} className="poster1">
             Title: <input type="text" name="title" />
             <br />
-            Location: <input type="text" name="location" value="Yes"/>
+            Location: <input type="text" name="location" defaultValue={this.props.userData.suburb}/>
             <br />
             Description: <input type="text" name="descrip" />
             <br />

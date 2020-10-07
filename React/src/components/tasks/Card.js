@@ -1,6 +1,6 @@
+import { UserOutlined } from '@ant-design/icons'
 import React from 'react'
-import {ApplyButton} from '../Button'
-import {UserOutlined} from '@ant-design/icons' 
+import { ApplyButton } from '../common/Button'
 import './Card.css'
 
 export class AllTaskCard extends React.Component {
@@ -23,7 +23,7 @@ export class AllTaskCard extends React.Component {
             <div className="card-col2">
               <div className="top">
                 <p>{this.props.data.location}</p>
-                <p><UserOutlined /> {this.props.data.owner}</p>
+                <p><UserOutlined /> {this.props.data.name}</p>
                 <p>{this.props.data.status}</p>
                 <p><ApplyButton {...this.props}></ApplyButton></p>
               </div>

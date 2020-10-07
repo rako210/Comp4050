@@ -5,8 +5,8 @@ class EditTask extends React.Component {
   render() {
     return (
       <div>
-        <Base authenticated={this.props.authenticated} userData={this.props.userData}></Base>
-        <FromEditTask> </FromEditTask>
+        <Base {...this.props} />
+        <FromEditTask {...this.props} />
       </div>
     )
   }
@@ -23,11 +23,10 @@ class FromEditTask extends React.Component {
   }
 
   componentDidMount() {
-    var url = window.location.href
-    var parameterRegex = /id=[0-9]*/g
-    var numberRegex = /[0-9]+/i
-    var jobID = url.match(parameterRegex)[0].match(numberRegex)[0]
-
+    // var url = window.location.href
+    // var parameterRegex = /id=[0-9]*/g
+    // var numberRegex = /[0-9]+/i
+    var jobID = this.props.location.state.taskData.id
     var data = { jobID: jobID }
 
     fetch('/api/list/task/registed-for-task', {
@@ -49,11 +48,8 @@ class FromEditTask extends React.Component {
 
     const data = new FormData(event.target)
 
-    var url = window.location.href
-    var parameterRegex = /id=[0-9]*/g
-    var numberRegex = /[0-9]+/i
-
-    var jobID = url.match(parameterRegex)[0].match(numberRegex)[0]
+    console.log(this.props.location)
+    var jobID = this.props.location.state.taskData.id
     data.append('jobID', jobID)
 
     fetch('/api/task/edit', {
@@ -86,6 +82,7 @@ class FromEditTask extends React.Component {
       )
     }
 
+
     return (
       <div>
         <h2> Update Task Details </h2>
@@ -95,18 +92,15 @@ class FromEditTask extends React.Component {
           className="poster1"
           id="editTaskForm"
         >
-          <input type="hidden" name="id" value={1} />
-          Owner:
-          <input type="text" name="owner" />
           <br />
           Title:
-          <input type="text" name="title" />
+          <input type="text" name="title" defaultValue={this.props.location.state.taskData.title} />
           <br />
           Location:
-          <input type="text" name="location" />
+          <input type="text" name="location" defaultValue={this.props.location.state.taskData.location}/>
           <br />
           Description:
-          <input type="text" name="descrip" onChange={this.handleChange} />
+          <input type="text" name="descrip" defaultValue={this.props.location.state.taskData.description} />
           <br />
           Select user to perform task:
           {listOfRegisteredUsers}

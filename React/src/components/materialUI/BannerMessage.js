@@ -1,8 +1,7 @@
-import React from 'react'
-import Button from '@material-ui/core/Button'
-import Snackbar from '@material-ui/core/Snackbar'
 import IconButton from '@material-ui/core/IconButton'
+import Snackbar from '@material-ui/core/Snackbar'
 import CloseIcon from '@material-ui/icons/Close'
+import React from 'react'
 
 /**
  * Banner Message
@@ -10,10 +9,6 @@ import CloseIcon from '@material-ui/icons/Close'
  */
 export default function BannerMessage(props) {
   const [open, setOpen] = React.useState(true)
-
-  const handleClick = () => {
-    setOpen(true)
-  }
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {

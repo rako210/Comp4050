@@ -1,47 +1,34 @@
-import React from 'react'
-import './Base.css'
-import SimpleMenu from './DropDown'
-import MenuListComposition from './MenuItem'
 import Typography from '@material-ui/core/Typography'
-import { orange } from '@material-ui/core/colors'
+import React, { Component } from 'react'
+import './Base.css'
+import MenuListComposition from './MenuItem'
 
-class Base extends React.Component {
+class Base extends Component {
   render() {
     return (
       <div>
-        <Main authenticated={this.props.authenticated} userData={this.props.userData}></Main>
+        <NavBar {...this.props} />
+        <Login {...this.props} />
       </div>
     )
   }
 }
 
-class Main extends React.Component {
-  render() {
-    return (
-      <div>
-        <div>
-          <NavBar authenticated={this.props.authenticated} userData={this.props.userData}></NavBar>
-          <Login authenticated={this.props.authenticated}></Login>
-        </div>
-      </div>
-    )
-  }
-}
-
-class NavBar extends React.Component {
+class NavBar extends Component {
   render() {
     var retVal = <div></div>
 
-    
-
     if (this.props.authenticated !== 'None')
-    // console.log(this.props.userData.id)
       retVal = (
         <div className="header">
           <div className="nav-bar">
             <div className="nav-left">
               <div className="nav-logo-container">
-                <img className="nav-logo" src={require('../images/logo.png')} />
+                <img
+                  className="nav-logo"
+                  src={require('../images/logo.png')}
+                  alt="Website Logo"
+                />
               </div>
               <ul className="nav-bar-list">
                 <a href="/">
@@ -69,16 +56,14 @@ class NavBar extends React.Component {
 
             <div className="nav-right">
               <ul className="nav-bar-list">
-              <a href="#">
-                  <li style={{color: 'orange'}}>
-                  {this.props.userData.accountBalance} Coins
+                <a href="#">
+                  <li style={{ color: 'orange' }}>
+                    {this.props.userData.accountBalance} Coins
                   </li>
                 </a>
                 <a href="#">
                   <li>
-                    <MenuListComposition
-                      authenticated={this.props.authenticated}
-                    ></MenuListComposition>
+                    <MenuListComposition {...this.props} />
                   </li>
                 </a>
               </ul>
@@ -91,7 +76,7 @@ class NavBar extends React.Component {
   }
 }
 
-class Login extends React.Component {
+class Login extends Component {
   render() {
     const authenticated = this.props.authenticated
     let retVal

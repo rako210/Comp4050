@@ -6,8 +6,8 @@ class AccountProfile extends React.Component {
   render() {
     return (
       <div>
-        <Base authenticated={this.props.authenticated} userData={this.props.userData}></Base>
-        <Main userData={this.props.userData}></Main>
+        <Base {...this.props}></Base>
+        <Main {...this.props}></Main>
       </div>
     )
   }
@@ -22,7 +22,7 @@ class Main extends React.Component {
             <div className="profile-img">
               <img
                 src="/static/images/Ashpic.JPG"
-                alt="Profile Image"
+                alt="Profile"
                 width={200}
               />
             </div>
