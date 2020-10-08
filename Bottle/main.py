@@ -27,7 +27,8 @@ banner_messages = {
     'ApplyFail': 'Please sign in to apply for tasks!',
     'UpdateAccountDetailsSuccess': 'Successfully updated your Account Details',
     'UpdateAccountDetailsFailPassword': 'Error! Password must contain a number, capital and lowercase letter and must be longer than 7 characters.',
-    'UpdateAccountDetailsFailEmpty': 'Error! Please fill in all fields!'
+    'UpdateAccountDetailsFailEmpty': 'Error! Please fill in all fields!',
+    'LoginFail': 'Please enter a valid Username or Password!'
 }
 
 # Return currently signed in user id
@@ -156,11 +157,12 @@ def route(db):
     name = request.forms.get("name")
     password = request.forms.get("password")
     log = users.check_login(db, name, password)
+
     if (log):  # if user is valid
         users.generate_session(db, name)
-        return redirect('/')
+        return {'result': 'true'}
     else:
-        return template('splash', info, authenticated=users.session_user(db))
+        return {'result': 'false', 'bannerMessage': banner_messages['LoginFail']}
 
 
 @app.post('/logout', methods=['GET'])

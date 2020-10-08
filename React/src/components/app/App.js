@@ -29,6 +29,7 @@ class App extends React.Component {
 
   updateUserData() {
     var getUserData = async () => {
+      this.setState({render: false})
       await fetch('/user_login')
         .then((res) => res.json())
         .then((data) => {

@@ -1,6 +1,7 @@
-import Typography from '@material-ui/core/Typography'
+import { Button, Typography } from '@material-ui/core'
 import React, { Component } from 'react'
 import './Base.css'
+import BasicTextFields from './materialUI/TextField'
 import MenuListComposition from './MenuItem'
 
 class Base extends Component {
@@ -77,6 +78,43 @@ class NavBar extends Component {
 }
 
 class Login extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      username: '',
+      password: '',
+      bannerMessage: '',
+    }
+
+    this.updateState = this.updateState.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  updateState(object) {
+    this.setState(object)
+  }
+
+  handleSubmit(event) {
+    event.preventDefault()
+
+    const data = new FormData()
+    data.append('name', this.state.username)
+    data.append('password', this.state.password)
+
+    fetch('/login', {
+      method: 'POST',
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.result === 'true') this.props.updateUserData()
+        else this.setState({ bannerMessage: res.bannerMessage })
+      })
+
+    // this.props.history.push('/accountProfile')
+  }
+
   render() {
     const authenticated = this.props.authenticated
     let retVal
@@ -104,10 +142,24 @@ class Login extends Component {
             id="loginform"
             className="poster1"
           >
-            <h3>Sign In</h3>
-            Username: <input type="text" name="name" /> <br />
-            Password: <input type="text" name="password" /> <br />
-            <input type="submit" value="Login" />
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <BasicTextFields callBack={this.updateState} label="Username" />
+            <BasicTextFields
+              callBack={this.updateState}
+              label="Password"
+              type="password"
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={this.handleSubmit}
+            >
+              Login
+            </Button>
+            <p>{this.state.bannerMessage}</p>
+            {/* <input type="submit" value="Login" /> */}
           </form>
 
           <form
@@ -122,7 +174,12 @@ class Login extends Component {
 
           <form action="/ForgotPassword" method="POST" className="poster1">
             <h3>Forgot Password?</h3>
-            Username: <input type="text" name="name" /> <br />
+            Username: <input
+              className="poster1Input"
+              type="text"
+              name="name"
+            />{' '}
+            <br />
             <input type="submit" value="Submit" />
           </form>
         </div>

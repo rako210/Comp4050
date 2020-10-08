@@ -3,8 +3,9 @@ html {
   background-color: grey;
   text-align: center;
   color: white;
-  font-family: sans-serif;
+  font-family: 'Roboto', sans-serif;
   margin: 0px;
+  padding: 0px;
 }
 
 .logo {
@@ -43,7 +44,7 @@ html {
   background-color: #ffd700;
 }
 
-.styled1 input[type="text"] {
+.styled1 input[type='text'] {
   float: right;
   padding: 0;
   border: none;
@@ -100,7 +101,7 @@ html {
 }
 /*(drop down menu end)*/
 
-.poster input[type="text"],
+.poster input[type='text'],
 select {
   width: 100%;
   padding: 12px 20px;
@@ -111,8 +112,8 @@ select {
   box-sizing: border-box;
 }
 
-.poster input[type="submit"] {
-  width: 20%%;
+.poster input[type='submit'] {
+  width: 20%;
   background-color: #4caf50;
   color: white;
   padding: 14px 20px;
@@ -121,6 +122,8 @@ select {
   border-radius: 4px;
   cursor: pointer;
 }
+
+/* Login Form */
 
 .poster1 {
   width: 300px;
@@ -132,13 +135,12 @@ select {
   color: black;
 }
 
-.poster input[type="submit"]:hover {
+.poster input[type='submit']:hover {
   background-color: red;
 }
 
-.poster1 input[type="text"],
-select {
-  width: 20%%;
+.poster1Input {
+  width: 60%;
   padding: 12px 20px;
   margin: 8px 0;
   display: inline-block;
@@ -147,8 +149,8 @@ select {
   box-sizing: border-box;
 }
 
-.poster1 input[type="submit"] {
-  width: 20%%;
+.poster1 input[type='submit'] {
+  flex: 1;
   background-color: #4caf50;
   color: white;
   padding: 14px 20px;
@@ -158,12 +160,12 @@ select {
   cursor: pointer;
 }
 
-.poster1 input[type="submit"]:hover {
+.poster1 input[type='submit']:hover {
   background-color: #45a049;
 }
 
-.button input[type="submit"] {
-  width: 20%%;
+.button input[type='submit'] {
+  width: 20%;
   background-color: #4caf50;
   color: white;
   padding: 14px 20px;
@@ -173,7 +175,7 @@ select {
   cursor: pointer;
 }
 
-.button input[type="submit"]:hover {
+.button input[type='submit']:hover {
   background-color: #45a049;
 }
 .div1 {
@@ -250,7 +252,7 @@ select {
 
 .container::after,
 .row::after {
-  content: "";
+  content: '';
   clear: both;
   display: table;
 }
