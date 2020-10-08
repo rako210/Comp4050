@@ -62,11 +62,11 @@ class FormAddTask extends React.Component {
           <h2>Create a Task</h2>
           <h2>{this.state.bannerMessage}</h2>
           <form onSubmit={this.handleSubmit} className="poster1">
-            Title: <input type="text" name="title" />
+            Title: <input className="poster1Input"  type="text" name="title" />
             <br />
-            Location: <input type="text" name="location" defaultValue={this.props.userData.suburb}/>
+            Location: <input className="poster1Input"  type="text" name="location" defaultValue={this.props.userData.suburb}/>
             <br />
-            Description: <input type="text" name="descrip" />
+            Description: <input className="poster1Input"  type="text" name="descrip" />
             <br />
             Payment:
             <select name="cost">

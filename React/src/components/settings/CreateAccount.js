@@ -12,15 +12,15 @@ class CreateAccount extends React.Component {
           id
           className="poster1"
         >
-          Username: <input type="text" name="username" />
+          Username: <input className="poster1Input"  type="text" name="username" />
           <br />
-          Email Address: <input type="text" name="email" />
+          Email Address: <input className="poster1Input"  type="text" name="email" />
           <br />
-          Name: <input type="text" name="name" />
+          Name: <input className="poster1Input"  type="text" name="name" />
           <br />
-          Suburb: <input type="text" name="suburb" />
+          Suburb: <input className="poster1Input"  type="text" name="suburb" />
           <br />
-          Password: <input type="text" name="password" />
+          Password: <input className="poster1Input"  type="text" name="password" />
           <br />
           Avatar: <input type="file" name="image" />
           <br />

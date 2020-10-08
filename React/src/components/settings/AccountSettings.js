@@ -116,7 +116,7 @@ class FormUpdateAccount extends React.Component {
             defaultValue={this.props.userData.email}
           />
           <br />
-          Password: <input type="text" name="pword" />
+          Password: <input className="poster1Input"  type="text" name="pword" />
           <br />
           Suburb:{' '}
           <input

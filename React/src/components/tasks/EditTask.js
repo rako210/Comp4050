@@ -94,13 +94,13 @@ class FromEditTask extends React.Component {
         >
           <br />
           Title:
-          <input type="text" name="title" defaultValue={this.props.location.state.taskData.title} />
+          <input className="poster1Input"  type="text" name="title" defaultValue={this.props.location.state.taskData.title} />
           <br />
           Location:
-          <input type="text" name="location" defaultValue={this.props.location.state.taskData.location}/>
+          <input className="poster1Input"  type="text" name="location" defaultValue={this.props.location.state.taskData.location}/>
           <br />
           Description:
-          <input type="text" name="descrip" defaultValue={this.props.location.state.taskData.description} />
+          <input className="poster1Input"  type="text" name="descrip" defaultValue={this.props.location.state.taskData.description} />
           <br />
           Select user to perform task:
           {listOfRegisteredUsers}
