@@ -68,7 +68,36 @@ def get_current_user_data(db):
 
 
 """ Password Reset """
+@app.post('/report')
+def report(db):
+    userLoggedIn = users.session_user(db)
+    userBeingReported = request.forms.get("userBeingReported")
+    complaint = request.forms.get("complaint")
 
+    res = report_user(userLoggedIn, userBeingReported, complaint)
+
+
+
+
+def report_user(currentUser, userBeingReported, complaint):
+    """sends complaint to our customer service team"""
+    email = 'community.barter.reset@gmail.com'
+    cont=['REPORTER:', currentUser, ',','BAD USER:', userBeingReported, ', COMPLAINT:', complaint]
+    content= "".join(cont)
+    msg = MIMEText(content)
+    msg['From'] = email
+    msg['To'] = email
+    msg['Subject'] = 'Reported User'
+
+    smtp_server_name = 'smtp.gmail.com'
+    port = '465'  # for secure messages
+    pword = config.cred['loginCred']
+
+    server = smtplib.SMTP_SSL('{}:{}'.format(smtp_server_name, port))
+
+    server.login(email, pword)
+    server.send_message(msg)
+    server.quit()
 
 # this will cause an error if no email exists for an account
 def send_email(token, recpt):
