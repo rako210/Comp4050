@@ -46,13 +46,14 @@ def get_user_id_json(db):
 def get_user_data_json(db, username):
 
     user_data = database.get_user_data(db, username)
-
+    ##########need to use split_string and acces items as you would in an array for skills field
     return {'result': user_data}
 
 # API call to return data for currently signed in user
 @app.get('/api/data/current-user')
 def get_current_user_data(db):
-
+    ##########need to use split_string and acces items as you would in an array for skills field
+################################################################
     return get_user_data_json(db, users.session_user(db))
 
 """ Password Reset """
@@ -224,9 +225,9 @@ def route(db):
     suburb = request.forms.get("suburb")
     image = request.files.get("image")
     ##########need front end implemented
-    #skills = request.files.get("skills")
-    #log = database.add_user(db, username, email, password, name, suburb, skills)
-    log = database.add_user(db, username, email, password, name, suburb)
+    skills = request.forms.get("tags")
+    print(skills)
+    log = database.add_user(db, username, email, password, name, suburb, skills)
 
     if log:  # if user is valid
         if image is not None:
@@ -368,7 +369,6 @@ def task(db):
     #                        location, description, cost)
     database.add_jobListing(db, userID, owner, title,
                             location, description, cost, category)
-    print('smd mohamed')
     return {'result': "True", 'bannerMessage': "Task Successfully Added"}
 
 

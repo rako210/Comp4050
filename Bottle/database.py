@@ -301,7 +301,7 @@ def create_tables(db):
 "initial user addition"
 
 
-def add_user(db, username, email, password, name, suburb):
+def add_user(db, username, email, password, name, suburb, skills):
     """"Adds a user to the database , ensures username is not already in use"""
     cursor = db.cursor()
     # check username is not in use
@@ -311,9 +311,9 @@ def add_user(db, username, email, password, name, suburb):
         return False
     else:
         salt = generate_salt()
-        sql = "INSERT INTO users (username, email, password, name, suburb, rand) VALUES (?,?,?,?,?,?)"
+        sql = "INSERT INTO users (username, email, password, name, suburb, rand, skills) VALUES (?,?,?,?,?,?,?)"
         cursor.execute(sql, [username, email, firstPassword_hash(
-            password, salt), name, suburb, salt])
+            password, salt), name, suburb, salt, skills])
         db.commit()
         return True
 
