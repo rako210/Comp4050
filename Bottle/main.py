@@ -13,6 +13,7 @@ import users
 
 app = Bottle()
 
+
 @app.route('/static/<filename:path>')
 def static(filename):
     """Static file Handling method for all static files in root static"""
@@ -21,6 +22,7 @@ def static(filename):
 
 # Banner Messages
 
+
 banner_messages = {
     'DeleteSuccess': "Task Successfuly Deleted!",
     'ApplySuccess': "Sucessfully applied for task!",
@@ -28,10 +30,14 @@ banner_messages = {
     'UpdateAccountDetailsSuccess': 'Successfully updated your Account Details',
     'UpdateAccountDetailsFailPassword': 'Error! Password must contain a number, capital and lowercase letter and must be longer than 7 characters.',
     'UpdateAccountDetailsFailEmpty': 'Error! Please fill in all fields!',
-    'LoginFail': 'Please enter a valid Username or Password!'
+    'LoginFail': 'Please enter a valid Username or Password!',
+    'CreateAccountSuccess': 'Sucessfuly created your account!',
+    'CreateAccountFailUsername': 'Error! An account under this username already exists, please login or try a different username.',
 }
 
 # Return currently signed in user id
+
+
 def get_user_id(db):
     return users.return_userID(db, users.session_user(db))
 
@@ -42,19 +48,24 @@ def get_user_id_json(db):
     return {'result': get_user_id(db)}
 
 # API call to return data for a particular user
+
+
 @app.get('/api/data/user/<username>')
 def get_user_data_json(db, username):
 
     user_data = database.get_user_data(db, username)
-    ##########need to use split_string and acces items as you would in an array for skills field
+    # need to use split_string and acces items as you would in an array for skills field
     return {'result': user_data}
 
 # API call to return data for currently signed in user
+
+
 @app.get('/api/data/current-user')
 def get_current_user_data(db):
-    ##########need to use split_string and acces items as you would in an array for skills field
-################################################################
+    # need to use split_string and acces items as you would in an array for skills field
+    ################################################################
     return get_user_data_json(db, users.session_user(db))
+
 
 """ Password Reset """
 
@@ -104,7 +115,8 @@ def token_reset(db):
         userID = users.return_userID(db, out[0])
         hash = database.password_hash(db, password, userID)
         database.update_password(db, hash, userID)
-        redirect('http://localhost:3000/')  # does this redirect not work anymore???
+        # does this redirect not work anymore???
+        redirect('http://localhost:3000/')
     else:
         return template('pwordReset', user=user, pwordError=True)
     # if here say pwrod doesnt meet password requirements
@@ -136,15 +148,17 @@ def split_string(string):
     res = string.split(',')
     return res
 
+
 @app.post('/rateUser')
 def rating(db):
     newRating = request.forms['rate']
     userID = request.forms['userID']
-    if int(newRating) >0:
-        database.update_rating(db, newRating, database.get_username(db, userID))
+    if int(newRating) > 0:
+        database.update_rating(
+            db, newRating, database.get_username(db, userID))
         return True
     ######################################################################
-    #@Mohamed if theres a new rating update rating else return home
+    # @Mohamed if theres a new rating update rating else return home
     redirect('/')
 
 
@@ -195,50 +209,45 @@ def main(db):
 
 @app.post('/createAcc')
 def route(db):
-    """handles new account creation
-    """
-    info = {'title': 'Creation Error',
-            'bannerMessage': 'An account under this email already exists please login or try another email'
-            }
 
-    info1 = {'title': 'Creation Error',
-             'bannerMessage': 'Password must contain at least 1 capital letter, 1 number and be atleast 7 characters long'
-             }
-
-    info2 = {'title': 'Creation Error',
-             'bannerMessage': 'Please enter all fields!'
-             }
+    password_flag = False
+    empty_flag = False
 
     username = request.forms.get("username")
-    if username.isspace() or not username:
-        return template('createAccount', info2, authenticated=users.session_user(db))
-
     password = request.forms.get("password")
-    pWordResult = password_test(password)
-    if not pWordResult:
-        return template('createAccount', info1, authenticated=users.session_user(db))
-
-    email = request.forms.get("email")
-
-    "SHOULD PROBS ADD JAVASCRIPT TO CHECK name and suburb ARE FILLED AND CHECK FILE TYPE OF IMAGE"
     name = request.forms.get("name")
+    email = request.forms.get("email")
     suburb = request.forms.get("suburb")
     image = request.files.get("image")
-    ##########need front end implemented
     skills = request.forms.get("tags")
-    print(skills)
-    log = database.add_user(db, username, email, password, name, suburb, skills)
 
-    if log:  # if user is valid
+    if (username.isspace() or not username) or (len(password) == 0) or (len(email) == 0) or (len(suburb) == 0) or (len(name) == 0):
+        empty_flag = True
+
+    if not password_test(password):
+        password_flag = True
+
+    if empty_flag:
+        return {'result': 'false', 'bannerMessage': banner_messages['UpdateAccountDetailsFailEmpty']}
+
+    if password_flag:
+        return {'result': 'false', 'bannerMessage': banner_messages['UpdateAccountDetailsFailPassword']}
+
+    valid_user = database.add_user(
+        db, username, email, password, name, suburb, skills)
+
+    if valid_user:  # if user is valid
         if image is not None:
             uid = users.return_userID(db, username)
             imagePath = userImage_upload(uid, image)
             database.update_avatar(db, uid, imagePath)
 
         users.generate_session(db, username)
-        return redirect('/')
+
+        return {'result': 'true', 'bannerMessage': banner_messages['CreateAccountSuccess']}
+
     else:
-        return template('createAccount', info, authenticated=users.session_user(db))
+        return {'result': 'false', 'bannerMessage': banner_messages['CreateAccountFailUsername']}
 
 
 def userImage_upload(user, image):
@@ -252,15 +261,15 @@ def userImage_upload(user, image):
 @app.post('/updateAccount')
 def account_update(db):
 
-    user_id         = users.return_userID(db, users.session_user(db))
-    email           = request.forms.get("email")
-    password        = request.forms.get("pword")
-    suburb          = request.forms.get("suburb")
-    name            = request.forms.get("name")
-    image           = request.files.get("image")
-    password_flag    = False
-    empty_flag      = False
-    
+    user_id = users.return_userID(db, users.session_user(db))
+    email = request.forms.get("email")
+    password = request.forms.get("pword")
+    suburb = request.forms.get("suburb")
+    name = request.forms.get("name")
+    image = request.files.get("image")
+    password_flag = False
+    empty_flag = False
+
     if (len(password) > 0):
         if (password_test(password)):
             newPassword = database.password_hash(db, password, user_id)
@@ -279,7 +288,7 @@ def account_update(db):
         database.update_name(db, name, user_id)
     else:
         empty_flag = True
-    
+
     if image is not None:
         imagePath = userImage_upload(user_id, image)
         database.update_avatar(db, user_id, imagePath)
@@ -365,7 +374,7 @@ def task(db):
                 'bannerMessage': 'You do not have enough coins in your account to post this job, '
                                  'either complete jobs to gain coins or delete some of your other jobs'}
 
-    #database.add_jobListing(db, userID, owner, title,
+    # database.add_jobListing(db, userID, owner, title,
     #                        location, description, cost)
     database.add_jobListing(db, userID, owner, title,
                             location, description, cost, category)
@@ -447,7 +456,7 @@ def task(db):
             db), database.return_jobCost(db, taskid))
 
     database.delete_jobListing(db, taskid)
-    
+
     return {'result': 'true', 'bannerMessage': banner_messages['DeleteSuccess']}
 
 
