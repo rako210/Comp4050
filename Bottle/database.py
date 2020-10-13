@@ -10,6 +10,14 @@ import datetime
 DATABASE_NAME = 'comp4050.db'
 
 #new
+def returnByCategory(db, category):
+    cursor = db.cursor()
+    sql = "SELECT jobID FROM jobListing WHERE category=?"
+    data = cursor.execute(sql, (category,))
+    data.fetchall()
+    return list(data)
+
+
 def return_accountBalance(db, user):
     cursor = db.cursor()
     sql = "SELECT accountBalance FROM users WHERE username=?"
@@ -76,6 +84,13 @@ def update_amountOfRatings(db, userName):
     db.commit()
     return True
 
+def update_totalRatings(db, userName, newRating):
+    cursor = db.cursor()
+    sql = "UPDATE users SET totalRating = totalRating + ? WHERE username =?"
+    cursor.execute(sql, (int(newRating), userName ))
+    db.commit()
+    return True
+
 
 def update_rating(db, newRating, userName):
     cursor = db.cursor()
@@ -86,18 +101,19 @@ def update_rating(db, newRating, userName):
     amountOfRatings = cursor.fetchone()
     print(amountOfRatings[0])
 
-    sql = "SELECT userRating from users WHERE username =?"
+    update_totalRatings(db, userName, newRating)
+
+    sql = "SELECT totalRating from users WHERE username =?"
     cursor.execute(sql, (userName,))
-    userRating = cursor.fetchone()
-    print(userRating[0])
-    print(newRating)
-    userRating = userRating[0] + int(newRating)
+    totalRating = cursor.fetchone()
+    print(totalRating[0])
+
+    userRating = totalRating[0]/amountOfRatings[0]
+
     print(userRating)
-    rating = userRating/amountOfRatings[0]
-    print(rating)
 
     sql = "UPDATE users SET userRating =? where username=?"
-    cursor.execute(sql,(rating, userName))
+    cursor.execute(sql, (int(userRating), userName))
     db.commit()
     return True
 "------------------------------------------------------------------------------------------------------------"
@@ -230,13 +246,15 @@ def create_tables(db):
         email text,
         password text,
         userID integer unique primary key autoincrement,
-        name test,
+        name text,
         suburb text,
         rand text,
         avatar text,
         userRating integer DEFAULT 0,
         amountOfRatings integer DEFAULT 0,
-        accountBalance integer DEFAULT 5
+        accountBalance integer DEFAULT 5,
+        totalRating integer DEFAULT 0,
+        skills text
     );
 
     DROP TABLE IF EXISTS sessions;
@@ -258,6 +276,7 @@ def create_tables(db):
         selectedUserID INTEGER,
         status INTEGER DEFAULT 0,
         cost INTEGER,
+        category text,
         FOREIGN KEY("selectedUserID") REFERENCES "users"("userID"),
         FOREIGN KEY("userID") REFERENCES "users"("userID"),
         FOREIGN KEY("owner") REFERENCES "users"("username")
@@ -370,14 +389,17 @@ def print_users(db):
 "job advert methods"
 
 
-def add_jobListing(db, userID, postOwner, title, location, description, cost):
+def add_jobListing(db, userID, postOwner, title, location, description, cost, category):
     """CHANGE THIS LATER Add a new job post to the database.
     The date of the post will be the current time and date.
 
     Return True if the record was added, False if not."""
     cursor = db.cursor()
-    sql = """INSERT INTO jobListing (userID ,owner, title, location, description, cost) VALUES (?,?,?, ?, ?, ?)"""
-    cursor.execute(sql, [userID, postOwner, title, location, description, cost])
+    print(category)
+    sql = """INSERT INTO jobListing (userID ,owner, title, location, description, cost, category) VALUES (?,?,?,?, ?, ?, ?)"""
+    #sql = """INSERT INTO jobListing (userID ,owner, title, location, description, cost) VALUES (?,?,?, ?, ?, ?)"""
+
+    cursor.execute(sql, [userID, postOwner, title, location, description, cost, category])
     db.commit()
 
     return True

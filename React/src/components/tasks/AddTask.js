@@ -74,6 +74,21 @@ class FormAddTask extends React.Component {
               <option value="2">2 Coins (Medium Effort)</option>
               <option value="3">3 Coins (High Effort)</option>
             </select>
+             Category:
+<select size={11} name="category">
+  <option value="Other Services" selected="selected">Other Services </option>
+  <option value="Electrical">Electrical</option>
+  <option value="Plumbing">Plumbing </option>
+  <option value="Gardening/ Landscaping">Gardening/ Landscaping</option>
+  <option value="Paint / Plaster">Paint / Plaster </option>
+  <option value="Other Trade">Other Trade</option>
+  <option value="General Housework">General Housework </option>
+  <option value="Computer/ Tech">Computer/ Tech</option>
+  <option value="Sports/ Health">Sports/ Health</option>
+  <option value="Automotive">Automotive </option>
+  <option value="Veterinary">Veterinary </option>
+  <option value="Babysitting">Babysitting</option>
+</select>
             <input type="submit" defaultValue="Update Details" />
           </form>
         </div>

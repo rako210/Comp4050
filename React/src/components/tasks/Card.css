@@ -66,6 +66,9 @@
     margin-bottom: 8px;
 }
 
-
+.flex-box {
+    display:flex;
+    justify-content: space-between;
+}
 
 

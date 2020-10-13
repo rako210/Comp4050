@@ -4,18 +4,25 @@ import { ApplyButton } from '../common/Button'
 import './Card.css'
 
 export class AllTaskCard extends React.Component {
-    render() {  
+    render() {
       return (
         <div className="box">
           <div className="card-header">
             <div className="card-col1">
-              <h2>{this.props.data.title}</h2>
+              <div className="flex-box">
+                <div>
+                  <h2>{this.props.data.title}</h2>
+                </div>
+                <div>
+                  <h2>#{this.props.data.category}</h2>
+                </div>
+              </div>
             </div>
             <div className="card-col2">
               <h2>{this.props.data.cost} Points</h2>
             </div>
           </div>
-  
+
           <div className="card-body">
             <div className="card-col1">
               <p>{this.props.data.description}</p>
@@ -36,6 +43,4 @@ export class AllTaskCard extends React.Component {
       )
     }
   }
-  
-
   

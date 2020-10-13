@@ -103,7 +103,7 @@ def token_reset(db):
         userID = users.return_userID(db, out[0])
         hash = database.password_hash(db, password, userID)
         database.update_password(db, hash, userID)
-        return redirect('/')  # does this redirect not work anymore???
+        redirect('http://localhost:3000/')  # does this redirect not work anymore???
     else:
         return template('pwordReset', user=user, pwordError=True)
     # if here say pwrod doesnt meet password requirements
@@ -131,12 +131,20 @@ def password_reset(db):
 
 # Review Users
 
+def split_string(string):
+    res = string.split(',')
+    return res
 
 @app.post('/rateUser')
 def rating(db):
     newRating = request.forms['rate']
     userID = request.forms['userID']
-    database.update_rating(db, newRating, database.get_username(db, userID))
+    if int(newRating) >0:
+        database.update_rating(db, newRating, database.get_username(db, userID))
+        return True
+    ######################################################################
+    #@Mohamed if theres a new rating update rating else return home
+    redirect('/')
 
 
 # Login / Register Account
@@ -215,6 +223,9 @@ def route(db):
     name = request.forms.get("name")
     suburb = request.forms.get("suburb")
     image = request.files.get("image")
+    ##########need front end implemented
+    #skills = request.files.get("skills")
+    #log = database.add_user(db, username, email, password, name, suburb, skills)
     log = database.add_user(db, username, email, password, name, suburb)
 
     if log:  # if user is valid
@@ -344,6 +355,8 @@ def task(db):
     location = request.forms.get("location")
     description = request.forms.get("descrip")
     cost = request.forms.get("cost")
+    category = request.forms.get("category")
+    print(category)
 
     balanceCheck = database.deduct_accountBalance(db, owner, cost)
     if balanceCheck is False:
@@ -351,9 +364,11 @@ def task(db):
                 'bannerMessage': 'You do not have enough coins in your account to post this job, '
                                  'either complete jobs to gain coins or delete some of your other jobs'}
 
+    #database.add_jobListing(db, userID, owner, title,
+    #                        location, description, cost)
     database.add_jobListing(db, userID, owner, title,
-                            location, description, cost)
-
+                            location, description, cost, category)
+    print('smd mohamed')
     return {'result': "True", 'bannerMessage': "Task Successfully Added"}
 
 
@@ -539,6 +554,7 @@ def task(db):
             'description': task[6],
             'selectedUserID': task[7],
             'cost': task[9],
+            'category': task[10],
             'status': status,
             'isRegistered': is_registered
         })
@@ -564,6 +580,7 @@ def task(db):
             'description': x[6],
             'selectedUserID': x[7],
             'cost': x[9],
+            'category': task[10],
             'status': status,
             'selectedUsername': database.get_username(db, x[7]),
         })
