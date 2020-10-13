@@ -21,7 +21,7 @@ class Main extends React.Component {
           <div className="profile-header">
             <div className="profile-img">
               <img
-                src="/static/images/Ashpic.JPG"
+                src={this.props.userData.avatar}
                 alt="Profile"
                 width={200}
               />

@@ -280,7 +280,7 @@ def route(db):
 
 
 def userImage_upload(user, image):
-    root = os.path.abspath(os.curdir)  # does this line work on all os' ?
+    root = os.path.relpath(os.curdir)  # does this line work on all os' ?
     path = root + "/static/userImages/" + "DP user -- " + \
         str(user) + " -- " + image.filename
     image.save(path, overwrite=True)
@@ -618,7 +618,6 @@ def task(db):
             'description': x[6],
             'selectedUserID': x[7],
             'cost': x[9],
-            'category': task[10],
             'status': status,
             'selectedUsername': database.get_username(db, x[7]),
         })

@@ -136,7 +136,6 @@ class FormUpdateAccount extends React.Component {
           <input
             type="file"
             name="image"
-            defaultValue={this.props.userData.avatar}
           />
           <br />
           <input type="submit" value="Update Details" />

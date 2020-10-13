@@ -104,6 +104,7 @@ class FromEditTask extends React.Component {
           <br />
           Select user to perform task:
           {listOfRegisteredUsers}
+
           <input type="submit" value="Save" />
         </form>
       </div>
