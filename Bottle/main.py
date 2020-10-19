@@ -70,17 +70,21 @@ def get_current_user_data(db):
 """ Password Reset """
 @app.post('/report')
 def report(db):
+    """form post function for user reporting"""
     userLoggedIn = users.session_user(db)
     userBeingReported = request.forms.get("userBeingReported")
     complaint = request.forms.get("complaint")
-
-    res = report_user(userLoggedIn, userBeingReported, complaint)
+    if userLoggedIn == userBeingReported:
+        return template('temp4')
+    else:
+        res = report_user(userLoggedIn, userBeingReported, complaint)
+        return template('temp5')
 
 
 
 
 def report_user(currentUser, userBeingReported, complaint):
-    """sends complaint to our customer service team"""
+    """reports user, sends complaint to our customer service team"""
     email = 'community.barter.reset@gmail.com'
     cont=['REPORTER:', currentUser, ',','BAD USER:', userBeingReported, ', COMPLAINT:', complaint]
     content= "".join(cont)
