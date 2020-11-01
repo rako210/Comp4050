@@ -1,10 +1,25 @@
 import React from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import PropTypes from 'prop-types'
+import Paper from '@material-ui/core/Paper'
+import Grid from '@material-ui/core/Grid'
 import BannerMessageController from '../materialUI/BannerMessageController'
 import { AllTaskCard } from './Card.js'
 import ShowAllCreatedTasksButton from './ShowAllCreatedTasksButton'
 import ShowAllCreatedTasksTable from './ShowAllCreatedTasksTable'
 import ShowAllTasksButton from './ShowAllTasksButton'
+import { Button, Typography } from '@material-ui/core'
 
+const styles = (theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
+})
 class TaskManager extends React.Component {
   constructor(props) {
     super(props)
@@ -14,7 +29,7 @@ class TaskManager extends React.Component {
       apiURL: null,
       tasks: null,
       registeredTasks: [],
-      bannerMessage: ''
+      bannerMessage: '',
     }
 
     this.displayAllTasks = this.displayAllTasks.bind(this)
@@ -53,23 +68,43 @@ class TaskManager extends React.Component {
   }
 
   updateBannerMessage(bannerMessage) {
-    this.setState({bannerMessage: bannerMessage})
+    this.setState({ bannerMessage: bannerMessage })
   }
 
   render() {
+    const { classes } = this.props
     return (
       <div>
-        <form action="/addtask" method="get" id="addtask" className="button">
-          <input type="submit" value="Create a new Task" />
-        </form>
-
-        <ShowAllCreatedTasksButton
-          callBack={this.displayCreatedTasks}
-        ></ShowAllCreatedTasksButton>
-
-        <ShowAllTasksButton
-          callBack={this.displayAllTasks}
-        ></ShowAllTasksButton>
+        <div className={classes.root}>
+          <Grid
+            container
+            container
+            spacing={0}
+            direction="row"
+            justify="center"
+          >
+            <Grid item xs={12} sm={3}>
+              <form
+                action="/addtask"
+                method="get"
+                id="addtask"
+                className="button"
+              >
+                <input type="submit" value="Create a new Task" />
+              </form>
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <ShowAllCreatedTasksButton
+                callBack={this.displayCreatedTasks}
+              ></ShowAllCreatedTasksButton>
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <ShowAllTasksButton
+                callBack={this.displayAllTasks}
+              ></ShowAllTasksButton>
+            </Grid>
+          </Grid>
+        </div>
 
         {this.state.bannerMessage}
         <BannerMessageController bannerMessage={this.state.bannerMessage} />
@@ -80,7 +115,7 @@ class TaskManager extends React.Component {
             <div>
               <RenderAllCards
                 data={this.state.tasks}
-                callBack = {this.applyForTask}
+                callBack={this.applyForTask}
                 updateRender={this.updateTaskList}
               ></RenderAllCards>
             </div>
@@ -99,17 +134,19 @@ class TaskManager extends React.Component {
     )
   }
 }
-
+TaskManager.propTypes = {
+  classes: PropTypes.object.isRequired,
+}
 class RenderAllCards extends React.Component {
-
   render() {
     let render = this.props.data.map((task) => {
-      return <AllTaskCard key={task.id} {...this.props} data={task}></AllTaskCard>
+      return (
+        <AllTaskCard key={task.id} {...this.props} data={task}></AllTaskCard>
+      )
     })
 
     return <div className="section">{render}</div>
   }
-
 }
 
-export default TaskManager;
+export default withStyles(styles)(TaskManager)
