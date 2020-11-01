@@ -120,19 +120,7 @@ class Login extends Component {
     let retVal
 
     if (authenticated !== 'None') {
-      retVal = (
-        <div>
-          <h2>Logged in as {authenticated}</h2>
-          <form
-            action="/logout"
-            method="POST"
-            id="logoutform"
-            className="button"
-          >
-            <input type="submit" value="Logout" />
-          </form>
-        </div>
-      )
+      retVal = <div style={{ marginBottom: '15px' }}></div>
     } else {
       retVal = (
         <div>

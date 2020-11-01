@@ -1,15 +1,16 @@
 
-import sqlite3
-import hashlib
-import string
-import secrets
 import datetime
-
+import hashlib
+import secrets
+import sqlite3
+import string
 
 # The database name
 DATABASE_NAME = 'comp4050.db'
 
-#new
+# new
+
+
 def returnByCategory(db, category):
     cursor = db.cursor()
     sql = "SELECT jobID FROM jobListing WHERE category=?"
@@ -28,40 +29,44 @@ def return_accountBalance(db, user):
     else:
         return data[0]
 
+
 def return_passwordHash(db, user):
     cursor = db.cursor()
     sql = "SELECT password FROM users WHERE username=?"
-    cursor.execute(sql,(user,))
+    cursor.execute(sql, (user,))
     data = cursor.fetchone()
     if data is None:
         return False
     else:
         return True
 
+
 def return_passwordHashV2(db, user):
     cursor = db.cursor()
     sql = "SELECT password FROM users WHERE username=?"
-    cursor.execute(sql,(user,))
+    cursor.execute(sql, (user,))
     data = cursor.fetchone()
     if data is None:
         return False
     else:
         return data[0]
+
 
 def return_email(db, user):
     cursor = db.cursor()
     sql = "SELECT email FROM users WHERE username=?"
-    cursor.execute(sql,(user,))
+    cursor.execute(sql, (user,))
     data = cursor.fetchone()
     if data is None:
         return False
     else:
         return data[0]
+
 
 def check_user(db, user, hash):
     cursor = db.cursor()
     sql = "SELECT username FROM users WHERE username=? and password=?"
-    cursor.execute(sql,(user,hash))
+    cursor.execute(sql, (user, hash))
     data = cursor.fetchone()
     if data is None:
         return False
@@ -69,13 +74,13 @@ def check_user(db, user, hash):
         return data[0]
 
 
-
-def return_userRating(db,userName):
+def return_userRating(db, userName):
     cursor = db.cursor()
     sql = "SELECT userRating from users WHERE username =?"
     cursor.execute(sql, (userName,))
     userRating = cursor.fetchone()
     return userRating[0]
+
 
 def update_amountOfRatings(db, userName):
     cursor = db.cursor()
@@ -84,10 +89,11 @@ def update_amountOfRatings(db, userName):
     db.commit()
     return True
 
+
 def update_totalRatings(db, userName, newRating):
     cursor = db.cursor()
     sql = "UPDATE users SET totalRating = totalRating + ? WHERE username =?"
-    cursor.execute(sql, (int(newRating), userName ))
+    cursor.execute(sql, (int(newRating), userName))
     db.commit()
     return True
 
@@ -116,6 +122,8 @@ def update_rating(db, newRating, userName):
     cursor.execute(sql, (int(userRating), userName))
     db.commit()
     return True
+
+
 "------------------------------------------------------------------------------------------------------------"
 "Password creation methods"
 
@@ -173,7 +181,9 @@ def return_salt(db, user):
     else:
         return data[0]
 
-#new
+# new
+
+
 def return_jobCost(db, jobID):
     cursor = db.cursor()
     sql = "SELECT cost FROM jobListing WHERE jobID=?"
@@ -183,6 +193,7 @@ def return_jobCost(db, jobID):
         return False
     else:
         return data[0]
+
 
 def return_accountBalance(db, user):
     """returns account balance value or false if no value is initialised"""
@@ -194,6 +205,7 @@ def return_accountBalance(db, user):
         return False
     else:
         return data[0]
+
 
 def deduct_accountBalance(db, user, value):
     """ use this when creating a joblisting,
@@ -209,9 +221,10 @@ def deduct_accountBalance(db, user, value):
     else:
         cursor = db.cursor()
         sql = "UPDATE users set accountBalance=? WHERE username=?"
-        cursor.execute(sql, (newBal,user))
+        cursor.execute(sql, (newBal, user))
         db.commit()
         return True
+
 
 def increase_accountBalance(db, user, value):
     """use this when CLOSING a job listing to give money to the person who completed the job
@@ -224,10 +237,6 @@ def increase_accountBalance(db, user, value):
     cursor.execute(sql, (value, user))
     db.commit()
     return True
-
-
-
-
 
 
 "------------------------------------------------------------------------------------------------------------"
@@ -399,7 +408,8 @@ def add_jobListing(db, userID, postOwner, title, location, description, cost, ca
     sql = """INSERT INTO jobListing (userID ,owner, title, location, description, cost, category) VALUES (?,?,?,?, ?, ?, ?)"""
     #sql = """INSERT INTO jobListing (userID ,owner, title, location, description, cost) VALUES (?,?,?, ?, ?, ?)"""
 
-    cursor.execute(sql, [userID, postOwner, title, location, description, cost, category])
+    cursor.execute(sql, [userID, postOwner, title,
+                         location, description, cost, category])
     db.commit()
 
     return True
@@ -467,33 +477,37 @@ def position_list(db, userID, limit=10):
     data = cursor.execute(sql, (limit,))
     return list(data)
 
+
 def get_user_data(db, userID):
 
     cursor = db.cursor()
     sql = """
-        SELECT username, email, userID, name, suburb, avatar, userRating, amountOfRatings, accountBalance
+        SELECT username, email, userID, name, suburb, avatar, userRating, amountOfRatings, accountBalance, skills
         FROM users 
         WHERE userID=?
     """
     data = cursor.execute(sql, (userID,))
     data = data.fetchone()
 
-    ret_val = dict( zip([key[0] for key in cursor.description], [value for value in data]) )
+    ret_val = dict(zip([key[0] for key in cursor.description], [
+                   value for value in data]))
 
     return ret_val
+
 
 def get_user_data(db, username):
 
     cursor = db.cursor()
     sql = """
-        SELECT username, email, userID, name, suburb, avatar, userRating, amountOfRatings, accountBalance
+        SELECT username, email, userID, name, suburb, avatar, userRating, amountOfRatings, accountBalance, skills
         FROM users 
         WHERE username=?
     """
     data = cursor.execute(sql, (username,))
     data = data.fetchone()
 
-    ret_val = dict( zip([key[0] for key in cursor.description], [value for value in data]) )
+    ret_val = dict(zip([key[0] for key in cursor.description], [
+                   value for value in data]))
 
     return ret_val
 
@@ -512,6 +526,7 @@ def get_username(db, userID):
     data = cursor.execute(sql, (userID,))
     data = data.fetchone()
     return data[0]
+
 
 def apply_for_job(db, job_id, user_id):
     """ Simply associate a job with a user and set the status of the task"""
@@ -611,6 +626,7 @@ def mark_task_as_complete(db, jobID):
 
     set_task_status(db, jobID, 2)
 
+
 def get_task_status(db, jobID):
     "0 - Looking for Helpers, 1 - In Progress, 2 - Completed"
     cursor = db.cursor()
@@ -621,8 +637,9 @@ def get_task_status(db, jobID):
     """
     data = cursor.execute(sql, (jobID,))
     data = data.fetchone()
-    
+
     return data[0]
+
 
 def return_selected_user(db, jobID):
     cursor = db.cursor()
@@ -641,4 +658,3 @@ if __name__ == '__main__':
     """Run this file with python to initilise tables and clear table data"""
     db = sqlite3.connect(DATABASE_NAME)
     create_tables(db)
-

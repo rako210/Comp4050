@@ -126,13 +126,17 @@ export class DeleteButton extends Component {
       })
 
     // Update list of data to be manipulated
-    this.props.updateList()
+    if ('updateList' in this.props) {
+      this.props.updateList()
+    }
 
     // Update user data to display correctly
     this.props.updateUserData()
 
     // Display banner message of successful operation
-    this.props.updateBannerMessage(this.state.bannerMessage)
+    if ('updateBannerMessage' in this.props) {
+      this.props.updateBannerMessage(this.state.bannerMessage)
+    }
   }
 
   render() {

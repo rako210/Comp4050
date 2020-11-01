@@ -605,7 +605,7 @@ def task(db):
 
 
 @app.get('/api/list/task/created-by-user')
-def task(db):
+def get_user_tasks(db):
     user_id = get_user_id(db)
     task_list = database.position_list(db, user_id)
     ret_val = []
