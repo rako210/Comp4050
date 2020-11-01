@@ -26,18 +26,21 @@ class NavBar extends Component {
           <div className="nav-bar">
             <div className="nav-left">
               <div className="nav-logo-container">
-                <img
-                  className="nav-logo"
-                  src={require('../images/logo.png')}
-                  alt="Website Logo"
-                />
-              </div>
-              <ul className="nav-bar-list">
                 <a href="/">
+                  <img
+                    className="nav-logo"
+                    src={require('../images/logo.png')}
+                    alt="Website Logo"
+                  />
+                </a>
+              </div>
+
+              <ul className="nav-bar-list">
+                {/* <a href="/">
                   <li>
                     <Typography variant="button">Home</Typography>
                   </li>
-                </a>
+                </a> */}
                 <a href="/about">
                   <li>
                     <Typography variant="button">About Us</Typography>

@@ -9,6 +9,7 @@ import MenuList from '@material-ui/core/MenuList'
 import { makeStyles } from '@material-ui/core/styles'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import { useHistory } from 'react-router-dom'
+import Avatar from '@material-ui/core/Avatar'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,6 +25,7 @@ export default function MenuListComposition(props) {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
   const anchorRef = React.useRef(null)
+  var avatarUrl = props.userData.avatar
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen)
@@ -82,7 +84,8 @@ export default function MenuListComposition(props) {
           onClick={handleToggle}
         >
           {props.authenticated} &nbsp;
-          <AccountCircleIcon />
+          {/* <AccountCircleIcon /> */}
+          <Avatar alt="Remy Sharp" src={avatarUrl} className={classes.small} />
         </Button>
         <Popper
           open={open}

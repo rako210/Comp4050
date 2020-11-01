@@ -34,6 +34,8 @@ export default function FormDialog() {
   }
 
   const handleClose = () => {
+    setvalidUser('')
+    setName('')
     setOpen(false)
   }
 
