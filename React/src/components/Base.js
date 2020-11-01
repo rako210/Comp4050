@@ -42,7 +42,7 @@ class NavBar extends Component {
                     <Typography variant="button">About Us</Typography>
                   </li>
                 </a>
-                <a href="/accountSettings">
+                {/* <a href="/accountSettings">
                   <li>
                     <Typography variant="button">Account Settings</Typography>
                   </li>
@@ -51,7 +51,7 @@ class NavBar extends Component {
                   <li>
                     <Typography variant="button">Account Profile</Typography>
                   </li>
-                </a>
+                </a> */}
               </ul>
             </div>
 

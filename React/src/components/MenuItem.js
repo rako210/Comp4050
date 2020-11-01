@@ -7,7 +7,8 @@ import Popper from '@material-ui/core/Popper'
 import MenuItem from '@material-ui/core/MenuItem'
 import MenuList from '@material-ui/core/MenuList'
 import { makeStyles } from '@material-ui/core/styles'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function MenuListComposition(props) {
+  let history = useHistory()
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
   const anchorRef = React.useRef(null)
@@ -33,6 +35,23 @@ export default function MenuListComposition(props) {
     }
 
     setOpen(false)
+  }
+
+  const handleLogout = () => {
+    fetch('/logout', { method: 'POST' }).then(handleRedirect)
+  }
+
+  const handleRedirect = (e) => {
+    if (e.status == 200) window.location.href = '/'
+    else console.log(e)
+  }
+
+  const redirectToProfile = () => {
+    history.push('/accountProfile')
+  }
+
+  const redirectToAccount = () => {
+    history.push('/accountSettings')
   }
 
   function handleListKeyDown(event) {
@@ -57,12 +76,13 @@ export default function MenuListComposition(props) {
       <div>
         <Button
           ref={anchorRef}
-          style={{color: 'rgba(255, 255, 255, 0.5)', fontWeight: 'bold'}}
+          style={{ color: 'rgba(255, 255, 255, 0.5)', fontWeight: 'bold' }}
           aria-controls={open ? 'menu-list-grow' : undefined}
           aria-haspopup="true"
           onClick={handleToggle}
         >
-          {props.authenticated} &nbsp;<AccountCircleIcon />
+          {props.authenticated} &nbsp;
+          <AccountCircleIcon />
         </Button>
         <Popper
           open={open}
@@ -86,9 +106,9 @@ export default function MenuListComposition(props) {
                     id="menu-list-grow"
                     onKeyDown={handleListKeyDown}
                   >
-                    <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    <MenuItem onClick={handleClose}>My account</MenuItem>
-                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                    <MenuItem onClick={redirectToProfile}>Profile</MenuItem>
+                    <MenuItem onClick={redirectToAccount}>My account</MenuItem>
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
                   </MenuList>
                 </ClickAwayListener>
               </Paper>
