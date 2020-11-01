@@ -161,7 +161,6 @@ def token_reset(db):
 @app.post('/ForgotPassword')
 def password_reset(db):
     name = request.forms.get("name")
-    print(name)
     flag = users.check_user(db, name)
     if flag:
         username = name
