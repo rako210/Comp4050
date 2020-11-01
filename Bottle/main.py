@@ -161,6 +161,7 @@ def token_reset(db):
 @app.post('/ForgotPassword')
 def password_reset(db):
     name = request.forms.get("name")
+    print(name)
     flag = users.check_user(db, name)
     if flag:
         username = name
@@ -168,10 +169,10 @@ def password_reset(db):
         key = itsdangerous.URLSafeSerializer(config.cred['secretKeys'])
         token = key.dumps([username, password])
         send_email(token, database.return_email(db, name))
-        return template('temp2')
+        return {'result': 'true'}
         # return a redirect to a page where it says please check your email
     else:
-        return template('temp3')
+        return {'result': 'false'}
         # return a message to the user saying the username is invalid
 
 

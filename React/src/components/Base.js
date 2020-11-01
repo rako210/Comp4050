@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import './Base.css'
 import BasicTextFields from './materialUI/TextField'
 import MenuListComposition from './MenuItem'
+import FormDialog from './ForgotPassword'
 
 class Base extends Component {
   render() {
@@ -159,17 +160,7 @@ class Login extends Component {
             <h3>Dont have an Account?</h3>
             <input type="submit" value="Create Account" />
           </form>
-
-          <form action="/ForgotPassword" method="POST" className="poster1">
-            <h3>Forgot Password?</h3>
-            Username: <input
-              className="poster1Input"
-              type="text"
-              name="name"
-            />{' '}
-            <br />
-            <input type="submit" value="Submit" />
-          </form>
+          <FormDialog />
         </div>
       )
     }
