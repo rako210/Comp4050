@@ -1,9 +1,9 @@
 import { Button, Typography } from '@material-ui/core'
 import React, { Component } from 'react'
 import './Base.css'
+import FormDialog from './ForgotPassword'
 import BasicTextFields from './materialUI/TextField'
 import MenuListComposition from './MenuItem'
-import FormDialog from './ForgotPassword'
 
 class Base extends Component {
   render() {
@@ -26,21 +26,18 @@ class NavBar extends Component {
           <div className="nav-bar">
             <div className="nav-left">
               <div className="nav-logo-container">
-                <a href="/">
-                  <img
-                    className="nav-logo"
-                    src={require('../images/logo.png')}
-                    alt="Website Logo"
-                  />
-                </a>
+                <img
+                  className="nav-logo"
+                  src={require('../images/logo.png')}
+                  alt="Website Logo"
+                />
               </div>
-
               <ul className="nav-bar-list">
-                {/* <a href="/">
+                <a href="/">
                   <li>
                     <Typography variant="button">Home</Typography>
                   </li>
-                </a> */}
+                </a>
                 <a href="/about">
                   <li>
                     <Typography variant="button">About Us</Typography>

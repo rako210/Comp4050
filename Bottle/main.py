@@ -10,6 +10,7 @@ from bottle import Bottle, redirect, request, response, static_file, template
 import config
 import database
 import users
+from dictionary import *
 
 app = Bottle()
 
@@ -20,20 +21,6 @@ def static(filename):
 
     return static_file(filename=filename, root='static')
 
-# Banner Messages
-
-
-banner_messages = {
-    'DeleteSuccess': "Task Successfuly Deleted!",
-    'ApplySuccess': "Sucessfully applied for task!",
-    'ApplyFail': 'Please sign in to apply for tasks!',
-    'UpdateAccountDetailsSuccess': 'Successfully updated your Account Details',
-    'UpdateAccountDetailsFailPassword': 'Error! Password must contain a number, capital and lowercase letter and must be longer than 7 characters.',
-    'UpdateAccountDetailsFailEmpty': 'Error! Please fill in all fields!',
-    'LoginFail': 'Please enter a valid Username or Password!',
-    'CreateAccountSuccess': 'Sucessfuly created your account!',
-    'CreateAccountFailUsername': 'Error! An account under this username already exists, please login or try a different username.',
-}
 
 # Return currently signed in user id
 
@@ -50,9 +37,11 @@ def get_user_id_json(db):
 # API call to return data for a particular user
 
 
-@app.get('/api/data/user/<username>')
-def get_user_data_json(db, username):
+@app.get('/api/data/user/', methods=['POST', 'GET'])
+def get_user_data_json(db):
 
+    username = request.query['username']
+    print(username)
     user_data = database.get_user_data(db, username)
     # need to use split_string and acces items as you would in an array for skills field
     return {'result': user_data}
@@ -64,10 +53,10 @@ def get_user_data_json(db, username):
 def get_current_user_data(db):
     # need to use split_string and acces items as you would in an array for skills field
     ################################################################
-    return get_user_data_json(db, users.session_user(db))
+    return {'result': database.get_user_data(db, users.session_user(db))}
 
 
-""" Password Reset """
+# Password Reset
 @app.post('/report')
 def report(db):
     """form post function for user reporting"""
@@ -81,13 +70,12 @@ def report(db):
         return template('temp5')
 
 
-
-
 def report_user(currentUser, userBeingReported, complaint):
     """reports user, sends complaint to our customer service team"""
     email = 'community.barter.reset@gmail.com'
-    cont=['REPORTER:', currentUser, ',','BAD USER:', userBeingReported, ', COMPLAINT:', complaint]
-    content= "".join(cont)
+    cont = ['REPORTER:', currentUser, ',', 'BAD USER:',
+            userBeingReported, ', COMPLAINT:', complaint]
+    content = "".join(cont)
     msg = MIMEText(content)
     msg['From'] = email
     msg['To'] = email
@@ -104,6 +92,8 @@ def report_user(currentUser, userBeingReported, complaint):
     server.quit()
 
 # this will cause an error if no email exists for an account
+
+
 def send_email(token, recpt):
     sender = 'community.barter.reset@gmail.com'
 
@@ -196,7 +186,6 @@ def rating(db):
 
 
 # Login / Register Account
-
 @app.post('/login')
 def route(db):
     """handles login of users,
@@ -285,9 +274,9 @@ def route(db):
 
 def userImage_upload(user, image):
     root = os.path.relpath(os.curdir)  # does this line work on all os' ?
-    path = root + "/static/userImages/" + "DP user -- " + \
+    path = "/static/userImages/" + "DP user -- " + \
         str(user) + " -- " + image.filename
-    image.save(path, overwrite=True)
+    image.save('.'+path, overwrite=True)
     return path
 
 
@@ -367,26 +356,6 @@ def acc(db):
 
 
 # Task Creation / Edit / Deletion / Apply
-
-@app.post('/addtask', methods=['GET'])
-def task(db):
-    """"
-    redirects to the addtask form page
-    """
-
-    info = {'title': 'Add Task',
-            'bannerMessage': 'yeanah'}
-
-    username = users.session_user(db)
-
-    # The user must be logged in order to add a task.
-    if username == None:
-        print("Please login in order to add a task.")
-        return redirect('/')
-    else:
-        return template('addtask', info, authenticated=users.session_user(db))
-
-
 @app.post('/addingtask', methods=['GET'])
 def task(db):
     """"
@@ -414,70 +383,8 @@ def task(db):
     return {'result': "True", 'bannerMessage': "Task Successfully Added"}
 
 
-@app.post('/gettask', methods=['GET'])
-def task(db):
-    """"
-    Will return based on the button pressed. It will then return the relative tasks in a top 10 format
-    """
-
-    tasktype = request.forms.get("tasktype")
-
-    if tasktype == "1":
-        usrid = users.session_user(db)
-        tasklist = database.position_list(db, usrid)
-        newtrack = []
-
-        loginisTrue = False
-
-        if users.session_user(db):
-            loginisTrue = True
-
-        for x in tasklist:
-            dict1 = {
-                'id': x[0],
-                'time': x[1],
-                'owner': x[2],
-                'title': x[3],
-                'location': x[4],
-                'description': x[5]
-            }
-            newtrack.append(dict1)
-        info = {'title': 'Account',
-                'bannerMessage': '',
-                'task': newtrack}
-
-        return {'result': newtrack}
-
-        # return template('index', info, authenticated=users.session_user(db), tasksexist=True, loginIsTrue=loginisTrue)
-
-    if tasktype == "0":
-        tasklist = database.position_list(db, None)
-        newtrack = []
-
-        loginisTrue = False
-
-        if users.session_user(db):
-            loginisTrue = True
-
-        for x in tasklist:
-            dict1 = {
-                'id': x[0],
-                'time': x[1],
-                'owner': x[2],
-                'title': x[3],
-                'location': x[4],
-                'description': x[5]
-            }
-            newtrack.append(dict1)
-        info = {'title': 'Account',
-                'bannerMessage': '',
-                'task': newtrack}
-
-        return {'result': newtrack}
-
-
 @app.post('/deletetask', methods=['GET'])
-def task(db):
+def delete_task(db):
     """"
     Deletes respective ID'd task
     """
@@ -519,8 +426,8 @@ def apply_for_task(db):
         return {'result': "false", 'bannerMessage': banner_messages['ApplyFail']}
 
 
-@app.post('/api/task/edit')
-def edit_task(db, methods=['GET']):
+@app.post('/api/task/edit', methods=['GET'])
+def edit_task(db):
     user_id = users.session_user(db)
     job_id = request.forms.get("jobID")
     owner = users.session_user(db)
@@ -540,8 +447,8 @@ def edit_task(db, methods=['GET']):
     return {'result': "True"}
 
 
-@app.post('/api/task/mark-complete')
-def mark_task_as_complete(db, methods=['GET']):
+@app.post('/api/task/mark-complete', methods=['GET'])
+def mark_task_as_complete(db,):
     job_id = request.forms.get("taskid")
     userAssigned = database.return_selected_user(db, job_id)
     if userAssigned is not False:
@@ -552,15 +459,7 @@ def mark_task_as_complete(db, methods=['GET']):
 
     print(job_id)
 
-
 # Task GET Methods
-
-# Task Status Dictionary
-status_dict = {
-    '0': "Looking for Helpers",
-    '1': "In Progress",
-    '2': "Task Complete"
-}
 
 
 @app.get('/api/getUserTasks')
@@ -621,6 +520,37 @@ def get_user_tasks(db):
             'location': x[5],
             'description': x[6],
             'selectedUserID': x[7],
+            'category': x[10],
+            'ownerName': database.get_user_data(db, x[3])['name'],
+            'cost': x[9],
+            'status': status,
+            'selectedUsername': database.get_username(db, x[7]),
+        })
+
+    return {'result': ret_val}
+
+
+@app.get('/api/list/task/createdByUser')
+def get_users_tasks(db):
+
+    username = request.query['username']
+    user_id = database.get_user_data(db, username)['userID']
+    task_list = database.position_list(db, user_id)
+    ret_val = []
+
+    for x in task_list:
+        status = status_dict[str(x[8])]
+
+        ret_val.append({
+            'id': x[0],
+            'time': x[1],
+            'owner': x[3],
+            'title': x[4],
+            'location': x[5],
+            'description': x[6],
+            'selectedUserID': x[7],
+            'category': x[10],
+            'ownerName': database.get_user_data(db, x[3])['name'],
             'cost': x[9],
             'status': status,
             'selectedUsername': database.get_username(db, x[7]),
@@ -649,6 +579,47 @@ def users_registered_for_task(db):
     data = database.get_users_applied_for_job(db, jobID)
 
     return {'result': data}
+
+
+"""Message Routes"""
+
+
+@app.post('/api/send-message', methods=['GET', 'POST'])
+def send_message(db):
+
+    message = request.forms.get("message")
+    recipient = request.query['username']
+    sender_id = users.get_userID(db)
+    recipient_id = users.return_userID(db, recipient)
+
+    print(message)
+
+    if ((sender_id != None) and (recipient_id != None)):
+        database.add_message(db, sender_id, recipient_id, message)
+    else:
+        if sender_id == None:
+            print('Please sign in to send a message!')
+        elif recipient_id == None:
+            print('Invalid recipient username')
+
+
+@app.get('/api/get-message', methods=['GET', 'POST'])
+def get_message(db):
+
+    user_id = users.get_userID(db)
+    recipient_id = users.return_userID(db, request.query['username'])
+
+    ret_val = database.get_message(db, user_id, recipient_id)
+
+    return {'data': ret_val}
+
+
+@app.get('/api/messages')
+def get_messages(db):
+
+    user_id = users.get_userID(db)
+    user_messages = database.get_messages(db, user_id)
+    return {'data': user_messages}
 
 
 if __name__ == '__main__':

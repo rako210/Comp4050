@@ -250,20 +250,22 @@ def create_tables(db):
     sql = """
     
     DROP TABLE IF EXISTS users;
-    CREATE TABLE users (
-        username text,
-        email text,
-        password text,
-        userID integer unique primary key autoincrement,
-        name text,
-        suburb text,
-        rand text,
-        avatar text,
-        userRating integer DEFAULT 0,
-        amountOfRatings integer DEFAULT 0,
-        accountBalance integer DEFAULT 5,
-        totalRating integer DEFAULT 0,
-        skills text
+    CREATE TABLE "users" (
+        "username"	text,
+        "email"	text,
+        "password"	text,
+        "userID"	integer UNIQUE,
+        "name"	text,
+        "suburb"	text,
+        "rand"	text,
+        "avatar"	text,
+        "userRating"	integer DEFAULT 0,
+        "amountOfRatings"	integer DEFAULT 0,
+        "accountBalance"	integer DEFAULT 5,
+        "totalRating"	integer DEFAULT 0,
+        "skills"	text,
+        "lastMessageReadTime"	TEXT DEFAULT '1990-01-01 00:00:00',
+        PRIMARY KEY("userID" AUTOINCREMENT)
     );
 
     DROP TABLE IF EXISTS sessions;
@@ -299,6 +301,18 @@ def create_tables(db):
         FOREIGN KEY("jobID") REFERENCES "users"("userID"),
         FOREIGN KEY("userID") REFERENCES "jobListing"("jobID"),
         PRIMARY KEY("jobID","userID")
+    );
+
+    DROP TABLE IF EXISTS message;
+    CREATE TABLE "message" (
+        "id"	INTEGER,
+        "senderID"	INTEGER,
+        "recipientID"	INTEGER,
+        "body"	TEXT,
+        "timestamp"	TEXT DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY("senderID") REFERENCES "users"("userID"),
+        FOREIGN KEY("recipientID") REFERENCES "users"("userID"),
+        PRIMARY KEY("id")
     );
     """
 
@@ -506,6 +520,8 @@ def get_user_data(db, username):
     data = cursor.execute(sql, (username,))
     data = data.fetchone()
 
+    print(data)
+
     ret_val = dict(zip([key[0] for key in cursor.description], [
                    value for value in data]))
 
@@ -650,6 +666,124 @@ def return_selected_user(db, jobID):
         return False
     else:
         return data[0]
+
+
+"""Messaging Methods"""
+
+
+def add_message(db, sender_id: int, recipient_id: int, message: str):
+    """Send message to a user"""
+
+    cursor = db.cursor()
+    sql = """INSERT INTO message (senderID, recipientID, body) VALUES (?,?,?)"""
+    cursor.execute(sql, [sender_id, recipient_id, message])
+    db.commit()
+
+
+def get_messages(db, user_id):
+    """Get a list of chat information for the user"""
+
+    cursor = db.cursor()
+    sql = """
+        SELECT DISTINCT 
+            CASE WHEN recipientID > senderID THEN recipientID ELSE senderID END as recipientID,
+            CASE WHEN recipientID > senderID THEN senderID ELSE recipientID END as senderID
+        FROM message
+        WHERE (senderID=? or recipientID=?)
+        GROUP BY recipientID, senderID
+    """
+    ret_val = cursor.execute(sql, [user_id, user_id]).fetchall()
+
+    ret_val = [dict(zip([key[0] for key in cursor.description], row))
+               for row in ret_val]
+
+    latest_messages = []
+
+    for item in ret_val:
+        item_dict = get_lastest_message_id(db,
+                                           item["senderID"], item['recipientID'])
+        if user_id != item['senderID']:
+            username = get_username(db, item['senderID'])
+            userdata = get_user_data(db, username)
+            item_dict['username'] = username
+            item_dict['name'] = userdata['name']
+            item_dict['avatar'] = userdata['avatar']
+
+        else:
+            username = get_username(db, item['recipientID'])
+            userdata = get_user_data(db, username)
+            item_dict['username'] = username
+            item_dict['name'] = userdata['name']
+            item_dict['avatar'] = userdata['avatar']
+
+        latest_messages.append(item_dict)
+
+    latest_messages.sort(
+        key=lambda x: x['mostRecentMessageTime'], reverse=True)
+
+    return latest_messages
+
+
+def get_lastest_message_id(db, user_id, recipient_id) -> int:
+
+    cursor = db.cursor()
+    sql = """
+        SELECT id, message.recipientID, message.senderID, MAX(message.timestamp) as mostRecentMessageTime, message.body
+        FROM message
+        WHERE (senderID=? AND recipientID=?) or (senderID=? AND recipientID=?)
+    """
+    ret_val = cursor.execute(
+        sql, [recipient_id, user_id, user_id, recipient_id]).fetchall()
+
+    ret_val = [dict(zip([key[0] for key in cursor.description], row))
+               for row in ret_val]
+
+    return ret_val[0]
+
+
+def get_message(db, user_id, recipient_id):
+    """Get chat information between the users"""
+
+    cursor = db.cursor()
+    sql = """
+        SELECT message.senderID, message.recipientID, message.body, message.timestamp, recipient.username as recipientUsername, recipient.name as recipientName, recipient.avatar as recipientAvatar, sender.username as senderUsername, sender.name as senderName, sender.avatar as senderAvatar
+        FROM message
+        INNER JOIN users recipient on message.recipientID=recipient.userID
+        INNER JOIN users sender on message.senderID=sender.userID
+        WHERE (recipientID=? AND senderID=?) or (recipientID=? AND senderID=?)
+        ORDER BY timestamp ASC
+    """
+    ret_val = cursor.execute(
+        sql, [recipient_id, user_id, user_id, recipient_id]).fetchall()
+
+    ret_val = [dict(zip([key[0] for key in cursor.description], row))
+               for row in ret_val]
+
+    return ret_val
+
+
+def update_last_read_timestamp(db, timestamp: str, user_id: int):
+
+    cursor = db.cursor()
+    sql = """
+        UPDATE users
+        SET lastMessageReadTime=?
+        WHERE userID=?
+    """
+    cursor.execute(sql, [timestamp, user_id])
+    db.commit()
+
+
+def get_last_read_timestamp(db, user_id: int):
+
+    cursor = db.cursor()
+    sql = """
+        SELECT lastMessageReadTime
+        FROM users
+        WHERE userID=?
+    """
+    cursor.execute(sql, [user_id])
+    return cursor.fetchone()[0]
 
 
 "------------------------------------------------------------------------------------------------------------"

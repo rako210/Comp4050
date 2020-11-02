@@ -1,15 +1,14 @@
-import React from 'react'
+import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import Grow from '@material-ui/core/Grow'
-import Paper from '@material-ui/core/Paper'
-import Popper from '@material-ui/core/Popper'
 import MenuItem from '@material-ui/core/MenuItem'
 import MenuList from '@material-ui/core/MenuList'
+import Paper from '@material-ui/core/Paper'
+import Popper from '@material-ui/core/Popper'
 import { makeStyles } from '@material-ui/core/styles'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
-import Avatar from '@material-ui/core/Avatar'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -109,8 +108,15 @@ export default function MenuListComposition(props) {
                     id="menu-list-grow"
                     onKeyDown={handleListKeyDown}
                   >
-                    <MenuItem onClick={redirectToProfile}>Profile</MenuItem>
-                    <MenuItem onClick={redirectToAccount}>My account</MenuItem>
+                    <MenuItem onClick={redirectToProfile}>My Profile</MenuItem>
+                    <MenuItem onClick={redirectToAccount}>My Account</MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        history.push('/messages')
+                      }}
+                    >
+                      My Messages
+                    </MenuItem>
                     <MenuItem onClick={handleLogout}>Logout</MenuItem>
                   </MenuList>
                 </ClickAwayListener>

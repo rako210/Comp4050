@@ -2,6 +2,8 @@ import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import About from '../about/About'
 import Home from '../home/Home'
+import SendMessage from '../messaging/SendMessage'
+import ViewMessage from '../messaging/ViewMessage'
 import AccountProfile from '../profile/AccountProfile'
 import Review from '../review/Review'
 import AccountSettings from '../settings/AccountSettings'
@@ -29,7 +31,7 @@ class App extends React.Component {
 
   updateUserData() {
     var getUserData = async () => {
-      this.setState({render: false})
+      this.setState({ render: false })
       await fetch('/user_login')
         .then((res) => res.json())
         .then((data) => {
@@ -63,6 +65,18 @@ class App extends React.Component {
         <Router>
           <div>
             <Switch>
+              <Route
+                path="/send-message"
+                render={(extraProps) => (
+                  <SendMessage {...props} {...extraProps} />
+                )}
+              />
+              <Route
+                path="/messages"
+                render={(extraProps) => (
+                  <ViewMessage {...props} {...extraProps} />
+                )}
+              />
               <Route
                 path="/addtask"
                 render={(extraProps) => <AddTask {...props} {...extraProps} />}

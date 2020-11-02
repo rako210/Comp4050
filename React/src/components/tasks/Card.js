@@ -1,5 +1,6 @@
 import { UserOutlined } from '@ant-design/icons'
 import React from 'react'
+import { Link } from 'react-router-dom'
 import {
   ApplyButton,
   DeleteButton,
@@ -10,6 +11,7 @@ import './Card.css'
 
 export class AllTaskCard extends React.Component {
   render() {
+    console.log(this.props.data)
     return (
       <div className="box">
         <div className="card-header">
@@ -35,9 +37,16 @@ export class AllTaskCard extends React.Component {
           <div className="card-col2">
             <div className="top">
               <p>{this.props.data.location}</p>
-              <p>
-                <UserOutlined /> {this.props.data.name}
-              </p>
+              <Link
+                to={{
+                  pathname: '/accountProfile',
+                  search: '?username=' + this.props.data.owner,
+                }}
+              >
+                <p>
+                  <UserOutlined /> {this.props.data.name}
+                </p>
+              </Link>
               <p>{this.props.data.status}</p>
               <p>
                 <ApplyButton {...this.props}></ApplyButton>
@@ -82,7 +91,7 @@ export class UserTaskCard extends React.Component {
             <div className="top">
               <p>{this.props.data.location}</p>
               <p>
-                <UserOutlined /> {this.props.data.name}
+                <UserOutlined /> {this.props.data.ownerName}
               </p>
               <p>{this.props.data.status}</p>
               <p>

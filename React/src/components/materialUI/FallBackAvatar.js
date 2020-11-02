@@ -1,7 +1,6 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
-import { deepOrange } from '@material-ui/core/colors';
+import Avatar from '@material-ui/core/Avatar'
+import { makeStyles } from '@material-ui/core/styles'
+import React from 'react'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,14 +13,14 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(15),
     height: theme.spacing(15),
   },
-}));
+}))
 
 export default function FallbackAvatar(props) {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div className={classes.root}>
       <Avatar src={props.url} className={classes.large} />
     </div>
-  );
+  )
 }
