@@ -24,7 +24,14 @@ class MessageBox extends React.Component {
 
     this.state = {
       data: [],
+      seconds: 0,
     }
+  }
+
+  tick() {
+    this.setState((state) => ({
+      seconds: state.seconds + 1,
+    }))
   }
 
   componentDidMount() {
@@ -34,7 +41,7 @@ class MessageBox extends React.Component {
         .then((res) => this.setState({ data: res.data }))
     }
 
-    updateMessageList()
+    this.interval = setInterval(() => updateMessageList(), 1000)
   }
 
   render() {

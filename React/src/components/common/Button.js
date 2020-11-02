@@ -40,7 +40,7 @@ export class ApplyButton extends Component {
   render() {
     let render
 
-    if (this.props.data.isRegistered)
+    if (this.props.data.isRegistered || this.state.bannerMessage)
       render = (
         <div style={{ color: 'green' }}>
           <BannerMessageController bannerMessage={this.state.bannerMessage} />

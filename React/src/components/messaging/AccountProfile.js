@@ -139,6 +139,10 @@ function MessageTextField(props) {
   const messagesEndRef = useRef(null)
 
   useEffect(() => {
+    const interval = setInterval(() => updateData(), 1000)
+    return () => {
+      clearInterval(interval)
+    }
     updateData()
   }, [])
 

@@ -29,6 +29,7 @@ function MessageTextField(props) {
   const classes = useStyles()
   const [value, setValue] = React.useState('')
   const [data, setData] = React.useState([])
+  const [time, setTime] = React.useState(Date.now())
 
   const handleChange = (event) => {
     setValue(event.target.value)
@@ -37,7 +38,10 @@ function MessageTextField(props) {
   const messagesEndRef = useRef(null)
 
   useEffect(() => {
-    updateData()
+    const interval = setInterval(() => updateData(), 1000)
+    return () => {
+      clearInterval(interval)
+    }
   }, [])
 
   const scrollToBottom = () => {
@@ -154,7 +158,7 @@ function MessageTextField(props) {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          maxHeight: '800px',
+          height: '800px',
           overflow: 'auto',
           marginBottom: '15px',
         }}
