@@ -1,14 +1,11 @@
-import React from 'react'
+import Grid from '@material-ui/core/Grid'
 import { withStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
-import Paper from '@material-ui/core/Paper'
-import Grid from '@material-ui/core/Grid'
+import React from 'react'
 import BannerMessageController from '../materialUI/BannerMessageController'
 import { AllTaskCard } from './Card.js'
-import ShowAllCreatedTasksButton from './ShowAllCreatedTasksButton'
 import ShowAllCreatedTasksTable from './ShowAllCreatedTasksTable'
 import ShowAllTasksButton from './ShowAllTasksButton'
-import { Button, Typography } from '@material-ui/core'
 
 const styles = (theme) => ({
   root: {
@@ -94,9 +91,9 @@ class TaskManager extends React.Component {
               </form>
             </Grid>
             <Grid item xs={12} sm={3}>
-              <ShowAllCreatedTasksButton
+              {/* <ShowAllCreatedTasksButton
                 callBack={this.displayCreatedTasks}
-              ></ShowAllCreatedTasksButton>
+              ></ShowAllCreatedTasksButton> */}
             </Grid>
             <Grid item xs={12} sm={3}>
               <ShowAllTasksButton
