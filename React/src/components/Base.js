@@ -130,6 +130,7 @@ class Login extends Component {
             method="POST"
             id="loginform"
             className="poster1"
+            onSubmit={this.handleSubmit}
           >
             <Typography component="h1" variant="h5">
               Sign in
