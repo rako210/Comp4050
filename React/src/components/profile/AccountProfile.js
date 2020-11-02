@@ -6,7 +6,7 @@ import React from 'react'
 import Base from '../Base'
 import FallbackAvatar from '../materialUI/FallBackAvatar'
 import SimpleRating from '../materialUI/Rating'
-import { UserTaskCard } from '../tasks/Card'
+import { AllTaskCard, OtherUserTaskCard, UserTaskCard } from '../tasks/Card'
 import './AccountProfile.css'
 
 class AccountProfile extends React.Component {
@@ -45,7 +45,6 @@ class Main extends React.Component {
           })
       }
       var check = search.replace('?username=', '')
-      console.log(check)
       if (check !== this.props.userData.username) {
         this.setState({ renderMessage: true })
       }
@@ -116,6 +115,19 @@ class Main extends React.Component {
           })}
         </div>
       )
+      if (this.state.renderMessage) {
+        renderTasks = (
+          <div>
+            {this.state.tasks.map((task) => {
+              return (
+                <div>
+                  <OtherUserTaskCard {...this.props} data={task} />
+                </div>
+              )
+            })}
+          </div>
+        )
+      }
       return (
         <div>
           <div className="profileContainer">

@@ -510,6 +510,7 @@ def get_user_tasks(db):
     ret_val = []
 
     for x in task_list:
+
         status = status_dict[str(x[8])]
 
         ret_val.append({
@@ -536,9 +537,17 @@ def get_users_tasks(db):
     username = request.query['username']
     user_id = database.get_user_data(db, username)['userID']
     task_list = database.position_list(db, user_id)
+    registerd_tasks = tasks_registered_by_user(db)
     ret_val = []
 
     for x in task_list:
+
+        is_registered = False
+
+        for registered_task in registerd_tasks:
+            if (registered_task['jobID'] == x[0]):
+                is_registered = True
+
         status = status_dict[str(x[8])]
 
         ret_val.append({
@@ -552,6 +561,7 @@ def get_users_tasks(db):
             'category': x[10],
             'ownerName': database.get_user_data(db, x[3])['name'],
             'cost': x[9],
+            'isRegistered': is_registered,
             'status': status,
             'selectedUsername': database.get_username(db, x[7]),
         })

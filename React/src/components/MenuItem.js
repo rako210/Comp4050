@@ -49,10 +49,12 @@ export default function MenuListComposition(props) {
 
   const redirectToProfile = () => {
     history.push('/accountProfile')
+    window.location.reload()
   }
 
   const redirectToAccount = () => {
     history.push('/accountSettings')
+    window.location.reload()
   }
 
   function handleListKeyDown(event) {
@@ -71,6 +73,8 @@ export default function MenuListComposition(props) {
 
     prevOpen.current = open
   }, [open])
+
+  console.log(props)
 
   return (
     <div className={classes.root}>
@@ -111,8 +115,10 @@ export default function MenuListComposition(props) {
                     <MenuItem onClick={redirectToProfile}>My Profile</MenuItem>
                     <MenuItem onClick={redirectToAccount}>My Account</MenuItem>
                     <MenuItem
-                      onClick={() => {
+                      onClick={async () => {
                         history.push('/messages')
+                        window.location.reload()
+                        // props.location.reload()
                       }}
                     >
                       My Messages

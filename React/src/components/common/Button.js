@@ -34,7 +34,7 @@ export class ApplyButton extends Component {
           this.setState({ bannerMessage: 'Please sign in to apply for tasks!' })
       })
 
-    this.props.updateRender()
+    if ('updateRender' in this.props) this.props.updateRender()
   }
 
   render() {
